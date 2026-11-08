@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP</title>
+    <title>Smartfon RP + CAD</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(160deg, #1b2735 0%, #090a0f 100%);
@@ -158,24 +158,22 @@
             width: 70px; height: 70px; border-radius: 50%; cursor: pointer;
         }
 
-        /* LISTY ELEMENTÓW */
+        /* LISTY ELEMENTÓW I WIADOMOŚCI */
         .list-item {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 10px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
-        .input-row { display: flex; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
-        .input-row input {
-            flex: 1; padding: 10px; border-radius: 20px; border: 1px solid var(--border-color);
-            background: var(--phone-bg); color: var(--text-color); outline: none;
+        .chat-input-box { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
+        .chat-input-box select, .chat-input-box textarea {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--phone-bg); color: var(--text-color); outline: none; font-size: 14px;
         }
-        .input-row button {
-            background: #3498db; color: white; border: none; padding: 0 16px;
-            border-radius: 20px; font-weight: bold; cursor: pointer;
+        .chat-input-box textarea { resize: none; height: 70px; }
+        .chat-input-box button {
+            background: #3498db; color: white; border: none; padding: 10px;
+            border-radius: 8px; font-weight: bold; cursor: pointer;
         }
-        textarea.notes-area {
-            width: 100%; height: 100%; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
-            border-radius: 10px; padding: 14px; font-size: 15px; resize: none; outline: none;
-        }
+        .chat-input-box button:active { background: #2980b9; }
 
         /* PRZEŁĄCZNIKI (SWITCH) */
         .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
@@ -290,13 +288,19 @@
             </div>
         </div>
 
-        <!-- APLIKACJA: WIADOMOŚCI -->
+        <!-- APLIKACJA: WIADOMOŚCI (Z WYSYŁANIEM NA DISCORD) -->
         <div id="app-sms" class="app-window">
-            <div class="app-header"><span>Wiadomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-header"><span>Wiadomości / Zgłoszenia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="sms-list"></div>
-            <div class="input-row">
-                <input type="text" id="sms-input" placeholder="Napisz wiadomość...">
-                <button onclick="sendSms()">Wyślij</button>
+            <div class="chat-input-box">
+                <select id="sms-recipient">
+                    <option value="997">🚨 997 - Zgłoszenie na Policję</option>
+                    <option value="998">🚒 998 - Zgłoszenie na Straż</option>
+                    <option value="999">🚑 999 - Zgłoszenie na Pogotowie</option>
+                    <option value="112">🌐 112 - Centrum Powiadamiania</option>
+                </select>
+                <textarea id="sms-input" placeholder="Wpisz treść: co się stało i gdzie (adres)..."></textarea>
+                <button onclick="sendSmsToDiscord()">Wyślij zgłoszenie do służb</button>
             </div>
         </div>
 
@@ -406,6 +410,11 @@
 </div>
 
 <script>
+    // ==========================================
+    // TUTAJ WKLEJ SWÓJ LINK DO WEBHOOKA DISCORD
+    // ==========================================
+    const WEBHOOK_SMS_DISCORD = "https://discord.com/api/webhooks/1486258771570200647/1ypvo2VGL9kQxBLZUS9z75WP-LeXUk2r0ea8QtLsQtnyk1Z1PTH-1k3mLc--SD7MiGFH";
+
     // ZEGAR NA ŻYWO
     function updateClock() {
         const now = new Date();
@@ -479,27 +488,57 @@
         document.getElementById('calling-overlay').classList.remove('active');
     }
 
-    // WIADOMOŚCI SMS
+    // WIADOMOŚCI SMS + WYSYŁANIE NA DISCORD
     function renderSms() {
         const list = document.getElementById('sms-list');
-        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[{"text":"Witaj w nowym telefonie!","time":"12:00"}]');
+        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[{"recipient":"997","text":"Witaj! Tu możesz wysyłać zgłoszenia do służb.","time":"12:00"}]');
         list.innerHTML = msgs.map(m => `
             <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                <div style="font-size:11px; color:#3498db; font-weight:bold; margin-bottom:2px;">Do: ${m.recipient}</div>
                 <div>${m.text}</div>
                 <small style="color:var(--subtext); margin-top:4px;">${m.time}</small>
             </div>
         `).join('');
     }
-    function sendSms() {
+
+    function sendSmsToDiscord() {
+        const recipient = document.getElementById('sms-recipient').value;
         const input = document.getElementById('sms-input');
         const text = input.value.trim();
-        if (!text) return;
-        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[]');
+        if (!text) {
+            alert('Wpisz treść zgłoszenia!');
+            return;
+        }
+
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        msgs.push({ text, time });
+        
+        // Zapis lokalny w telefonie
+        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[]');
+        msgs.push({ recipient, text, time });
         localStorage.setItem('phone_sms', JSON.stringify(msgs));
         input.value = "";
         renderSms();
+
+        // Wysyłanie na Discorda
+        if (WEBHOOK_SMS_DISCORD.includes("TUTAJ_WKLEJ")) {
+            alert('Zgłoszenie zapisane w telefonie (brak linku do Webhooka Discord w kodzie)!');
+            return;
+        }
+
+        const discordMessage = {
+            content: `🚨 **NOWE ZGŁOSZENIE ALARMOWE (${recipient})** 🚨\n• **Treść:** ${text}\n• **Czas:** ${time}`
+        };
+
+        fetch(WEBHOOK_SMS_DISCORD, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(discordMessage)
+        }).then(() => {
+            alert('Zgłoszenie zostało wysłane do dyspozytorni na Discordzie!');
+        }).catch(err => {
+            console.error(err);
+            alert('Błąd podczas wysyłania na Discorda.');
+        });
     }
 
     // NOTATKI
