@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Telefon</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(160deg, #1b2735 0%, #090a0f 100%);
+            --phone-bg: #0a0a0c;
+            --text-color: #fff;
+            --header-bg: #1c1f26;
+            --card-bg: #1c1f26;
+            --border-color: #2c313c;
+            --subtext: #94a3b8;
+        }
+
+        body.light-mode {
+            --bg-gradient: linear-gradient(160deg, #f0f4f8 0%, #d9e2ec 100%);
+            --phone-bg: #f8fafc;
+            --text-color: #1e293b;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --subtext: #64748b;
+        }
+
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; user-select: none; }
+        body {
+            margin: 0; padding: 0; background: var(--phone-bg); color: var(--text-color);
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* OBUDOWA / EKRAN TELEFONU */
+        .phone {
+            width: 100%; max-width: 400px; height: 100vh; max-height: 820px;
+            background: var(--bg-gradient);
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            transition: background 0.3s;
+        }
+
+        /* GÓRNY PASEK STANU */
+        .status-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 16px; font-size: 12px; font-weight: 600; background: rgba(0,0,0,0.25); z-index: 10; color: #fff;
+        }
+        .status-icons { display: flex; gap: 8px; align-items: center; }
+
+        /* GŁÓWNA PRZESTRZEŃ */
+        .screen { flex: 1; position: relative; overflow-y: auto; display: flex; flex-direction: column; }
+
+        /* WIDŻET ZEGARA NA PULPICIE */
+        .home-clock { text-align: center; padding: 35px 20px 20px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .home-clock .time { font-size: 54px; font-weight: 200; letter-spacing: 1px; }
+        .home-clock .date { font-size: 14px; color: #e2e8f0; margin-top: 4px; }
+
+        /* SIATKA APLIKACJI */
+        .app-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 10px;
+            padding: 20px 18px; margin-top: auto; margin-bottom: 20px;
+        }
+        .app-icon {
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; text-align: center;
+        }
+        .app-icon .icon-box {
+            width: 58px; height: 58px; border-radius: 15px; display: flex;
+            justify-content: center; align-items: center; font-size: 26px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.35); transition: transform 0.1s;
+        }
+        .app-icon:active .icon-box { transform: scale(0.92); }
+        .app-icon span { font-size: 11px; margin-top: 6px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6); font-weight: 500; }
+
+        .bg-green { background: #2ecc71; }
+        .bg-blue { background: #3498db; }
+        .bg-orange { background: #e67e22; }
+        .bg-yellow { background: #f1c40f; color: #111; }
+        .bg-gray { background: #34495e; }
+        .bg-red { background: #e74c3c; }
+        .bg-purple { background: #9b59b6; }
+
+        /* DOLNY PASEK NAWIGACJI */
+        .nav-bar {
+            height: 48px; background: rgba(0,0,0,0.45); display: flex;
+            justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-btn {
+            background: none; border: none; color: #cbd5e1; font-size: 18px;
+            padding: 10px 24px; cursor: pointer;
+        }
+        .nav-btn:active { color: #fff; }
+
+        /* OKNA APLIKACJI */
+        .app-window {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--phone-bg); flex-direction: column; z-index: 5; color: var(--text-color);
+        }
+        .app-window.active { display: flex; }
+        .app-header {
+            padding: 14px 16px; background: var(--header-bg); font-size: 17px; font-weight: bold;
+            border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;
+        }
+        .app-content { flex: 1; overflow-y: auto; padding: 15px; }
+
+        /* KLAWIATURA TELEFONU */
+        .dial-display {
+            font-size: 30px; text-align: center; padding: 20px 10px; min-height: 75px;
+            letter-spacing: 2px; border-bottom: 1px solid var(--border-color); margin-bottom: 15px;
+        }
+        .dial-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px; }
+        .dial-key {
+            background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); font-size: 22px;
+            padding: 16px; border-radius: 50px; cursor: pointer;
+        }
+        .dial-key:active { opacity: 0.7; }
+        .dial-actions { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .call-btn {
+            background: #2ecc71; border: none; color: white; font-size: 22px;
+            width: 65px; height: 65px; border-radius: 50%; cursor: pointer;
+        }
+        .del-btn {
+            background: #34495e; border: none; color: white; font-size: 18px;
+            width: 65px; height: 65px; border-radius: 50%; cursor: pointer;
+        }
+
+        /* EKRAN POŁĄCZENIA */
+        .calling-overlay {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #1a252f 0%, #0d1117 100%);
+            z-index: 20; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px; color: #fff;
+        }
+        .calling-overlay.active { display: flex; }
+        .end-call-btn {
+            background: #e74c3c; border: none; color: white; font-size: 24px;
+            width: 70px; height: 70px; border-radius: 50%; cursor: pointer;
+        }
+
+        /* SMS / KONTAKTI / USTAWIENIA */
+        .list-item {
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .input-row { display: flex; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
+        .input-row input {
+            flex: 1; padding: 10px; border-radius: 20px; border: 1px solid var(--border-color);
+            background: var(--phone-bg); color: var(--text-color); outline: none;
+        }
+        .input-row button {
+            background: #3498db; color: white; border: none; padding: 0 16px;
+            border-radius: 20px; font-weight: bold; cursor: pointer;
+        }
+        textarea.notes-area {
+            width: 100%; height: 100%; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 14px; font-size: 15px; resize: none; outline: none;
+        }
+
+        /* PRZEŁĄCZNIKI (SWITCH) W USTAWIENIACH */
+        .switch {
+            position: relative; display: inline-block; width: 48px; height: 26px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #475569; transition: .3s; border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #2ecc71; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* KALKULATOR */
+        .calc-screen {
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; text-align: right; font-size: 32px;
+            border-radius: 10px; margin-bottom: 15px; min-height: 75px; word-break: break-all;
+        }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn {
+            padding: 18px; font-size: 20px; border: 1px solid var(--border-color); border-radius: 12px;
+            background: var(--card-bg); color: var(--text-color); cursor: pointer;
+        }
+        .calc-btn.op { background: #e67e22; color: #fff; border: none; }
+        .calc-btn.eq { background: #2ecc71; color: #fff; border: none; }
+    </style>
+</head>
+<body>
+
+<div class="phone" id="phone-device">
+    <!-- GÓRNY PASEK -->
+    <div class="status-bar">
+        <span id="sb-time">12:00</span>
+        <div class="status-icons">
+            <span id="sb-wifi">📶 LTE</span>
+            <span id="sb-battery">🔋 94%</span>
+        </div>
+    </div>
+
+    <!-- EKRAN GŁÓWNY -->
+    <div class="screen">
+        <div class="home-clock">
+            <div class="time" id="main-time">12:00</div>
+            <div class="date" id="main-date">Niedziela, 8 listopada</div>
+        </div>
+
+        <div class="app-grid">
+            <div class="app-icon" onclick="openApp('dialer')">
+                <div class="icon-box bg-green">📞</div>
+                <span>Telefon</span>
+            </div>
+            <div class="app-icon" onclick="openApp('sms')">
+                <div class="icon-box bg-blue">💬</div>
+                <span>Wiadomości</span>
+            </div>
+            <div class="app-icon" onclick="openApp('contacts')">
+                <div class="icon-box bg-orange">👤</div>
+                <span>Kontakty</span>
+            </div>
+            <div class="app-icon" onclick="openApp('notes')">
+                <div
