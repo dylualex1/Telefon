@@ -380,4 +380,208 @@
                     <select id="wallpaper-select" onchange="changeWallpaper(this.value)" style="width:100%; padding:8px; border-radius:8px; background:var(--phone-bg); color:var(--text-color); border:1px solid var(--border-color);">
                         <option value="default">Granatowa noc (Domyślna)</option>
                         <option value="cyber">Cyberpunk (Neon)</option>
-                        <option value="minimal">Minimalizm (Czysty grafit)</
+                        <option value="minimal">Minimalizm (Czysty grafit)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- EKRAN POŁĄCZENIA -->
+        <div id="calling-overlay" class="calling-overlay">
+            <div style="text-align:center;">
+                <div id="call-name" style="font-size:26px; font-weight:bold;">Dzwonienie...</div>
+                <div id="call-num" style="font-size:16px; color:#94a3b8; margin-top:8px;"></div>
+                <div id="call-status" style="font-size:14px; color:#2ecc71; margin-top:20px;">Łączenie...</div>
+            </div>
+            <button class="end-call-btn" onclick="endCall()">📵</button>
+        </div>
+    </div>
+
+    <!-- DOLNY PASEK NAWIGACJI -->
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="lockPhone()">🔒</button>
+        <button class="nav-btn" onclick="goHome()">◯</button>
+        <button class="nav-btn" onclick="goHome()">▢</button>
+    </div>
+</div>
+
+<script>
+    // ZEGAR NA ŻYWO
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('sb-time').innerText = timeStr;
+        document.getElementById('main-time').innerText = timeStr;
+        document.getElementById('lock-time').innerText = timeStr;
+        const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        document.getElementById('main-date').innerText = formattedDate;
+        document.getElementById('lock-date').innerText = formattedDate;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // EKRAN BLOKADY / ODCISK PALCA
+    function unlockPhone() {
+        document.getElementById('lock-screen').classList.add('hidden');
+    }
+
+    function lockPhone() {
+        if (localStorage.getItem('phone_lock_enabled') !== 'false') {
+            goHome();
+            document.getElementById('lock-screen').classList.remove('hidden');
+        }
+    }
+
+    function toggleLockFeature() {
+        const isEnabled = document.getElementById('lock-switch').checked;
+        localStorage.setItem('phone_lock_enabled', isEnabled);
+    }
+
+    // NAWIGACJA
+    function openApp(name) {
+        goHome();
+        document.getElementById('app-' + name).classList.add('active');
+        if (name === 'sms') renderSms();
+    }
+    function goHome() {
+        document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+    }
+
+    // TELEFON
+    let dialNum = "";
+    function addDigit(d) {
+        if (dialNum.length < 15) {
+            dialNum += d;
+            document.getElementById('dial-number').innerText = dialNum;
+        }
+    }
+    function delDigit() {
+        dialNum = dialNum.slice(0, -1);
+        document.getElementById('dial-number').innerText = dialNum;
+    }
+    function startCall() {
+        if (!dialNum) return;
+        callPreset(dialNum, dialNum);
+    }
+    function callPreset(num, name) {
+        document.getElementById('call-name').innerText = name;
+        document.getElementById('call-num').innerText = num;
+        document.getElementById('call-status').innerText = "Łączenie...";
+        document.getElementById('calling-overlay').classList.add('active');
+        setTimeout(() => {
+            if (document.getElementById('calling-overlay').classList.contains('active')) {
+                document.getElementById('call-status').innerText = "Połączono (00:01)";
+            }
+        }, 2000);
+    }
+    function endCall() {
+        document.getElementById('calling-overlay').classList.remove('active');
+    }
+
+    // WIADOMOŚCI SMS
+    function renderSms() {
+        const list = document.getElementById('sms-list');
+        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[{"text":"Witaj w nowym telefonie!","time":"12:00"}]');
+        list.innerHTML = msgs.map(m => `
+            <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                <div>${m.text}</div>
+                <small style="color:var(--subtext); margin-top:4px;">${m.time}</small>
+            </div>
+        `).join('');
+    }
+    function sendSms() {
+        const input = document.getElementById('sms-input');
+        const text = input.value.trim();
+        if (!text) return;
+        const msgs = JSON.parse(localStorage.getItem('phone_sms') || '[]');
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        msgs.push({ text, time });
+        localStorage.setItem('phone_sms', JSON.stringify(msgs));
+        input.value = "";
+        renderSms();
+    }
+
+    // NOTATKI
+    const notesArea = document.getElementById('notes-area');
+    notesArea.value = localStorage.getItem('phone_notes') || "";
+    notesArea.addEventListener('input', () => {
+        localStorage.setItem('phone_notes', notesArea.value);
+    });
+
+    // KALKULATOR
+    let calcExp = "";
+    function calcAdd(val) {
+        calcExp += val;
+        document.getElementById('calc-display').innerText = calcExp;
+    }
+    function calcClear() {
+        calcExp = "";
+        document.getElementById('calc-display').innerText = "0";
+    }
+    function calcBack() {
+        calcExp = calcExp.slice(0, -1);
+        document.getElementById('calc-display').innerText = calcExp || "0";
+    }
+    function calcEval() {
+        try {
+            calcExp = String(eval(calcExp));
+            document.getElementById('calc-display').innerText = calcExp;
+        } catch {
+            document.getElementById('calc-display').innerText = "Błąd";
+            calcExp = "";
+        }
+    }
+
+    // USTAWIENIA
+    function toggleTheme() {
+        const isLight = document.getElementById('theme-switch').checked;
+        document.body.classList.toggle('light-mode', isLight);
+        localStorage.setItem('phone_theme', isLight ? 'light' : 'dark');
+    }
+
+    function toggleAirplane() {
+        const isAir = document.getElementById('airplane-switch').checked;
+        document.getElementById('sb-wifi').innerText = isAir ? "✈️" : "📶 LTE";
+    }
+
+    function toggleWifi() {
+        const isWifi = document.getElementById('wifi-switch').checked;
+        if (!document.getElementById('airplane-switch').checked) {
+            document.getElementById('sb-wifi').innerText = isWifi ? "📶 Wi-Fi" : "📶 LTE";
+        }
+    }
+
+    function changeWallpaper(type) {
+        const device = document.getElementById('phone-device');
+        if (type === 'cyber') {
+            device.style.background = "linear-gradient(160deg, #8e44ad 0%, #2c3e50 100%)";
+        } else if (type === 'minimal') {
+            device.style.background = "#111827";
+        } else {
+            device.style.background = "";
+        }
+        localStorage.setItem('phone_wallpaper', type);
+    }
+
+    // WCZYTYWANIE USTAWIEŃ PRZY STARCIE
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('phone_theme');
+        if (savedTheme === 'light') {
+            document.getElementById('theme-switch').checked = true;
+            document.body.classList.add('light-mode');
+        }
+        const savedWp = localStorage.getItem('phone_wallpaper');
+        if (savedWp) {
+            document.getElementById('wallpaper-select').value = savedWp;
+            changeWallpaper(savedWp);
+        }
+        const lockEnabled = localStorage.getItem('phone_lock_enabled');
+        if (lockEnabled === 'false') {
+            document.getElementById('lock-switch').checked = false;
+            document.getElementById('lock-screen').classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>
