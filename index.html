@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telefon</title>
+    <title>Smartfon z blokadą</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(160deg, #1b2735 0%, #090a0f 100%);
@@ -32,7 +32,7 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* OBUDOWA / EKRAN TELEFONU */
+        /* OBUDOWA TELEFONU */
         .phone {
             width: 100%; max-width: 400px; height: 100vh; max-height: 820px;
             background: var(--bg-gradient);
@@ -40,6 +40,29 @@
             box-shadow: 0 0 40px rgba(0,0,0,0.8);
             transition: background 0.3s;
         }
+
+        /* EKRAN BLOKADY */
+        .lock-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(12px);
+            z-index: 100; display: flex; flex-direction: column; justify-content: space-between;
+            align-items: center; padding: 60px 20px; color: #fff; transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .lock-screen.hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
+        .lock-clock { text-align: center; }
+        .lock-time { font-size: 64px; font-weight: 200; }
+        .lock-date { font-size: 15px; color: #cbd5e1; margin-top: 5px; }
+        
+        /* SKANER ODCISKU PALCA */
+        .fingerprint-container { text-align: center; margin-bottom: 40px; }
+        .fingerprint-btn {
+            width: 75px; height: 75px; border-radius: 50%; background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.2); font-size: 34px; display: flex;
+            justify-content: center; align-items: center; cursor: pointer; margin: 0 auto 12px;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.2); transition: 0.2s;
+        }
+        .fingerprint-btn:active { background: rgba(46, 204, 113, 0.3); border-color: #2ecc71; transform: scale(0.95); }
+        .lock-hint { font-size: 13px; color: #94a3b8; }
 
         /* GÓRNY PASEK STANU */
         .status-bar {
@@ -128,7 +151,7 @@
         .calling-overlay {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(180deg, #1a252f 0%, #0d1117 100%);
-            z-index: 20; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px; color: #fff;
+            z-index: 200; flex-direction: column; justify-content: space-between; align-items: center; padding: 60px 20px; color: #fff;
         }
         .calling-overlay.active { display: flex; }
         .end-call-btn {
@@ -136,7 +159,7 @@
             width: 70px; height: 70px; border-radius: 50%; cursor: pointer;
         }
 
-        /* SMS / KONTAKTI / USTAWIENIA */
+        /* LISTY ELEMENTÓW */
         .list-item {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 10px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
@@ -155,7 +178,7 @@
             border-radius: 10px; padding: 14px; font-size: 15px; resize: none; outline: none;
         }
 
-        /* PRZEŁĄCZNIKI (SWITCH) W USTAWIENIACH */
+        /* PRZEŁĄCZNIKI (SWITCH) */
         .switch {
             position: relative; display: inline-block; width: 48px; height: 26px;
         }
@@ -188,6 +211,19 @@
 <body>
 
 <div class="phone" id="phone-device">
+    
+    <!-- EKRAN BLOKADY Z ODCISKIEM PALCA -->
+    <div id="lock-screen" class="lock-screen">
+        <div class="lock-clock">
+            <div class="lock-time" id="lock-time">12:00</div>
+            <div class="lock-date" id="lock-date">Niedziela, 8 listopada</div>
+        </div>
+        <div class="fingerprint-container">
+            <div class="fingerprint-btn" onclick="unlockPhone()">👆</div>
+            <div class="lock-hint">Dotknij, aby odblokować odciskiem</div>
+        </div>
+    </div>
+
     <!-- GÓRNY PASEK -->
     <div class="status-bar">
         <span id="sb-time">12:00</span>
@@ -218,4 +254,134 @@
                 <span>Kontakty</span>
             </div>
             <div class="app-icon" onclick="openApp('notes')">
-                <div
+                <div class="icon-box bg-yellow">📝</div>
+                <span>Notatki</span>
+            </div>
+            <div class="app-icon" onclick="openApp('calc')">
+                <div class="icon-box bg-gray">🧮</div>
+                <span>Kalkulator</span>
+            </div>
+            <div class="app-icon" onclick="openApp('settings')">
+                <div class="icon-box bg-purple">⚙️</div>
+                <span>Ustawienia</span>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: TELEFON -->
+        <div id="app-dialer" class="app-window">
+            <div class="app-header"><span>Telefon</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="dial-display" id="dial-number"></div>
+                <div class="dial-pad">
+                    <button class="dial-key" onclick="addDigit('1')">1</button>
+                    <button class="dial-key" onclick="addDigit('2')">2</button>
+                    <button class="dial-key" onclick="addDigit('3')">3</button>
+                    <button class="dial-key" onclick="addDigit('4')">4</button>
+                    <button class="dial-key" onclick="addDigit('5')">5</button>
+                    <button class="dial-key" onclick="addDigit('6')">6</button>
+                    <button class="dial-key" onclick="addDigit('7')">7</button>
+                    <button class="dial-key" onclick="addDigit('8')">8</button>
+                    <button class="dial-key" onclick="addDigit('9')">9</button>
+                    <button class="dial-key" onclick="addDigit('*')">*</button>
+                    <button class="dial-key" onclick="addDigit('0')">0</button>
+                    <button class="dial-key" onclick="addDigit('#')">#</button>
+                </div>
+                <div class="dial-actions">
+                    <button class="call-btn" onclick="startCall()">📞</button>
+                    <button class="del-btn" onclick="delDigit()">⌫</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: WIADOMOŚCI -->
+        <div id="app-sms" class="app-window">
+            <div class="app-header"><span>Wiadomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" id="sms-list"></div>
+            <div class="input-row">
+                <input type="text" id="sms-input" placeholder="Napisz wiadomość...">
+                <button onclick="sendSms()">Wyślij</button>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: KONTAKTY -->
+        <div id="app-contacts" class="app-window">
+            <div class="app-header"><span>Kontakty</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="list-item">
+                    <div><b>Numer Alarmowy</b><br><small style="color:var(--subtext);">112</small></div>
+                    <button class="nav-btn" onclick="callPreset('112', 'Numer Alarmowy')">📞</button>
+                </div>
+                <div class="list-item">
+                    <div><b>Straż Pożarna</b><br><small style="color:var(--subtext);">998</small></div>
+                    <button class="nav-btn" onclick="callPreset('998', 'Straż Pożarna')">📞</button>
+                </div>
+                <div class="list-item">
+                    <div><b>Policja</b><br><small style="color:var(--subtext);">997</small></div>
+                    <button class="nav-btn" onclick="callPreset('997', 'Policja')">📞</button>
+                </div>
+                <div class="list-item">
+                    <div><b>Pogotowie</b><br><small style="color:var(--subtext);">999</small></div>
+                    <button class="nav-btn" onclick="callPreset('999', 'Pogotowie')">📞</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: NOTATKI -->
+        <div id="app-notes" class="app-window">
+            <div class="app-header"><span>Notatki</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <textarea id="notes-area" class="notes-area" placeholder="Wpisz swoje notatki..."></textarea>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: KALKULATOR -->
+        <div id="app-calc" class="app-window">
+            <div class="app-header"><span>Kalkulator</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="calc-screen" id="calc-display">0</div>
+                <div class="calc-grid">
+                    <button class="calc-btn" onclick="calcClear()">C</button>
+                    <button class="calc-btn op" onclick="calcAdd('/')">÷</button>
+                    <button class="calc-btn op" onclick="calcAdd('*')">×</button>
+                    <button class="calc-btn op" onclick="calcBack()">⌫</button>
+                    <button class="calc-btn" onclick="calcAdd('7')">7</button>
+                    <button class="calc-btn" onclick="calcAdd('8')">8</button>
+                    <button class="calc-btn" onclick="calcAdd('9')">9</button>
+                    <button class="calc-btn op" onclick="calcAdd('-')">-</button>
+                    <button class="calc-btn" onclick="calcAdd('4')">4</button>
+                    <button class="calc-btn" onclick="calcAdd('5')">5</button>
+                    <button class="calc-btn" onclick="calcAdd('6')">6</button>
+                    <button class="calc-btn op" onclick="calcAdd('+')">+</button>
+                    <button class="calc-btn" onclick="calcAdd('1')">1</button>
+                    <button class="calc-btn" onclick="calcAdd('2')">2</button>
+                    <button class="calc-btn" onclick="calcAdd('3')">3</button>
+                    <button class="calc-btn eq" onclick="calcEval()">=</button>
+                    <button class="calc-btn" style="grid-column: span 2;" onclick="calcAdd('0')">0</button>
+                    <button class="calc-btn" onclick="calcAdd('.')">.</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: USTAWIENIA -->
+        <div id="app-settings" class="app-window">
+            <div class="app-header"><span>Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="list-item">
+                    <div><b>Blokada ekranu (Odcisk)</b><br><small style="color:var(--subtext);">Włącz zabezpieczenie startowe</small></div>
+                    <label class="switch"><input type="checkbox" id="lock-switch" checked onchange="toggleLockFeature()"><span class="slider"></span></label>
+                </div>
+                <div class="list-item">
+                    <div><b>Tryb Jasny / Ciemny</b><br><small style="color:var(--subtext);">Zmień motyw interfejsu</small></div>
+                    <label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label>
+                </div>
+                <div class="list-item">
+                    <div><b>Tryb Samolotowy</b><br><small style="color:var(--subtext);">Wyłącz łączność</small></div>
+                    <label class="switch"><input type="checkbox" id="airplane-switch" onchange="toggleAirplane()"><span class="slider"></span></label>
+                </div>
+                <div class="list-item">
+                    <div><b>Wi-Fi</b><br><small style="color:var(--subtext);">Sieci bezprzewodowe</small></div>
+                    <label class="switch"><input type="checkbox" id="wifi-switch" checked onchange="toggleWifi()"><span class="slider"></span></label>
+                </div>
+                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                    <div><b>Wybierz tapetę</b><br><small style="color:var(--subtext);">Styl tła pulpitu</small></div>
+                    <select id="wallpaper-select" onchange="changeWallpaper(this.value)" style="width:100%; paddi
