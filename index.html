@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + mObywatel</title>
+    <title>Smartfon RP + Bank + Kasyno</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -52,14 +52,10 @@
             align-items: center; padding: 25px; color: #fff; text-align: center; overflow-y: auto;
         }
         .setup-screen.hidden { display: none; }
-        .number-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-            width: 100%; margin: 15px 0;
-        }
+        .number-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; margin: 15px 0; }
         .num-choice {
             padding: 12px; border-radius: 10px; border: 1px solid #34495e;
-            background: #1c1f26; color: #fff; font-size: 15px; font-weight: bold;
-            cursor: pointer; transition: 0.2s;
+            background: #1c1f26; color: #fff; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
         .num-choice:hover { border-color: #3498db; }
         .num-choice.taken { background: #2c1a1d; border-color: #c0392b; color: #e74c3c; }
@@ -93,21 +89,16 @@
 
         .screen { flex: 1; position: relative; overflow-y: auto; display: flex; flex-direction: column; }
 
-        .home-clock { text-align: center; padding: 25px 20px 15px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .home-clock .time { font-size: 48px; font-weight: 200; letter-spacing: 1px; }
-        .home-clock .date { font-size: 13px; color: #e2e8f0; margin-top: 2px; }
-        .my-number-badge { font-size: 11px; background: rgba(52, 152, 219, 0.3); padding: 3px 8px; border-radius: 10px; display: inline-block; margin-top: 6px; border: 1px solid #3498db; }
+        .home-clock { text-align: center; padding: 20px 20px 10px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .home-clock .time { font-size: 42px; font-weight: 200; letter-spacing: 1px; }
+        .home-clock .date { font-size: 12px; color: #e2e8f0; margin-top: 2px; }
+        .my-number-badge { font-size: 11px; background: rgba(52, 152, 219, 0.3); padding: 3px 8px; border-radius: 10px; display: inline-block; margin-top: 5px; border: 1px solid #3498db; }
 
-        .app-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 8px;
-            padding: 15px; margin-top: auto; margin-bottom: 10px;
-        }
-        .app-icon {
-            display: flex; flex-direction: column; align-items: center; cursor: pointer; text-align: center;
-        }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; padding: 15px; margin-top: auto; margin-bottom: 10px; }
+        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; text-align: center; }
         .app-icon .icon-box {
-            width: 52px; height: 52px; border-radius: 14px; display: flex;
-            justify-content: center; align-items: center; font-size: 24px;
+            width: 50px; height: 50px; border-radius: 14px; display: flex;
+            justify-content: center; align-items: center; font-size: 22px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.35); transition: transform 0.1s;
         }
         .app-icon:active .icon-box { transform: scale(0.92); }
@@ -119,15 +110,14 @@
         .bg-gray { background: #34495e; }
         .bg-purple { background: #9b59b6; }
         .bg-red { background: #e74c3c; }
+        .bg-green { background: #27ae60; }
+        .bg-gold { background: linear-gradient(135deg, #f39c12, #d35400); }
 
         .nav-bar {
             height: 48px; background: rgba(0,0,0,0.45); display: flex;
             justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); z-index: 100;
         }
-        .nav-btn {
-            background: none; border: none; color: #cbd5e1; font-size: 18px;
-            padding: 10px 24px; cursor: pointer;
-        }
+        .nav-btn { background: none; border: none; color: #cbd5e1; font-size: 18px; padding: 10px 24px; cursor: pointer; }
         .nav-btn:active { color: #fff; }
 
         .app-window {
@@ -141,27 +131,18 @@
         }
         .app-content { flex: 1; overflow-y: auto; padding: 15px; }
 
-        .msg-bubble {
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px;
-            margin-bottom: 10px; max-width: 85%;
-        }
+        .msg-bubble { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; margin-bottom: 10px; max-width: 85%; }
         .msg-bubble.mine { background: #2980b9; margin-left: auto; border-color: #3498db; color: #fff; }
         .msg-bubble.service { background: #c0392b; border-color: #e74c3c; max-width: 100%; color: #fff; }
         
         .chat-input-box { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
-        .chat-input-box input, .chat-input-box textarea, .contact-form input, .id-form input {
+        .chat-input-box input, .chat-input-box textarea, .contact-form input, .id-form input, .bank-input {
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
             background: var(--phone-bg); color: var(--text-color); outline: none; font-size: 14px;
         }
         .chat-input-box textarea { resize: none; height: 60px; }
-        .btn-primary {
-            background: #2ecc71; color: white; border: none; padding: 10px;
-            border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
-        }
-        .btn-danger {
-            background: #e74c3c; color: white; border: none; padding: 6px 10px;
-            border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;
-        }
+        .btn-primary { background: #2ecc71; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+        .btn-danger { background: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
         .list-item {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 10px;
@@ -169,30 +150,18 @@
         }
         .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #475569; transition: .3s; border-radius: 26px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
-            background-color: white; transition: .3s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .3s; border-radius: 26px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: #2ecc71; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .calc-screen {
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; text-align: right; font-size: 32px;
-            border-radius: 10px; margin-bottom: 15px; min-height: 75px; word-break: break-all;
-        }
+        .calc-screen { background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; text-align: right; font-size: 32px; border-radius: 10px; margin-bottom: 15px; min-height: 75px; word-break: break-all; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn {
-            padding: 18px; font-size: 20px; border: 1px solid var(--border-color); border-radius: 12px;
-            background: var(--card-bg); color: var(--text-color); cursor: pointer;
-        }
+        .calc-btn { padding: 18px; font-size: 20px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); color: var(--text-color); cursor: pointer; }
         .calc-btn.op { background: #e67e22; color: #fff; border: none; }
         .calc-btn.eq { background: #2ecc71; color: #fff; border: none; }
 
-        /* STYL DOWODU OSOBISTEGO (mObywatel) */
+        /* DOWÓD OSOBISTY */
         .id-card {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 16px; padding: 20px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -204,6 +173,26 @@
         .id-photo { width: 80px; height: 100px; background: #cbd5e1; border-radius: 8px; object-fit: cover; border: 2px solid #fff; }
         .id-info div { font-size: 13px; margin-bottom: 4px; }
         .id-info span { font-weight: bold; }
+
+        /* BANK */
+        .bank-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-radius: 16px; padding: 20px; color: #fff; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .bank-balance { font-size: 32px; font-weight: bold; margin-top: 5px; }
+        .history-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 12px; }
+
+        /* KASYNO */
+        .casino-box {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: center;
+        }
+        .casino-reels {
+            font-size: 36px; background: var(--phone-bg); padding: 12px; border-radius: 10px;
+            border: 2px solid #f39c12; margin: 10px 0; letter-spacing: 8px;
+        }
+        .casino-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+        .quick-bet { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--header-bg); color: var(--text-color); cursor: pointer; font-weight: bold; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -251,6 +240,14 @@
                 <div class="icon-box bg-red">🆔</div>
                 <span>mObywatel</span>
             </div>
+            <div class="app-icon" onclick="openApp('bank')">
+                <div class="icon-box bg-green">💳</div>
+                <span>Bank</span>
+            </div>
+            <div class="app-icon" onclick="openApp('casino')">
+                <div class="icon-box bg-gold">🎰</div>
+                <span>Kasyno</span>
+            </div>
             <div class="app-icon" onclick="openApp('contacts')">
                 <div class="icon-box bg-orange">👤</div>
                 <span>Kontakty</span>
@@ -269,10 +266,82 @@
             </div>
         </div>
 
-        <!-- APLIKACJA: mObywatel (DOWÓD OSOBISTY) -->
+        <!-- APLIKACJA: mObywatel -->
         <div id="app-moboyatel" class="app-window">
             <div class="app-header"><span>mObywatel RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="mobook-content"></div>
+        </div>
+
+        <!-- APLIKACJA: BANK -->
+        <div id="app-bank" class="app-window">
+            <div class="app-header"><span>Bank RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="bank-card">
+                    <div style="font-size: 12px; opacity: 0.9;">Dostępne środki</div>
+                    <div class="bank-balance" id="bank-balance-display">0.00 PLN</div>
+                    <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;" id="bank-phone-display">Konto powiązane z tel: ...</div>
+                </div>
+
+                <h3 style="font-size: 14px; margin-bottom: 8px;">Wyślij przelew</h3>
+                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
+                    <input type="text" id="transfer-target" class="bank-input" placeholder="Numer telefonu odbiorcy (np. 555-011)">
+                    <input type="number" id="transfer-amount" class="bank-input" placeholder="Kwota (PLN)">
+                    <button class="btn-primary" onclick="makeTransfer()">Wyślij przelew</button>
+                </div>
+
+                <h3 style="font-size: 14px; margin-bottom: 8px;">Historia operacji</h3>
+                <div id="bank-history-list"></div>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: KASYNO -->
+        <div id="app-casino" class="app-window">
+            <div class="app-header"><span>🎰 Kasyno Royal RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div style="background:linear-gradient(135deg, #2c3e50, #000); padding:12px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid #f39c12;">
+                    <div style="font-size:11px; color:#f39c12;">TWOJE SALDO W BANKU</div>
+                    <div style="font-size:22px; font-weight:bold; color:#fff;" id="casino-balance-display">0.00 PLN</div>
+                </div>
+
+                <div style="margin-bottom:12px;">
+                    <input type="number" id="casino-bet" class="bank-input" placeholder="Stawka (PLN)" value="100">
+                    <div class="casino-btn-row">
+                        <button class="quick-bet" onclick="setBet(50)">50</button>
+                        <button class="quick-bet" onclick="setBet(100)">100</button>
+                        <button class="quick-bet" onclick="setBet(500)">500</button>
+                        <button class="quick-bet" onclick="setBet(1000)">1000</button>
+                    </div>
+                </div>
+
+                <div id="casino-result-msg" style="text-align:center; font-weight:bold; font-size:13px; min-height:20px; margin-bottom:10px;"></div>
+
+                <!-- GRA 1: JEDNORĘKI BANDYTA -->
+                <div class="casino-box">
+                    <b>🍒 Jednoręki Bandyta</b>
+                    <div style="font-size:11px; color:var(--subtext);">2 takie same = 1.5x | 3 takie same = 5x</div>
+                    <div class="casino-reels" id="slot-reels">🍒 🍋 💎</div>
+                    <button class="btn-primary" style="background:#f39c12;" onclick="playSlots()">ZAKRĘĆ</button>
+                </div>
+
+                <!-- GRA 2: ORZEŁ CZY RESZKA -->
+                <div class="casino-box">
+                    <b>🪙 Orzeł czy Reszka (Wygrana 2x)</b>
+                    <div class="casino-btn-row">
+                        <button class="btn-primary" style="background:#3498db;" onclick="playCoin('Orzeł')">Orzeł</button>
+                        <button class="btn-primary" style="background:#9b59b6;" onclick="playCoin('Reszka')">Reszka</button>
+                    </div>
+                </div>
+
+                <!-- GRA 3: RZUT KOSTKĄ -->
+                <div class="casino-box">
+                    <b>🎲 Rzut Kostką (Wygrana 2x)</b>
+                    <div style="font-size:11px; color:var(--subtext); margin-bottom:6px;">Mało (1-3) lub Dużo (4-6)</div>
+                    <div class="casino-btn-row">
+                        <button class="btn-primary" style="background:#16a085;" onclick="playDice('low')">Mało (1-3)</button>
+                        <button class="btn-primary" style="background:#e67e22;" onclick="playDice('high')">Dużo (4-6)</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- APLIKACJA: WIADOMOŚCI -->
@@ -335,7 +404,7 @@
             </div>
         </div>
 
-        <!-- APLIKACJA: USTAWIENIA (Ukryty Mod Panel pod nagłówkiem - 5 kliknięć w "Ustawienia") -->
+        <!-- APLIKACJA: USTAWIENIA -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -358,7 +427,7 @@
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
             <div class="app-content">
-                <p style="font-size:13px; color:var(--subtext); margin-top:0;">Zwolnij zajęty numer, aby gracz mógł wybrać nowy.</p>
+                <p style="font-size:13px; color:var(--subtext); margin-top:0;">Zarządzaj numerami, dowodami i saldami kont:</p>
                 <div id="mod-numbers-list"></div>
             </div>
         </div>
@@ -372,9 +441,6 @@
 </div>
 
 <script>
-    // ==========================================
-    // 1. TWOJA KONFIGURACJA FIREBASE
-    // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyCGJbpt3_AhHf1Sjs1CQCi0BgoSbeeJj-A",
         authDomain: "telefon-rp.firebaseapp.com",
@@ -386,31 +452,25 @@
         measurementId: "G-D46V1EX5G1"
     };
 
-    // ==========================================
-    // 2. KONFIGURACJA DISCORDA I MODERATORA
-    // ==========================================
     const WEBHOOK_DISCORD = "https://discord.com/api/webhooks/1569040236401659917/8i05NCXDJBRz_Qfk88nicMhCsMhzhLylZM30BA8lcitwUfI47Cc62gZq_MGZnuDDZUpQ";
-    const MOD_PIN = "1234"; 
+    const MOD_PIN = "0000";
     const AVAILABLE_NUMBERS = ["555-010", "555-011", "555-012", "555-013", "555-014", "555-015", "555-016", "555-017", "555-018", "555-019"];
 
-    // INICJALIZACJA FIREBASE
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     let claimedNumbersCache = {};
     let allCitizensCache = {};
+    let allAccountsCache = {};
     let secretClickCount = 0;
 
-    // START APLIKACJI
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
 
-        const savedTheme = localStorage.getItem('phone_theme');
-        if (savedTheme === 'light') {
+        if (localStorage.getItem('phone_theme') === 'light') {
             document.getElementById('theme-switch').checked = true;
             document.body.classList.add('light-mode');
         }
-        const lockEnabled = localStorage.getItem('phone_lock_enabled');
-        if (lockEnabled === 'false') {
+        if (localStorage.getItem('phone_lock_enabled') === 'false') {
             document.getElementById('lock-switch').checked = false;
             document.getElementById('lock-screen').classList.add('hidden');
         }
@@ -420,44 +480,44 @@
         db.ref('claimed_numbers').on('value', (snapshot) => {
             claimedNumbersCache = snapshot.val() || {};
             checkUserNumber();
-            if (document.getElementById('app-mod').classList.contains('active')) {
-                renderModList();
-            }
+            if (document.getElementById('app-mod').classList.contains('active')) renderModList();
         });
 
         db.ref('citizens').on('value', (snapshot) => {
             allCitizensCache = snapshot.val() || {};
             renderMobywatel();
+            if (document.getElementById('app-mod').classList.contains('active')) renderModList();
+        });
+
+        db.ref('bank_accounts').on('value', (snapshot) => {
+            allAccountsCache = snapshot.val() || {};
+            renderBank();
+            renderCasinoBalance();
         });
 
         db.ref('messages').limitToLast(50).on('value', (snapshot) => {
-            const msgsObj = snapshot.val() || {};
-            const msgsArray = Object.values(msgsObj);
-            renderMessages(msgsArray);
+            renderMessages(Object.values(snapshot.val() || {}));
         });
     });
 
-    // UKRYTE WEJŚCIE DLA MODERATORA (Kliknij 5 razy w napisy "Ustawienia")
     function secretModClick() {
         secretClickCount++;
         if (secretClickCount >= 5) {
             secretClickCount = 0;
             const pin = prompt("🛡️ Podaj PIN Moderatora:");
-            if (pin === MOD_PIN) {
-                renderModList();
-                openApp('mod');
-            } else if (pin !== null) {
-                alert("Błędny PIN!");
-            }
+            if (pin === MOD_PIN) { renderModList(); openApp('mod'); }
+            else if (pin !== null) alert("Błędny PIN!");
         }
     }
 
-    // SYSTEM STAŁYCH NUMERÓW I PINÓW
     function checkUserNumber() {
         const myNum = localStorage.getItem('phone_my_number');
         if (myNum && claimedNumbersCache[myNum]) {
             document.getElementById('setup-screen').classList.add('hidden');
             updateMyNumberDisplay(myNum);
+            if (!allAccountsCache[myNum]) {
+                db.ref('bank_accounts/' + myNum).set({ balance: 1000, history: [{ title: "Bonus powitalny", amount: 1000, type: "in", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) }] });
+            }
         } else {
             localStorage.removeItem('phone_my_number');
             renderNumberChoices();
@@ -466,36 +526,29 @@
     }
 
     function renderNumberChoices() {
-        const grid = document.getElementById('number-grid');
-        grid.innerHTML = AVAILABLE_NUMBERS.map(num => {
+        document.getElementById('number-grid').innerHTML = AVAILABLE_NUMBERS.map(num => {
             const isTaken = !!claimedNumbersCache[num];
-            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">
-                ${num} <br><small style="font-size:10px; font-weight:normal;">${isTaken ? 'Zajęty (Zaloguj)' : 'Wolny'}</small>
-            </button>`;
+            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">${num}<br><small style="font-size:10px; font-weight:normal;">${isTaken ? 'Zajęty (Zaloguj)' : 'Wolny'}</small></button>`;
         }).join('');
     }
 
     function selectNumber(num) {
         if (claimedNumbersCache[num]) {
-            const pin = prompt(`Numer ${num} jest zajęty. Jeśli to Twój numer, podaj swój PIN:`);
+            const pin = prompt(`Numer ${num} jest zajęty. Podaj swój PIN:`);
             if (pin === claimedNumbersCache[num].pin) {
                 localStorage.setItem('phone_my_number', num);
                 document.getElementById('setup-screen').classList.add('hidden');
                 updateMyNumberDisplay(num);
-            } else if (pin !== null) {
-                alert("Błędny PIN!");
-            }
+            } else if (pin !== null) alert("Błędny PIN!");
         } else {
-            const newPin = prompt(`Wybrano numer ${num}. Ustaw swój PIN (min. 2 znaki), aby go zablokować:`);
+            const newPin = prompt(`Wybrano numer ${num}. Ustaw swój PIN (min. 2 znaki):`);
             if (newPin && newPin.trim().length >= 2) {
                 db.ref('claimed_numbers/' + num).set({ pin: newPin.trim() }).then(() => {
                     localStorage.setItem('phone_my_number', num);
                     document.getElementById('setup-screen').classList.add('hidden');
                     updateMyNumberDisplay(num);
                 });
-            } else if (newPin !== null) {
-                alert("PIN musi mieć minimum 2 znaki!");
-            }
+            } else if (newPin !== null) alert("PIN musi mieć minimum 2 znaki!");
         }
     }
 
@@ -504,7 +557,159 @@
         document.getElementById('settings-my-num').innerText = num;
     }
 
-    // APLIKACJA: mObywatel (Z NICKIEM DC)
+    // BANK
+    function renderBank() {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum) return;
+        const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        document.getElementById('bank-balance-display').innerText = acc.balance.toFixed(2) + " PLN";
+        document.getElementById('bank-phone-display').innerText = "Konto powiązane z tel: " + myNum;
+
+        const histDiv = document.getElementById('bank-history-list');
+        const historyList = acc.history || [];
+        if (historyList.length === 0) { histDiv.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak operacji.</p>`; return; }
+
+        histDiv.innerHTML = historyList.slice().reverse().map(h => `
+            <div class="history-card" style="border-left: 4px solid ${h.type === 'in' ? '#2ecc71' : '#e74c3c'};">
+                <div style="display:flex; justify-content:space-between;">
+                    <b>${h.title}</b>
+                    <span style="color: ${h.type === 'in' ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${h.type === 'in' ? '+' : '-'}${h.amount.toFixed(2)} PLN</span>
+                </div>
+                <div style="font-size:10px; color:var(--subtext); margin-top:2px;">${h.time}</div>
+            </div>
+        `).join('');
+    }
+
+    function makeTransfer() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const targetNum = document.getElementById('transfer-target').value.trim();
+        const amount = parseFloat(document.getElementById('transfer-amount').value);
+
+        if (!targetNum || isNaN(amount) || amount <= 0) return alert("Podaj poprawny numer i kwotę!");
+        if (myNum === targetNum) return alert("Nie możesz wysłać przelewu do siebie!");
+        if (!allAccountsCache[targetNum]) return alert("Konto odbiorcy nie istnieje!");
+
+        const myAcc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (myAcc.balance < amount) return alert("Brak środków na koncie!");
+
+        const targetAcc = allAccountsCache[targetNum];
+        const timeStr = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+        myAcc.balance -= amount;
+        myAcc.history = myAcc.history || [];
+        myAcc.history.push({ title: `Przelew do: ${targetNum}`, amount, type: 'out', time: timeStr });
+
+        targetAcc.balance += amount;
+        targetAcc.history = targetAcc.history || [];
+        targetAcc.history.push({ title: `Przelew od: ${myNum}`, amount, type: 'in', time: timeStr });
+
+        db.ref('bank_accounts/' + myNum).set(myAcc);
+        db.ref('bank_accounts/' + targetNum).set(targetAcc);
+
+        document.getElementById('transfer-target').value = "";
+        document.getElementById('transfer-amount').value = "";
+        alert("Przelew wysłany!");
+    }
+
+    // KASYNO
+    function renderCasinoBalance() {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum) return;
+        const acc = allAccountsCache[myNum] || { balance: 0 };
+        document.getElementById('casino-balance-display').innerText = acc.balance.toFixed(2) + " PLN";
+    }
+
+    function setBet(val) { document.getElementById('casino-bet').value = val; }
+
+    function processCasinoGame(bet, wonAmount, gameName) {
+        const myNum = localStorage.getItem('phone_my_number');
+        const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        const timeStr = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+        acc.history = acc.history || [];
+        if (wonAmount > 0) {
+            const netWin = wonAmount - bet;
+            acc.balance += netWin;
+            acc.history.push({ title: `Kasyno (${gameName}): Wygrana`, amount: netWin, type: 'in', time: timeStr });
+        } else {
+            acc.balance -= bet;
+            acc.history.push({ title: `Kasyno (${gameName}): Przegrana`, amount: bet, type: 'out', time: timeStr });
+        }
+        db.ref('bank_accounts/' + myNum).set(acc);
+    }
+
+    function validateBet() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const bet = parseFloat(document.getElementById('casino-bet').value);
+        const acc = allAccountsCache[myNum] || { balance: 0 };
+        if (isNaN(bet) || bet <= 0) { alert("Podaj poprawną stawkę!"); return null; }
+        if (acc.balance < bet) { alert("Nie masz tyle pieniędzy na koncie!"); return null; }
+        return bet;
+    }
+
+    function playSlots() {
+        const bet = validateBet();
+        if (!bet) return;
+        const symbols = ["🍒", "🍋", "💎", "7️⃣"];
+        const r1 = symbols[Math.floor(Math.random() * symbols.length)];
+        const r2 = symbols[Math.floor(Math.random() * symbols.length)];
+        const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+        document.getElementById('slot-reels').innerText = `${r1} ${r2} ${r3}`;
+
+        const msg = document.getElementById('casino-result-msg');
+        if (r1 === r2 && r2 === r3) {
+            const win = bet * 5;
+            processCasinoGame(bet, win, "Bandyta");
+            msg.style.color = "#2ecc71";
+            msg.innerText = `🎉 JACKPOT! Wygrałeś ${win.toFixed(2)} PLN!`;
+        } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+            const win = bet * 1.5;
+            processCasinoGame(bet, win, "Bandyta");
+            msg.style.color = "#2ecc71";
+            msg.innerText = `✨ Para! Wygrałeś ${win.toFixed(2)} PLN!`;
+        } else {
+            processCasinoGame(bet, 0, "Bandyta");
+            msg.style.color = "#e74c3c";
+            msg.innerText = `❌ Pudło! Przegrałeś ${bet.toFixed(2)} PLN.`;
+        }
+    }
+
+    function playCoin(choice) {
+        const bet = validateBet();
+        if (!bet) return;
+        const result = Math.random() < 0.5 ? "Orzeł" : "Reszka";
+        const msg = document.getElementById('casino-result-msg');
+        if (choice === result) {
+            const win = bet * 2;
+            processCasinoGame(bet, win, "Moneta");
+            msg.style.color = "#2ecc71";
+            msg.innerText = `🪙 Wypadł(a) ${result}! Wygrywasz ${win.toFixed(2)} PLN!`;
+        } else {
+            processCasinoGame(bet, 0, "Moneta");
+            msg.style.color = "#e74c3c";
+            msg.innerText = `🪙 Wypadł(a) ${result}. Przegrałeś ${bet.toFixed(2)} PLN.`;
+        }
+    }
+
+    function playDice(choice) {
+        const bet = validateBet();
+        if (!bet) return;
+        const roll = Math.floor(Math.random() * 6) + 1;
+        const isWin = (choice === 'low' && roll <= 3) || (choice === 'high' && roll >= 4);
+        const msg = document.getElementById('casino-result-msg');
+        if (isWin) {
+            const win = bet * 2;
+            processCasinoGame(bet, win, "Kostka");
+            msg.style.color = "#2ecc71";
+            msg.innerText = `🎲 Wyrzucono ${roll}! Wygrywasz ${win.toFixed(2)} PLN!`;
+        } else {
+            processCasinoGame(bet, 0, "Kostka");
+            msg.style.color = "#e74c3c";
+            msg.innerText = `🎲 Wyrzucono ${roll}. Przegrałeś ${bet.toFixed(2)} PLN.`;
+        }
+    }
+
+    // mObywatel
     function renderMobywatel() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
@@ -513,15 +718,12 @@
 
         if (!citizen) {
             container.innerHTML = `
-                <div style="text-align:center; padding:5px 0;">
-                    <h3>Twój Dokument</h3>
-                    <p style="font-size:12px; color:var(--subtext);">Wypełnij dane, aby wygenerować dowód tożsamości.</p>
-                </div>
+                <div style="text-align:center; padding:5px 0;"><h3>Twój Dokument</h3><p style="font-size:12px; color:var(--subtext);">Wypełnij dane, aby wygenerować dowód.</p></div>
                 <div class="id-form" style="display:flex; flex-direction:column; gap:8px;">
                     <input type="text" id="id-name" placeholder="Imię i Nazwisko">
                     <input type="text" id="id-pesel" placeholder="PESEL">
                     <input type="text" id="id-dob" placeholder="Data urodzenia (np. 12.05.1998)">
-                    <input type="text" id="id-discord" placeholder="Nick na Discordzie (np. Kowalski#1234)">
+                    <input type="text" id="id-discord" placeholder="Nick na Discordzie">
                     <input type="text" id="id-photo" placeholder="Link do zdjęcia (URL)">
                     <button class="btn-primary" onclick="createCitizenId()">Stwórz dowód osobisty</button>
                 </div>
@@ -529,14 +731,8 @@
         } else {
             const isSuspended = citizen.suspended;
             container.innerHTML = `
-                <div style="text-align:center; margin-bottom:10px;">
-                    <span style="font-size:12px; color:var(--subtext);">Dokument mObywatel</span>
-                </div>
                 <div class="id-card ${isSuspended ? 'suspended' : ''}">
-                    <div class="id-header">
-                        <span>RZECZPOSPOLITA POLSKA</span>
-                        <span>${isSuspended ? '⚠️ ZASTRZEŻONY' : '✅ AKTUALNY'}</span>
-                    </div>
+                    <div class="id-header"><span>RZECZPOSPOLITA POLSKA</span><span>${isSuspended ? '⚠️ ZASTRZEŻONY' : '✅ AKTUALNY'}</span></div>
                     <div class="id-body">
                         <img src="${citizen.photo || 'https://via.placeholder.com/80'}" class="id-photo" alt="Zdjęcie">
                         <div class="id-info">
@@ -548,9 +744,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="${isSuspended ? 'btn-primary' : 'btn-danger'}" onclick="toggleSuspendId()">
-                    ${isSuspended ? '🔓 Cofnij zastrzeżenie dokumentu' : '🛑 Zastrzeż dokument'}
-                </button>
+                <button class="${isSuspended ? 'btn-primary' : 'btn-danger'}" onclick="toggleSuspendId()">${isSuspended ? '🔓 Cofnij zastrzeżenie' : '🛑 Zastrzeż dokument'}</button>
             `;
         }
     }
@@ -562,144 +756,102 @@
         const dob = document.getElementById('id-dob').value.trim();
         const discord = document.getElementById('id-discord').value.trim();
         const photo = document.getElementById('id-photo').value.trim();
+        if (!name || !pesel || !dob || !discord) return alert("Uzupełnij wszystkie pola!");
 
-        if (!name || !pesel || !dob || !discord) {
-            alert("Uzupełnij wszystkie pola, w tym nick Discord!");
-            return;
-        }
-
-        db.ref('citizens/' + myNum).set({
-            name: name,
-            pesel: pesel,
-            dob: dob,
-            discord: discord,
-            photo: photo,
-            suspended: false
-        }).then(() => {
-            alert("Dowód osobisty został pomyślnie utworzony!");
-        });
+        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false }).then(() => alert("Dowód utworzony!"));
     }
 
     function toggleSuspendId() {
         const myNum = localStorage.getItem('phone_my_number');
         const citizen = allCitizensCache[myNum];
-        if (!citizen) return;
-
-        const newStatus = !citizen.suspended;
-        db.ref('citizens/' + myNum + '/suspended').set(newStatus).then(() => {
-            alert(newStatus ? "Dokument został zastrzeżony!" : "Zastrzeżenie zostało cofnięte.");
-        });
+        if (citizen) db.ref('citizens/' + myNum + '/suspended').set(!citizen.suspended);
     }
 
     // PANEL MODERATORA
     function renderModList() {
         const list = document.getElementById('mod-numbers-list');
         const keys = Object.keys(claimedNumbersCache);
-        if (keys.length === 0) {
-            list.innerHTML = `<p style="color:var(--subtext); text-align:center;">Brak zajętych numerów.</p>`;
-            return;
-        }
-        list.innerHTML = keys.map(num => `
-            <div class="list-item">
-                <div><b>${num}</b><br><small style="color:var(--subtext);">PIN: ${claimedNumbersCache[num].pin}</small></div>
-                <button class="btn-danger" onclick="modDeleteNumber('${num}')">Usuń / Zwolnij</button>
-            </div>
-        `).join('');
+        if (keys.length === 0) { list.innerHTML = `<p style="color:var(--subtext); text-align:center;">Brak zajętych numerów.</p>`; return; }
+        list.innerHTML = keys.map(num => {
+            const cit = allCitizensCache[num];
+            const acc = allAccountsCache[num];
+            return `
+                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <div><b>Tel: ${num}</b><br><small style="color:var(--subtext);">PIN: ${claimedNumbersCache[num].pin}</small></div>
+                        <button class="btn-danger" onclick="modDeleteNumber('${num}')">Zwolnij numer</button>
+                    </div>
+                    <div style="font-size:12px; color:var(--subtext); width:100%; border-top:1px solid var(--border-color); padding-top:6px;">
+                        Obywatel: <b>${cit ? cit.name : 'Brak dowodu'}</b> | Saldo: <b>${acc ? acc.balance.toFixed(2) : '0'} PLN</b>
+                    </div>
+                    <div style="display:flex; gap:5px; width:100%;">
+                        <button class="btn-primary" style="padding:4px; font-size:11px;" onclick="modEditCitizen('${num}')">Edytuj dowód</button>
+                        <button class="btn-primary" style="padding:4px; font-size:11px; background:#e67e22;" onclick="modEditBalance('${num}')">Zmień saldo</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     function modDeleteNumber(num) {
-        if (!confirm(`Czy na pewno chcesz zwolnić numer ${num}?`)) return;
+        if (!confirm(`Zwolnić numer ${num}?`)) return;
         db.ref('claimed_numbers/' + num).remove();
         db.ref('citizens/' + num).remove();
+        db.ref('bank_accounts/' + num).remove();
     }
 
-    // KONTAKTY
-    function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts') || '[]'); }
-    function getContactName(num) {
-        const found = getContacts().find(c => c.num === num);
-        return found ? `${found.name} (${num})` : num;
+    function modEditCitizen(num) {
+        const cit = allCitizensCache[num];
+        if (!cit) return alert("Brak dowodu dla tego numeru!");
+        const newName = prompt("Edytuj imię i nazwisko:", cit.name);
+        const newPesel = prompt("Edytuj PESEL:", cit.pesel);
+        if (newName && newPesel) { db.ref('citizens/' + num).update({ name: newName, pesel: newPesel }); alert("Zaktualizowano!"); }
     }
+
+    function modEditBalance(num) {
+        const acc = allAccountsCache[num] || { balance: 0, history: [] };
+        const newBal = prompt(`Nowe saldo dla ${num} (obecne: ${acc.balance} PLN):`);
+        if (newBal !== null && !isNaN(parseFloat(newBal))) {
+            acc.balance = parseFloat(newBal);
+            acc.history = acc.history || [];
+            acc.history.push({ title: "Korekta Moderatora", amount: acc.balance, type: "in", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
+            db.ref('bank_accounts/' + num).set(acc);
+            alert("Saldo zmienione!");
+        }
+    }
+
+    // KONTAKTY, WIADOMOŚCI, KALKULATOR, USTAWIENIA
+    function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts') || '[]'); }
+    function getContactName(num) { const f = getContacts().find(c => c.num === num); return f ? `${f.name} (${num})` : num; }
     function addContact() {
         const name = document.getElementById('contact-name').value.trim();
         const num = document.getElementById('contact-num').value.trim();
-        if (!name || !num) return alert("Wpisz imię i numer telefonu!");
-        const contacts = getContacts();
-        contacts.push({ name, num });
+        if (!name || !num) return alert("Wpisz imię i numer!");
+        const contacts = getContacts(); contacts.push({ name, num });
         localStorage.setItem('phone_contacts', JSON.stringify(contacts));
-        document.getElementById('contact-name').value = "";
-        document.getElementById('contact-num').value = "";
+        document.getElementById('contact-name').value = ""; document.getElementById('contact-num').value = "";
         renderContacts();
     }
-    function deleteContact(index) {
-        const contacts = getContacts();
-        contacts.splice(index, 1);
-        localStorage.setItem('phone_contacts', JSON.stringify(contacts));
-        renderContacts();
-    }
-    function messageContact(num) {
-        openApp('sms');
-        document.getElementById('target-phone').value = num;
-    }
+    function deleteContact(idx) { const c = getContacts(); c.splice(idx, 1); localStorage.setItem('phone_contacts', JSON.stringify(c)); renderContacts(); }
+    function messageContact(num) { openApp('sms'); document.getElementById('target-phone').value = num; }
     function renderContacts() {
-        const list = document.getElementById('contacts-list');
-        let html = `
-            <div class="list-item"><div><b>🚨 Policja</b><br><small style="color:var(--subtext);">997</small></div><button class="nav-btn" onclick="messageContact('997')">💬</button></div>
-            <div class="list-item"><div><b>🚒 Straż Pożarna</b><br><small style="color:var(--subtext);">998</small></div><button class="nav-btn" onclick="messageContact('998')">💬</button></div>
-        `;
-        html += getContacts().map((c, idx) => `
-            <div class="list-item">
-                <div><b>${c.name}</b><br><small style="color:var(--subtext);">${c.num}</small></div>
-                <div style="display:flex; gap:5px;">
-                    <button class="nav-btn" style="padding:5px 10px;" onclick="messageContact('${c.num}')">💬</button>
-                    <button class="btn-danger" onclick="deleteContact(${idx})">✕</button>
-                </div>
-            </div>
-        `).join('');
-        list.innerHTML = html;
+        let html = `<div class="list-item"><div><b>🚨 Policja</b><br><small style="color:var(--subtext);">997</small></div><button class="nav-btn" onclick="messageContact('997')">💬</button></div><div class="list-item"><div><b>🚒 Straż Pożarna</b><br><small style="color:var(--subtext);">998</small></div><button class="nav-btn" onclick="messageContact('998')">💬</button></div>`;
+        html += getContacts().map((c, idx) => `<div class="list-item"><div><b>${c.name}</b><br><small style="color:var(--subtext);">${c.num}</small></div><div style="display:flex; gap:5px;"><button class="nav-btn" style="padding:5px 10px;" onclick="messageContact('${c.num}')">💬</button><button class="btn-danger" onclick="deleteContact(${idx})">✕</button></div></div>`).join('');
+        document.getElementById('contacts-list').innerHTML = html;
     }
 
-    // WIADOMOŚCI P2P + DISCORD
     function sendSms() {
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('target-phone').value.trim();
         const text = document.getElementById('sms-text').value.trim();
-
-        if (!target || !text) return alert('Wpisz numer odbiorcy i treść wiadomości!');
-
+        if (!target || !text) return alert('Wpisz numer i treść!');
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        const emergencyNumbers = ['997', '998', '999', '112'];
-
-        if (emergencyNumbers.includes(target)) {
-            db.ref('messages').push({
-                sender: myNum,
-                receiver: `🚨 Zgłoszenie (${target})`,
-                text: text,
-                time: time,
-                isEmergency: true
-            });
-
-            if (!WEBHOOK_DISCORD.includes("TUTAJ_WKLEJ")) {
-                const serviceName = target === '997' ? 'Policja' : (target === '998' ? 'Straż Pożarna' : 'Służby Ratunkowe');
-                fetch(WEBHOOK_DISCORD, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: `🚨 **NOWE ZGŁOSZENIE ALARMOWE DLA: ${serviceName} (${target})** 🚨\n• **Od numeru:** ${myNum}\n• **Treść:** ${text}\n• **Godzina:** ${time}`
-                    })
-                }).catch(err => console.error(err));
-            }
+        if (['997', '998', '999', '112'].includes(target)) {
+            db.ref('messages').push({ sender: myNum, receiver: `🚨 Zgłoszenie (${target})`, text, time, isEmergency: true });
             document.getElementById('sms-text').value = "";
-            alert('Zgłoszenie zostało wysłane do służb!');
-            return;
+            return alert('Zgłoszenie wysłane!');
         }
-
-        db.ref('messages').push({
-            sender: myNum,
-            receiver: target,
-            text: text,
-            time: time,
-            isEmergency: false
-        });
+        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency: false });
         document.getElementById('sms-text').value = "";
     }
 
@@ -707,59 +859,37 @@
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
         const list = document.getElementById('sms-list');
-        const myConvos = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum || m.isEmergency);
-
-        list.innerHTML = myConvos.map(m => {
-            if (m.isEmergency) {
-                return `
-                    <div class="msg-bubble service">
-                        <div style="font-size:11px; font-weight:bold; margin-bottom:2px; color:#f1c40f;">Od: ${m.sender} ➔ ${m.receiver}</div>
-                        <div>${m.text}</div>
-                        <div style="font-size:9px; text-align:right; opacity:0.8; margin-top:3px;">${m.time}</div>
-                    </div>
-                `;
-            }
+        list.innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum || m.isEmergency).map(m => {
+            if (m.isEmergency) return `<div class="msg-bubble service"><div style="font-size:11px; font-weight:bold; color:#f1c40f;">Od: ${m.sender} ➔ ${m.receiver}</div><div>${m.text}</div></div>`;
             const isMine = m.sender === myNum;
-            const senderDisplay = isMine ? `Od: Ja (${m.sender}) ➔ Do: ${getContactName(m.receiver)}` : `Od: ${getContactName(m.sender)}`;
-            return `
-                <div class="msg-bubble ${isMine ? 'mine' : ''}">
-                    <div style="font-size:10px; opacity:0.85; margin-bottom:3px; font-weight:bold;">${senderDisplay}</div>
-                    <div>${m.text}</div>
-                    <div style="font-size:9px; text-align:right; opacity:0.6; margin-top:3px;">${m.time}</div>
-                </div>
-            `;
+            return `<div class="msg-bubble ${isMine ? 'mine' : ''}"><div style="font-size:10px; font-weight:bold;">${isMine ? 'Ja ➔ ' + getContactName(m.receiver) : getContactName(m.sender)}</div><div>${m.text}</div></div>`;
         }).join('');
         list.scrollTop = list.scrollHeight;
     }
 
-    // ZEGAR, BLOKADA, NAWIGACJA, NOTATKI, KALKULATOR, USTAWIENIA
     function updateClock() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
         const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
-        const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
         document.getElementById('sb-time').innerText = timeStr;
         document.getElementById('main-time').innerText = timeStr;
         document.getElementById('lock-time').innerText = timeStr;
-        document.getElementById('main-date').innerText = formattedDate;
-        document.getElementById('lock-date').innerText = formattedDate;
+        document.getElementById('main-date').innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        document.getElementById('lock-date').innerText = dateStr;
     }
     setInterval(updateClock, 1000);
     updateClock();
 
     function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
-    function lockPhone() {
-        if (localStorage.getItem('phone_lock_enabled') !== 'false') {
-            goHome();
-            document.getElementById('lock-screen').classList.remove('hidden');
-        }
-    }
+    function lockPhone() { if (localStorage.getItem('phone_lock_enabled') !== 'false') { goHome(); document.getElementById('lock-screen').classList.remove('hidden'); } }
     function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
     function openApp(name) {
         goHome();
         document.getElementById('app-' + name).classList.add('active');
         if (name === 'contacts') renderContacts();
         if (name === 'moboyatel') renderMobywatel();
+        if (name === 'bank') renderBank();
+        if (name === 'casino') renderCasinoBalance();
     }
     function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 
