@@ -41,22 +41,25 @@
             transition: background 0.3s;
         }
 
-        /* EKRAN REJESTRACJI NUMERU */
+        /* EKRAN WYBORU NUMERU */
         .setup-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(12px);
+            background: rgba(10, 10, 15, 0.96); backdrop-filter: blur(12px);
             z-index: 2000; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; padding: 30px; color: #fff; text-align: center;
+            align-items: center; padding: 25px; color: #fff; text-align: center; overflow-y: auto;
         }
         .setup-screen.hidden { display: none; }
-        .setup-screen input {
-            width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px;
-            border: 1px solid #34495e; background: #1c1f26; color: white; font-size: 18px; text-align: center; outline: none;
+        .number-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            width: 100%; margin: 15px 0;
         }
-        .setup-screen button {
-            width: 100%; padding: 12px; border-radius: 10px; border: none;
-            background: #2ecc71; color: white; font-size: 16px; font-weight: bold; cursor: pointer;
+        .num-choice {
+            padding: 12px; border-radius: 10px; border: 1px solid #34495e;
+            background: #1c1f26; color: #fff; font-size: 15px; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
         }
+        .num-choice:hover { border-color: #3498db; }
+        .num-choice.taken { background: #2c1a1d; border-color: #c0392b; color: #e74c3c; }
 
         /* EKRAN BLOKADY */
         .lock-screen {
@@ -113,7 +116,6 @@
         .app-icon:active .icon-box { transform: scale(0.92); }
         .app-icon span { font-size: 11px; margin-top: 6px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6); font-weight: 500; }
 
-        .bg-green { background: #2ecc71; }
         .bg-blue { background: #3498db; }
         .bg-orange { background: #e67e22; }
         .bg-yellow { background: #f1c40f; color: #111; }
@@ -148,18 +150,22 @@
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px;
             margin-bottom: 10px; max-width: 85%;
         }
-        .msg-bubble.mine { background: #2980b9; margin-left: auto; border-color: #3498db; }
-        .msg-bubble.service { background: #c0392b; border-color: #e74c3c; max-width: 100%; }
+        .msg-bubble.mine { background: #2980b9; margin-left: auto; border-color: #3498db; color: #fff; }
+        .msg-bubble.service { background: #c0392b; border-color: #e74c3c; max-width: 100%; color: #fff; }
         
         .chat-input-box { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
-        .chat-input-box input, .chat-input-box textarea {
+        .chat-input-box input, .chat-input-box textarea, .contact-form input {
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
             background: var(--phone-bg); color: var(--text-color); outline: none; font-size: 14px;
         }
         .chat-input-box textarea { resize: none; height: 60px; }
-        .chat-input-box button {
+        .btn-primary {
             background: #2ecc71; color: white; border: none; padding: 10px;
-            border-radius: 8px; font-weight: bold; cursor: pointer;
+            border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
+        }
+        .btn-danger {
+            background: #e74c3c; color: white; border: none; padding: 6px 10px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;
         }
 
         /* LISTY I USTAWIENIA */
@@ -196,12 +202,11 @@
 </head>
 <body>
 
-<!-- EKRAN REJESTRACJI NUMERU -->
-<div id="setup-screen" class="setup-screen">
-    <h2>📱 Konfiguracja Smartfona</h2>
-    <p style="color:#94a3b8; font-size:14px; margin-bottom:10px;">Wpisz swój unikalny numer telefonu, pod którym znajdą Cię inni gracze:</p>
-    <input type="text" id="my-phone-input" placeholder="np. 555-001">
-    <button onclick="saveMyNumber()">Zapisz i aktywuj telefon</button>
+<!-- EKRAN WYBORU NUMERU -->
+<div id="setup-screen" class="setup-screen hidden">
+    <h2>📱 Wybierz swój numer</h2>
+    <p style="color:#94a3b8; font-size:13px;">Kliknij wolny numer, aby go zająć i ustawić PIN. Numer jest przypisany na stałe.</p>
+    <div id="number-grid" class="number-grid"></div>
 </div>
 
 <div class="phone" id="phone-device">
@@ -210,7 +215,7 @@
     <div id="lock-screen" class="lock-screen">
         <div class="lock-clock">
             <div class="lock-time" id="lock-time">12:00</div>
-            <div class="lock-date" id="lock-date">Niedziela, 8 listopada</div>
+            <div class="lock-date" id="lock-date">Poniedziałek, 9 listopada</div>
         </div>
         <div class="fingerprint-container">
             <div class="fingerprint-btn" onclick="unlockPhone()">👆</div>
@@ -231,7 +236,7 @@
     <div class="screen">
         <div class="home-clock">
             <div class="time" id="main-time">12:00</div>
-            <div class="date" id="main-date">Niedziela, 8 listopada</div>
+            <div class="date" id="main-date">Poniedziałek, 9 listopada</div>
             <div class="my-number-badge" id="display-my-num">Mój numer: ...</div>
         </div>
 
@@ -239,6 +244,10 @@
             <div class="app-icon" onclick="openApp('sms')">
                 <div class="icon-box bg-blue">💬</div>
                 <span>Wiadomości</span>
+            </div>
+            <div class="app-icon" onclick="openApp('contacts')">
+                <div class="icon-box bg-orange">👤</div>
+                <span>Kontakty</span>
             </div>
             <div class="app-icon" onclick="openApp('calc')">
                 <div class="icon-box bg-gray">🧮</div>
@@ -254,16 +263,27 @@
             </div>
         </div>
 
-        <!-- APLIKACJA: WIADOMOŚCI / SMS P2P + ALARMY -->
+        <!-- APLIKACJA: WIADOMOŚCI -->
         <div id="app-sms" class="app-window">
             <div class="app-header"><span>Wiadomości SMS</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content" id="sms-list" style="display:flex; flex-direction:column; gap:8px;">
-                <!-- Tutaj wpadają wiadomości -->
-            </div>
+            <div class="app-content" id="sms-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             <div class="chat-input-box">
-                <input type="text" id="target-phone" placeholder="Numer kolegi (lub np. 997 dla Policji)">
-                <textarea id="sms-text" placeholder="Napisz wiadomość (lub zgłoszenie)..."></textarea>
-                <button onclick="sendSms()">Wyślij wiadomość</button>
+                <input type="text" id="target-phone" placeholder="Numer kolegi (lub 997 dla Policji)">
+                <textarea id="sms-text" placeholder="Napisz wiadomość..."></textarea>
+                <button class="btn-primary" onclick="sendSms()">Wyślij wiadomość</button>
+            </div>
+        </div>
+
+        <!-- APLIKACJA: KONTAKTY -->
+        <div id="app-contacts" class="app-window">
+            <div class="app-header"><span>Kontakty</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="contact-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--border-color);">
+                    <input type="text" id="contact-name" placeholder="Imię / Ksywa (np. Marek)">
+                    <input type="text" id="contact-num" placeholder="Numer telefonu (np. 555-011)">
+                    <button class="btn-primary" onclick="addContact()">➕ Zapisz kontakt</button>
+                </div>
+                <div id="contacts-list"></div>
             </div>
         </div>
 
@@ -271,7 +291,7 @@
         <div id="app-notes" class="app-window">
             <div class="app-header"><span>Notatki</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <textarea id="notes-area" class="notes-area" placeholder="Wpisz swoje notatki..."></textarea>
+                <textarea id="notes-area" style="width:100%; height:100%; background:var(--card-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:10px; padding:14px; font-size:15px; resize:none; outline:none;" placeholder="Wpisz swoje notatki..."></textarea>
             </div>
         </div>
 
@@ -316,9 +336,22 @@
                     <label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label>
                 </div>
                 <div class="list-item">
-                    <div><b>Zmień mój numer</b><br><small style="color:var(--subtext)" id="settings-my-num">...</small></div>
-                    <button onclick="resetNumber()" style="padding:6px 12px; background:#e74c3c; color:white; border:none; border-radius:6px; cursor:pointer;">Zmień</button>
+                    <div><b>Mój numer telefonu</b><br><small style="color:var(--subtext)" id="settings-my-num">...</small></div>
+                    <span style="font-size:12px; color:#2ecc71;">Stały</span>
                 </div>
+                <div class="list-item" style="margin-top:20px; border-color:#e67e22;">
+                    <div><b>Panel Moderatora</b><br><small style="color:var(--subtext);">Zarządzaj numerami graczy</small></div>
+                    <button onclick="openModPanel()" style="padding:6px 12px; background:#e67e22; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Otwórz</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL MODERATORA -->
+        <div id="app-mod" class="app-window">
+            <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
+            <div class="app-content">
+                <p style="font-size:13px; color:var(--subtext); margin-top:0;">Tutaj możesz zwolnić zajęty numer, aby gracz mógł wybrać nowy.</p>
+                <div id="mod-numbers-list"></div>
             </div>
         </div>
     </div>
@@ -333,18 +366,15 @@
 
 <script>
     // ==========================================
-    // TUTAJ WKLEJ SWÓJ LINK DO WEBHOOKA DISCORD
+    // KONFIGURACJA
     // ==========================================
-    const WEBHOOK_DISCORD = "TUTAJ_WKLEJ_LINK_DO_WEBHOOKA";
+    const WEBHOOK_DISCORD = "TUTAJ_WKLEJ_LINK_DO_WEBHOOKA"https://discord.com/api/webhooks/1569040236401659917/8i05NCXDJBRz_Qfk88nicMhCsMhzhLylZM30BA8lcitwUfI47Cc62gZq_MGZnuDDZUpQ";
+    const MOD_PIN = "1234"; // Hasło do Panelu Moderatora
+    const AVAILABLE_NUMBERS = ["555-010", "555-011", "555-012", "555-013", "555-014", "555-015", "555-016", "555-017", "555-018", "555-019"];
 
-    // SPRAWDZANIE NUMERU PRZY STARCIE
+    // START APLIKACJI
     window.addEventListener('DOMContentLoaded', () => {
-        const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum) {
-            document.getElementById('setup-screen').classList.remove('hidden');
-        } else {
-            updateMyNumberDisplay(myNum);
-        }
+        checkUserNumber();
 
         const savedTheme = localStorage.getItem('phone_theme');
         if (savedTheme === 'light') {
@@ -358,18 +388,65 @@
         }
 
         loadMessages();
+        renderContacts();
         setInterval(loadMessages, 3000);
     });
 
-    function saveMyNumber() {
-        const num = document.getElementById('my-phone-input').value.trim();
-        if (!num) {
-            alert('Wpisz poprawny numer telefonu!');
-            return;
+    // SYSTEM STAŁYCH NUMERÓW I PINÓW
+    function getClaimedNumbers() {
+        return JSON.parse(localStorage.getItem('rp_claimed_numbers') || '{}');
+    }
+
+    function checkUserNumber() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const claimed = getClaimedNumbers();
+
+        // Jeśli gracz ma zapisany numer i nadal jest on zajęty w bazie
+        if (myNum && claimed[myNum]) {
+            document.getElementById('setup-screen').classList.add('hidden');
+            updateMyNumberDisplay(myNum);
+        } else {
+            // Jeśli moderator usunął numer lub gracz jest nowy -> pokaż wybór
+            localStorage.removeItem('phone_my_number');
+            renderNumberChoices();
+            document.getElementById('setup-screen').classList.remove('hidden');
         }
-        localStorage.setItem('phone_my_number', num);
-        document.getElementById('setup-screen').classList.add('hidden');
-        updateMyNumberDisplay(num);
+    }
+
+    function renderNumberChoices() {
+        const grid = document.getElementById('number-grid');
+        const claimed = getClaimedNumbers();
+        grid.innerHTML = AVAILABLE_NUMBERS.map(num => {
+            const isTaken = !!claimed[num];
+            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">
+                ${num} <br><small style="font-size:10px; font-weight:normal;">${isTaken ? 'Zajęty (Zaloguj)' : 'Wolny'}</small>
+            </button>`;
+        }).join('');
+    }
+
+    function selectNumber(num) {
+        const claimed = getClaimedNumbers();
+        if (claimed[num]) {
+            const pin = prompt(`Numer ${num} jest zajęty. Jeśli to Twój numer, podaj swój PIN:`);
+            if (pin === claimed[num].pin) {
+                localStorage.setItem('phone_my_number', num);
+                document.getElementById('setup-screen').classList.add('hidden');
+                updateMyNumberDisplay(num);
+            } else if (pin !== null) {
+                alert("Błędny PIN!");
+            }
+        } else {
+            const newPin = prompt(`Wybrano numer ${num}. Ustaw swój PIN (np. 4 cyfry), aby go zablokować:`);
+            if (newPin && newPin.trim().length >= 2) {
+                claimed[num] = { pin: newPin.trim() };
+                localStorage.setItem('rp_claimed_numbers', JSON.stringify(claimed));
+                localStorage.setItem('phone_my_number', num);
+                document.getElementById('setup-screen').classList.add('hidden');
+                updateMyNumberDisplay(num);
+            } else if (newPin !== null) {
+                alert("PIN musi mieć minimum 2 znaki!");
+            }
+        }
     }
 
     function updateMyNumberDisplay(num) {
@@ -377,52 +454,112 @@
         document.getElementById('settings-my-num').innerText = num;
     }
 
-    function resetNumber() {
-        localStorage.removeItem('phone_my_number');
-        location.reload();
-    }
-
-    // ZEGAR NA ŻYWO
-    function updateClock() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
-        document.getElementById('sb-time').innerText = timeStr;
-        document.getElementById('main-time').innerText = timeStr;
-        document.getElementById('lock-time').innerText = timeStr;
-        const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-        document.getElementById('main-date').innerText = formattedDate;
-        document.getElementById('lock-date').innerText = formattedDate;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // EKRAN BLOKADY
-    function unlockPhone() {
-        document.getElementById('lock-screen').classList.add('hidden');
-    }
-    function lockPhone() {
-        if (localStorage.getItem('phone_lock_enabled') !== 'false') {
-            goHome();
-            document.getElementById('lock-screen').classList.remove('hidden');
+    // PANEL MODERATORA
+    function openModPanel() {
+        const pin = prompt("Podaj PIN Moderatora:");
+        if (pin === MOD_PIN) {
+            renderModList();
+            openApp('mod');
+        } else if (pin !== null) {
+            alert("Odmowa dostępu! Błędny PIN.");
         }
     }
-    function toggleLockFeature() {
-        const isEnabled = document.getElementById('lock-switch').checked;
-        localStorage.setItem('phone_lock_enabled', isEnabled);
+
+    function renderModList() {
+        const list = document.getElementById('mod-numbers-list');
+        const claimed = getClaimedNumbers();
+        const keys = Object.keys(claimed);
+        if (keys.length === 0) {
+            list.innerHTML = `<p style="color:var(--subtext); text-align:center;">Brak zajętych numerów.</p>`;
+            return;
+        }
+        list.innerHTML = keys.map(num => `
+            <div class="list-item">
+                <div><b>${num}</b><br><small style="color:var(--subtext);">PIN: ${claimed[num].pin}</small></div>
+                <button class="btn-danger" onclick="modDeleteNumber('${num}')">Usuń / Zwolnij</button>
+            </div>
+        `).join('');
     }
 
-    // NAWIGACJA
-    function openApp(name) {
-        goHome();
-        document.getElementById('app-' + name).classList.add('active');
-        if (name === 'sms') loadMessages();
-    }
-    function goHome() {
-        document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
+    function modDeleteNumber(num) {
+        if (!confirm(`Czy na pewno chcesz zwolnić numer ${num}?`)) return;
+        const claimed = getClaimedNumbers();
+        delete claimed[num];
+        localStorage.setItem('rp_claimed_numbers', JSON.stringify(claimed));
+        
+        // Jeśli moderator usunął numer, na którym sam był zalogowany
+        if (localStorage.getItem('phone_my_number') === num) {
+            localStorage.removeItem('phone_my_number');
+            location.reload();
+        } else {
+            renderModList();
+        }
     }
 
-    // SYSTEM WIADOMOŚCI P2P + DISCORD DLA SŁUŻB
+    // KONTAKTY
+    function getContacts() {
+        return JSON.parse(localStorage.getItem('phone_contacts') || '[]');
+    }
+
+    function getContactName(num) {
+        const contacts = getContacts();
+        const found = contacts.find(c => c.num === num);
+        return found ? `${found.name} (${num})` : num;
+    }
+
+    function addContact() {
+        const name = document.getElementById('contact-name').value.trim();
+        const num = document.getElementById('contact-num').value.trim();
+        if (!name || !num) {
+            alert("Wpisz imię i numer telefonu!");
+            return;
+        }
+        const contacts = getContacts();
+        contacts.push({ name, num });
+        localStorage.setItem('phone_contacts', JSON.stringify(contacts));
+        document.getElementById('contact-name').value = "";
+        document.getElementById('contact-num').value = "";
+        renderContacts();
+    }
+
+    function deleteContact(index) {
+        const contacts = getContacts();
+        contacts.splice(index, 1);
+        localStorage.setItem('phone_contacts', JSON.stringify(contacts));
+        renderContacts();
+    }
+
+    function messageContact(num) {
+        openApp('sms');
+        document.getElementById('target-phone').value = num;
+    }
+
+    function renderContacts() {
+        const list = document.getElementById('contacts-list');
+        const contacts = getContacts();
+        let html = `
+            <div class="list-item">
+                <div><b>🚨 Policja</b><br><small style="color:var(--subtext);">997</small></div>
+                <button class="nav-btn" onclick="messageContact('997')">💬</button>
+            </div>
+            <div class="list-item">
+                <div><b>🚒 Straż Pożarna</b><br><small style="color:var(--subtext);">998</small></div>
+                <button class="nav-btn" onclick="messageContact('998')">💬</button>
+            </div>
+        `;
+        html += contacts.map((c, idx) => `
+            <div class="list-item">
+                <div><b>${c.name}</b><br><small style="color:var(--subtext);">${c.num}</small></div>
+                <div style="display:flex; gap:5px;">
+                    <button class="nav-btn" style="padding:5px 10px;" onclick="messageContact('${c.num}')">💬</button>
+                    <button class="btn-danger" onclick="deleteContact(${idx})">✕</button>
+                </div>
+            </div>
+        `).join('');
+        list.innerHTML = html;
+    }
+
+    // WIADOMOŚCI P2P + DISCORD
     function sendSms() {
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('target-phone').value.trim();
@@ -434,11 +571,9 @@
         }
 
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-        // Sprawdź czy to numer alarmowy (np. 997, 998, 999, 112)
         const emergencyNumbers = ['997', '998', '999', '112'];
+
         if (emergencyNumbers.includes(target)) {
-            // Zapisz zgłoszenie lokalnie jako wiadomość specjalną
             const msgData = {
                 sender: myNum,
                 receiver: `🚨 Zgłoszenie (${target})`,
@@ -450,17 +585,15 @@
             allMsgs.push(msgData);
             localStorage.setItem('rp_global_sms', JSON.stringify(allMsgs));
 
-            // Wyślij na Discorda przez Webhook
             if (!WEBHOOK_DISCORD.includes("TUTAJ_WKLEJ")) {
                 const serviceName = target === '997' ? 'Policja' : (target === '998' ? 'Straż Pożarna' : 'Służby Ratunkowe');
-                const discordPayload = {
-                    content: `🚨 **NOWE ZGŁOSZENIE ALARMOWE DLA: ${serviceName} (${target})** 🚨\n• **Od numeru:** ${myNum}\n• **Treść:** ${text}\n• **Godzina:** ${time}`
-                };
                 fetch(WEBHOOK_DISCORD, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordPayload)
-                }).catch(err => console.error("Błąd wysyłania na Discord:", err));
+                    body: JSON.stringify({
+                        content: `🚨 **NOWE ZGŁOSZENIE ALARMOWE DLA: ${serviceName} (${target})** 🚨\n• **Od numeru:** ${myNum}\n• **Treść:** ${text}\n• **Godzina:** ${time}`
+                    })
+                }).catch(err => console.error(err));
             }
 
             document.getElementById('sms-text').value = "";
@@ -469,15 +602,7 @@
             return;
         }
 
-        // Zwykła wiadomość P2P do kolegi
-        const msgData = {
-            sender: myNum,
-            receiver: target,
-            text: text,
-            time: time,
-            isEmergency: false
-        };
-
+        const msgData = { sender: myNum, receiver: target, text: text, time: time, isEmergency: false };
         const allMsgs = JSON.parse(localStorage.getItem('rp_global_sms') || '[]');
         allMsgs.push(msgData);
         localStorage.setItem('rp_global_sms', JSON.stringify(allMsgs));
@@ -488,68 +613,77 @@
 
     function loadMessages() {
         const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum) return;
         const list = document.getElementById('sms-list');
         const allMsgs = JSON.parse(localStorage.getItem('rp_global_sms') || '[]');
-
-        // Filtrujemy wiadomości wysłane DO mnie, PRZEZE MNIE lub zgłoszenia alarmowe
         const myConvos = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum || m.isEmergency);
 
         list.innerHTML = myConvos.map(m => {
             if (m.isEmergency) {
                 return `
                     <div class="msg-bubble service">
-                        <div style="font-size:10px; font-weight:bold; margin-bottom:2px; color:#f1c40f;">${m.receiver}</div>
+                        <div style="font-size:11px; font-weight:bold; margin-bottom:2px; color:#f1c40f;">Od: ${m.sender} ➔ ${m.receiver}</div>
                         <div>${m.text}</div>
                         <div style="font-size:9px; text-align:right; opacity:0.8; margin-top:3px;">${m.time}</div>
                     </div>
                 `;
             }
             const isMine = m.sender === myNum;
-            const label = isMine ? `Do: ${m.receiver}` : `Od: ${m.sender}`;
+            const senderDisplay = isMine ? `Od: Ja (${m.sender}) ➔ Do: ${getContactName(m.receiver)}` : `Od: ${getContactName(m.sender)}`;
             return `
                 <div class="msg-bubble ${isMine ? 'mine' : ''}">
-                    <div style="font-size:10px; opacity:0.8; margin-bottom:2px;">${label}</div>
+                    <div style="font-size:10px; opacity:0.85; margin-bottom:3px; font-weight:bold;">${senderDisplay}</div>
                     <div>${m.text}</div>
                     <div style="font-size:9px; text-align:right; opacity:0.6; margin-top:3px;">${m.time}</div>
                 </div>
             `;
         }).join('');
-        
         list.scrollTop = list.scrollHeight;
     }
 
-    // NOTATKI
-    const notesArea = document.getElementById('notes-area');
-    notesArea.value = localStorage.getItem('phone_notes') || "";
-    notesArea.addEventListener('input', () => {
-        localStorage.setItem('phone_notes', notesArea.value);
-    });
+    // ZEGAR, BLOKADA, NAWIGACJA, NOTATKI, KALKULATOR, USTAWIENIA
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
+        const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        document.getElementById('sb-time').innerText = timeStr;
+        document.getElementById('main-time').innerText = timeStr;
+        document.getElementById('lock-time').innerText = timeStr;
+        document.getElementById('main-date').innerText = formattedDate;
+        document.getElementById('lock-date').innerText = formattedDate;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // KALKULATOR
-    let calcExp = "";
-    function calcAdd(val) {
-        calcExp += val;
-        document.getElementById('calc-display').innerText = calcExp;
-    }
-    function calcClear() {
-        calcExp = "";
-        document.getElementById('calc-display').innerText = "0";
-    }
-    function calcBack() {
-        calcExp = calcExp.slice(0, -1);
-        document.getElementById('calc-display').innerText = calcExp || "0";
-    }
-    function calcEval() {
-        try {
-            calcExp = String(eval(calcExp));
-            document.getElementById('calc-display').innerText = calcExp;
-        } catch {
-            document.getElementById('calc-display').innerText = "Błąd";
-            calcExp = "";
+    function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
+    function lockPhone() {
+        if (localStorage.getItem('phone_lock_enabled') !== 'false') {
+            goHome();
+            document.getElementById('lock-screen').classList.remove('hidden');
         }
     }
+    function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
+    function openApp(name) {
+        goHome();
+        document.getElementById('app-' + name).classList.add('active');
+        if (name === 'sms') loadMessages();
+        if (name === 'contacts') renderContacts();
+    }
+    function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 
-    // USTAWIENIA
+    const notesArea = document.getElementById('notes-area');
+    notesArea.value = localStorage.getItem('phone_notes') || "";
+    notesArea.addEventListener('input', () => localStorage.setItem('phone_notes', notesArea.value));
+
+    let calcExp = "";
+    function calcAdd(val) { calcExp += val; document.getElementById('calc-display').innerText = calcExp; }
+    function calcClear() { calcExp = ""; document.getElementById('calc-display').innerText = "0"; }
+    function calcBack() { calcExp = calcExp.slice(0, -1); document.getElementById('calc-display').innerText = calcExp || "0"; }
+    function calcEval() {
+        try { calcExp = String(eval(calcExp)); document.getElementById('calc-display').innerText = calcExp; }
+        catch { document.getElementById('calc-display').innerText = "Błąd"; calcExp = ""; }
+    }
     function toggleTheme() {
         const isLight = document.getElementById('theme-switch').checked;
         document.body.classList.toggle('light-mode', isLight);
