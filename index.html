@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + mObywatel + Bluebird</title>
+    <title>Smartfon RP + mObywatel</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -119,7 +119,6 @@
         .bg-gray { background: #34495e; }
         .bg-purple { background: #9b59b6; }
         .bg-red { background: #e74c3c; }
-        .bg-teal { background: #16a085; }
 
         .nav-bar {
             height: 48px; background: rgba(0,0,0,0.45); display: flex;
@@ -252,10 +251,6 @@
                 <div class="icon-box bg-red">🆔</div>
                 <span>mObywatel</span>
             </div>
-            <div class="app-icon" onclick="openApp('bluebird')">
-                <div class="icon-box bg-teal">🚨</div>
-                <span>Bluebird</span>
-            </div>
             <div class="app-icon" onclick="openApp('contacts')">
                 <div class="icon-box bg-orange">👤</div>
                 <span>Kontakty</span>
@@ -278,19 +273,6 @@
         <div id="app-moboyatel" class="app-window">
             <div class="app-header"><span>mObywatel RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="mobook-content"></div>
-        </div>
-
-        <!-- APLIKACJA: BLUEBIRD (MDT / POLICJA) -->
-        <div id="app-bluebird" class="app-window">
-            <div class="app-header"><span>Bluebird CAD/MDT</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content">
-                <p style="font-size:12px; color:var(--subtext); margin-top:0;">Wyszukaj obywatela po PESEL, Nicku DC lub Imieniu:</p>
-                <div style="display:flex; gap:6px; margin-bottom:15px;">
-                    <input type="text" id="bb-search-input" placeholder="Szukaj (PESEL, DC, Imię)..." style="flex:1; padding:8px; border-radius:8px; border:1px solid var(--border-color); background:var(--phone-bg); color:var(--text-color); outline:none;">
-                    <button class="btn-primary" style="width:auto; padding:8px 12px;" onclick="searchBluebird()">Szukaj</button>
-                </div>
-                <div id="bb-results"></div>
-            </div>
         </div>
 
         <!-- APLIKACJA: WIADOMOŚCI -->
@@ -353,7 +335,7 @@
             </div>
         </div>
 
-        <!-- APLIKACJA: USTAWIENIA (Ukryty Mod Panel pod nagłówkiem) -->
+        <!-- APLIKACJA: USTAWIENIA (Ukryty Mod Panel pod nagłówkiem - 5 kliknięć w "Ustawienia") -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -607,41 +589,6 @@
         db.ref('citizens/' + myNum + '/suspended').set(newStatus).then(() => {
             alert(newStatus ? "Dokument został zastrzeżony!" : "Zastrzeżenie zostało cofnięte.");
         });
-    }
-
-    // APLIKACJA: BLUEBIRD (MDT / POLICJA)
-    function searchBluebird() {
-        const query = document.getElementById('bb-search-input').value.trim().toLowerCase();
-        const resultsDiv = document.getElementById('bb-results');
-
-        if (!query) {
-            resultsDiv.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Wpisz coś, aby wyszukać.</p>`;
-            return;
-        }
-
-        const entries = Object.entries(allCitizensCache);
-        const matches = entries.filter(([num, c]) => 
-            c.pesel.toLowerCase().includes(query) || 
-            c.name.toLowerCase().includes(query) || 
-            (c.discord && c.discord.toLowerCase().includes(query)) || 
-            num.includes(query)
-        );
-
-        if (matches.length === 0) {
-            resultsDiv.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak wyników w bazie.</p>`;
-            return;
-        }
-
-        resultsDiv.innerHTML = matches.map(([num, c]) => `
-            <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px; border-color:${c.suspended ? '#e74c3c' : 'var(--border-color)'}">
-                <div style="display:flex; justify-content:space-width; width:100%; justify-content:space-between;">
-                    <b>${c.name}</b>
-                    <span style="font-size:11px; color:${c.suspended ? '#e74c3c' : '#2ecc71'}; font-weight:bold;">${c.suspended ? '🛑 Zastrzeżony' : '✅ Aktywny'}</span>
-                </div>
-                <div style="font-size:12px; color:var(--subtext);">PESEL: ${c.pesel} | DC: ${c.discord || 'Brak'}</div>
-                <div style="font-size:12px; color:var(--subtext);">Data ur.: ${c.dob} | Tel: ${num}</div>
-            </div>
-        `).join('');
     }
 
     // PANEL MODERATORA
