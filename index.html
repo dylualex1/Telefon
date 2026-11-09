@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + Bank + Kasyno</title>
+    <title>Smartfon RP + Bank + Kasyno + Pojazdy</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -42,7 +42,6 @@
             background: var(--bg-gradient);
             display: flex; flex-direction: column; position: relative; overflow: hidden;
             box-shadow: 0 0 40px rgba(0,0,0,0.8);
-            transition: background 0.3s;
         }
 
         .setup-screen {
@@ -112,6 +111,7 @@
         .bg-red { background: #e74c3c; }
         .bg-green { background: #27ae60; }
         .bg-gold { background: linear-gradient(135deg, #f39c12, #d35400); }
+        .bg-teal { background: #16a085; }
 
         .nav-bar {
             height: 48px; background: rgba(0,0,0,0.45); display: flex;
@@ -183,14 +183,8 @@
         .history-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 12px; }
 
         /* KASYNO */
-        .casino-box {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: center;
-        }
-        .casino-reels {
-            font-size: 36px; background: var(--phone-bg); padding: 12px; border-radius: 10px;
-            border: 2px solid #f39c12; margin: 10px 0; letter-spacing: 8px;
-        }
+        .casino-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: center; }
+        .casino-reels { font-size: 36px; background: var(--phone-bg); padding: 12px; border-radius: 10px; border: 2px solid #f39c12; margin: 10px 0; letter-spacing: 8px; }
         .casino-btn-row { display: flex; gap: 8px; margin-top: 8px; }
         .quick-bet { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--header-bg); color: var(--text-color); cursor: pointer; font-weight: bold; font-size: 12px; }
     </style>
@@ -232,47 +226,24 @@
         </div>
 
         <div class="app-grid">
-            <div class="app-icon" onclick="openApp('sms')">
-                <div class="icon-box bg-blue">💬</div>
-                <span>Wiadomości</span>
-            </div>
-            <div class="app-icon" onclick="openApp('moboyatel')">
-                <div class="icon-box bg-red">🆔</div>
-                <span>mObywatel</span>
-            </div>
-            <div class="app-icon" onclick="openApp('bank')">
-                <div class="icon-box bg-green">💳</div>
-                <span>Bank</span>
-            </div>
-            <div class="app-icon" onclick="openApp('casino')">
-                <div class="icon-box bg-gold">🎰</div>
-                <span>Kasyno</span>
-            </div>
-            <div class="app-icon" onclick="openApp('contacts')">
-                <div class="icon-box bg-orange">👤</div>
-                <span>Kontakty</span>
-            </div>
-            <div class="app-icon" onclick="openApp('calc')">
-                <div class="icon-box bg-gray">🧮</div>
-                <span>Kalkulator</span>
-            </div>
-            <div class="app-icon" onclick="openApp('notes')">
-                <div class="icon-box bg-yellow">📝</div>
-                <span>Notatki</span>
-            </div>
-            <div class="app-icon" onclick="openApp('settings')">
-                <div class="icon-box bg-purple">⚙️</div>
-                <span>Ustawienia</span>
-            </div>
+            <div class="app-icon" onclick="openApp('sms')"><div class="icon-box bg-blue">💬</div><span>Wiadomości</span></div>
+            <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
+            <div class="app-icon" onclick="openApp('bank')"><div class="icon-box bg-green">💳</div><span>Bank</span></div>
+            <div class="app-icon" onclick="openApp('casino')"><div class="icon-box bg-gold">🎰</div><span>Kasyno</span></div>
+            <div class="app-icon" onclick="openApp('vehicles')"><div class="icon-box bg-teal">🚗</div><span>Pojazdy</span></div>
+            <div class="app-icon" onclick="openApp('contacts')"><div class="icon-box bg-orange">👤</div><span>Kontakty</span></div>
+            <div class="app-icon" onclick="openApp('calc')"><div class="icon-box bg-gray">🧮</div><span>Kalkulator</span></div>
+            <div class="app-icon" onclick="openApp('notes')"><div class="icon-box bg-yellow">📝</div><span>Notatki</span></div>
+            <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
         </div>
 
-        <!-- APLIKACJA: mObywatel -->
+        <!-- mObywatel -->
         <div id="app-moboyatel" class="app-window">
             <div class="app-header"><span>mObywatel RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="mobook-content"></div>
         </div>
 
-        <!-- APLIKACJA: BANK -->
+        <!-- BANK -->
         <div id="app-bank" class="app-window">
             <div class="app-header"><span>Bank RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -281,28 +252,38 @@
                     <div class="bank-balance" id="bank-balance-display">0.00 PLN</div>
                     <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;" id="bank-phone-display">Konto powiązane z tel: ...</div>
                 </div>
-
                 <h3 style="font-size: 14px; margin-bottom: 8px;">Wyślij przelew</h3>
                 <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="transfer-target" class="bank-input" placeholder="Numer telefonu odbiorcy (np. 555-011)">
+                    <input type="text" id="transfer-target" class="bank-input" placeholder="Numer odbiorcy (np. 555-011)">
                     <input type="number" id="transfer-amount" class="bank-input" placeholder="Kwota (PLN)">
                     <button class="btn-primary" onclick="makeTransfer()">Wyślij przelew</button>
                 </div>
-
                 <h3 style="font-size: 14px; margin-bottom: 8px;">Historia operacji</h3>
                 <div id="bank-history-list"></div>
             </div>
         </div>
 
-        <!-- APLIKACJA: KASYNO -->
+        <!-- POJAZDY -->
+        <div id="app-vehicles" class="app-window">
+            <div class="app-header"><span>Moje Pojazdy (Max 5)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
+                    <input type="text" id="v-brand" class="bank-input" placeholder="Marka i model (np. Benefactor Schafter)">
+                    <input type="text" id="v_plate" class="bank-input" placeholder="Tablica rejestracyjna (np. W1 KOWAL)">
+                    <button class="btn-primary" onclick="registerVehicle()">➕ Zarejestruj pojazd</button>
+                </div>
+                <div id="my-vehicles-list"></div>
+            </div>
+        </div>
+
+        <!-- KASYNO -->
         <div id="app-casino" class="app-window">
             <div class="app-header"><span>🎰 Kasyno Royal RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div style="background:linear-gradient(135deg, #2c3e50, #000); padding:12px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid #f39c12;">
-                    <div style="font-size:11px; color:#f39c12;">TWOJE SALDO W BANKU</div>
+                    <div style="font-size:11px; color:#f39c12;">SALDO KONTRAKTOWE</div>
                     <div style="font-size:22px; font-weight:bold; color:#fff;" id="casino-balance-display">0.00 PLN</div>
                 </div>
-
                 <div style="margin-bottom:12px;">
                     <input type="number" id="casino-bet" class="bank-input" placeholder="Stawka (PLN)" value="100">
                     <div class="casino-btn-row">
@@ -312,71 +293,46 @@
                         <button class="quick-bet" onclick="setBet(1000)">1000</button>
                     </div>
                 </div>
-
                 <div id="casino-result-msg" style="text-align:center; font-weight:bold; font-size:13px; min-height:20px; margin-bottom:10px;"></div>
-
-                <!-- GRA 1: JEDNORĘKI BANDYTA -->
                 <div class="casino-box">
                     <b>🍒 Jednoręki Bandyta</b>
-                    <div style="font-size:11px; color:var(--subtext);">2 takie same = 1.5x | 3 takie same = 5x</div>
                     <div class="casino-reels" id="slot-reels">🍒 🍋 💎</div>
                     <button class="btn-primary" style="background:#f39c12;" onclick="playSlots()">ZAKRĘĆ</button>
-                </div>
-
-                <!-- GRA 2: ORZEŁ CZY RESZKA -->
-                <div class="casino-box">
-                    <b>🪙 Orzeł czy Reszka (Wygrana 2x)</b>
-                    <div class="casino-btn-row">
-                        <button class="btn-primary" style="background:#3498db;" onclick="playCoin('Orzeł')">Orzeł</button>
-                        <button class="btn-primary" style="background:#9b59b6;" onclick="playCoin('Reszka')">Reszka</button>
-                    </div>
-                </div>
-
-                <!-- GRA 3: RZUT KOSTKĄ -->
-                <div class="casino-box">
-                    <b>🎲 Rzut Kostką (Wygrana 2x)</b>
-                    <div style="font-size:11px; color:var(--subtext); margin-bottom:6px;">Mało (1-3) lub Dużo (4-6)</div>
-                    <div class="casino-btn-row">
-                        <button class="btn-primary" style="background:#16a085;" onclick="playDice('low')">Mało (1-3)</button>
-                        <button class="btn-primary" style="background:#e67e22;" onclick="playDice('high')">Dużo (4-6)</button>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- APLIKACJA: WIADOMOŚCI -->
+        <!-- WIADOMOŚCI -->
         <div id="app-sms" class="app-window">
             <div class="app-header"><span>Wiadomości SMS</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="sms-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             <div class="chat-input-box">
-                <input type="text" id="target-phone" placeholder="Numer kolegi (lub 997 dla Policji)">
+                <input type="text" id="target-phone" placeholder="Numer (lub 997 Policja)">
                 <textarea id="sms-text" placeholder="Napisz wiadomość..."></textarea>
-                <button class="btn-primary" onclick="sendSms()">Wyślij wiadomość</button>
+                <button class="btn-primary" onclick="sendSms()">Wyślij</button>
             </div>
         </div>
 
-        <!-- APLIKACJA: KONTAKTY -->
+        <!-- KONTAKTY -->
         <div id="app-contacts" class="app-window">
             <div class="app-header"><span>Kontakty</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div class="contact-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--border-color);">
-                    <input type="text" id="contact-name" placeholder="Imię / Ksywa (np. Marek)">
-                    <input type="text" id="contact-num" placeholder="Numer telefonu (np. 555-011)">
+                    <input type="text" id="contact-name" placeholder="Imię / Ksywa">
+                    <input type="text" id="contact-num" placeholder="Numer telefonu">
                     <button class="btn-primary" onclick="addContact()">➕ Zapisz kontakt</button>
                 </div>
                 <div id="contacts-list"></div>
             </div>
         </div>
 
-        <!-- APLIKACJA: NOTATKI -->
+        <!-- NOTATKI -->
         <div id="app-notes" class="app-window">
             <div class="app-header"><span>Notatki</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content">
-                <textarea id="notes-area" style="width:100%; height:100%; background:var(--card-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:10px; padding:14px; font-size:15px; resize:none; outline:none;" placeholder="Wpisz swoje notatki..."></textarea>
-            </div>
+            <div class="app-content"><textarea id="notes-area" style="width:100%; height:100%; background:var(--card-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:10px; padding:14px; font-size:15px; resize:none; outline:none;" placeholder="Notatki..."></textarea></div>
         </div>
 
-        <!-- APLIKACJA: KALKULATOR -->
+        <!-- KALKULATOR -->
         <div id="app-calc" class="app-window">
             <div class="app-header"><span>Kalkulator</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -386,50 +342,28 @@
                     <button class="calc-btn op" onclick="calcAdd('/')">÷</button>
                     <button class="calc-btn op" onclick="calcAdd('*')">×</button>
                     <button class="calc-btn op" onclick="calcBack()">⌫</button>
-                    <button class="calc-btn" onclick="calcAdd('7')">7</button>
-                    <button class="calc-btn" onclick="calcAdd('8')">8</button>
-                    <button class="calc-btn" onclick="calcAdd('9')">9</button>
-                    <button class="calc-btn op" onclick="calcAdd('-')">-</button>
-                    <button class="calc-btn" onclick="calcAdd('4')">4</button>
-                    <button class="calc-btn" onclick="calcAdd('5')">5</button>
-                    <button class="calc-btn" onclick="calcAdd('6')">6</button>
-                    <button class="calc-btn op" onclick="calcAdd('+')">+</button>
-                    <button class="calc-btn" onclick="calcAdd('1')">1</button>
-                    <button class="calc-btn" onclick="calcAdd('2')">2</button>
-                    <button class="calc-btn" onclick="calcAdd('3')">3</button>
-                    <button class="calc-btn eq" onclick="calcEval()">=</button>
-                    <button class="calc-btn" style="grid-column: span 2;" onclick="calcAdd('0')">0</button>
-                    <button class="calc-btn" onclick="calcAdd('.')">.</button>
+                    <button class="calc-btn" onclick="calcAdd('7')">7</button><button class="calc-btn" onclick="calcAdd('8')">8</button><button class="calc-btn" onclick="calcAdd('9')">9</button><button class="calc-btn op" onclick="calcAdd('-')">-</button>
+                    <button class="calc-btn" onclick="calcAdd('4')">4</button><button class="calc-btn" onclick="calcAdd('5')">5</button><button class="calc-btn" onclick="calcAdd('6')">6</button><button class="calc-btn op" onclick="calcAdd('+')">+</button>
+                    <button class="calc-btn" onclick="calcAdd('1')">1</button><button class="calc-btn" onclick="calcAdd('2')">2</button><button class="calc-btn" onclick="calcAdd('3')">3</button><button class="calc-btn eq" onclick="calcEval()">=</button>
+                    <button class="calc-btn" style="grid-column: span 2;" onclick="calcAdd('0')">0</button><button class="calc-btn" onclick="calcAdd('.')">.</button>
                 </div>
             </div>
         </div>
 
-        <!-- APLIKACJA: USTAWIENIA -->
+        <!-- USTAWIENIA (5x klik w napis "Ustawienia" otwiera panel moderatora) -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <div class="list-item">
-                    <div><b>Blokada ekranu (Odcisk)</b><br><small style="color:var(--subtext);">Włącz zabezpieczenie</small></div>
-                    <label class="switch"><input type="checkbox" id="lock-switch" checked onchange="toggleLockFeature()"><span class="slider"></span></label>
-                </div>
-                <div class="list-item">
-                    <div><b>Tryb Jasny / Ciemny</b><br><small style="color:var(--subtext);">Zmień motyw</small></div>
-                    <label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label>
-                </div>
-                <div class="list-item">
-                    <div><b>Mój numer telefonu</b><br><small style="color:var(--subtext)" id="settings-my-num">...</small></div>
-                    <span style="font-size:12px; color:#2ecc71;">Stały</span>
-                </div>
+                <div class="list-item"><div><b>Blokada ekranu</b></div><label class="switch"><input type="checkbox" id="lock-switch" checked onchange="toggleLockFeature()"><span class="slider"></span></label></div>
+                <div class="list-item"><div><b>Motyw</b></div><label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label></div>
+                <div class="list-item"><div><b>Mój numer</b><br><small id="settings-my-num">...</small></div><span style="color:#2ecc71; font-size:12px;">Aktywny</span></div>
             </div>
         </div>
 
-        <!-- PANEL MODERATORA -->
+        <!-- PANEL MODERATORA (Zarządzanie numerami, edycja dowodów, zmiana salda) -->
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
-            <div class="app-content">
-                <p style="font-size:13px; color:var(--subtext); margin-top:0;">Zarządzaj numerami, dowodami i saldami kont:</p>
-                <div id="mod-numbers-list"></div>
-            </div>
+            <div class="app-content"><div id="mod-numbers-list"></div></div>
         </div>
     </div>
 
@@ -452,8 +386,7 @@
         measurementId: "G-D46V1EX5G1"
     };
 
-    const WEBHOOK_DISCORD = "https://discord.com/api/webhooks/1569040236401659917/8i05NCXDJBRz_Qfk88nicMhCsMhzhLylZM30BA8lcitwUfI47Cc62gZq_MGZnuDDZUpQ";
-    const MOD_PIN = "0000";
+    const MOD_PIN = "997997";
     const AVAILABLE_NUMBERS = ["555-010", "555-011", "555-012", "555-013", "555-014", "555-015", "555-016", "555-017", "555-018", "555-019"];
 
     firebase.initializeApp(firebaseConfig);
@@ -461,43 +394,21 @@
     let claimedNumbersCache = {};
     let allCitizensCache = {};
     let allAccountsCache = {};
+    let allVehiclesCache = {};
     let secretClickCount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
-
-        if (localStorage.getItem('phone_theme') === 'light') {
-            document.getElementById('theme-switch').checked = true;
-            document.body.classList.add('light-mode');
-        }
-        if (localStorage.getItem('phone_lock_enabled') === 'false') {
-            document.getElementById('lock-switch').checked = false;
-            document.getElementById('lock-screen').classList.add('hidden');
-        }
+        if (localStorage.getItem('phone_theme') === 'light') { document.getElementById('theme-switch').checked = true; document.body.classList.add('light-mode'); }
+        if (localStorage.getItem('phone_lock_enabled') === 'false') { document.getElementById('lock-switch').checked = false; document.getElementById('lock-screen').classList.add('hidden'); }
 
         renderContacts();
 
-        db.ref('claimed_numbers').on('value', (snapshot) => {
-            claimedNumbersCache = snapshot.val() || {};
-            checkUserNumber();
-            if (document.getElementById('app-mod').classList.contains('active')) renderModList();
-        });
-
-        db.ref('citizens').on('value', (snapshot) => {
-            allCitizensCache = snapshot.val() || {};
-            renderMobywatel();
-            if (document.getElementById('app-mod').classList.contains('active')) renderModList();
-        });
-
-        db.ref('bank_accounts').on('value', (snapshot) => {
-            allAccountsCache = snapshot.val() || {};
-            renderBank();
-            renderCasinoBalance();
-        });
-
-        db.ref('messages').limitToLast(50).on('value', (snapshot) => {
-            renderMessages(Object.values(snapshot.val() || {}));
-        });
+        db.ref('claimed_numbers').on('value', snap => { claimedNumbersCache = snap.val() || {}; checkUserNumber(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('citizens').on('value', snap => { allCitizensCache = snap.val() || {}; renderMobywatel(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('bank_accounts').on('value', snap => { allAccountsCache = snap.val() || {}; renderBank(); renderCasinoBalance(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
+        db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
     });
 
     function secretModClick() {
@@ -505,8 +416,7 @@
         if (secretClickCount >= 5) {
             secretClickCount = 0;
             const pin = prompt("🛡️ Podaj PIN Moderatora:");
-            if (pin === MOD_PIN) { renderModList(); openApp('mod'); }
-            else if (pin !== null) alert("Błędny PIN!");
+            if (pin === MOD_PIN) { renderModList(); openApp('mod'); } else if (pin !== null) alert("Błędny PIN!");
         }
     }
 
@@ -515,9 +425,7 @@
         if (myNum && claimedNumbersCache[myNum]) {
             document.getElementById('setup-screen').classList.add('hidden');
             updateMyNumberDisplay(myNum);
-            if (!allAccountsCache[myNum]) {
-                db.ref('bank_accounts/' + myNum).set({ balance: 1000, history: [{ title: "Bonus powitalny", amount: 1000, type: "in", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) }] });
-            }
+            if (!allAccountsCache[myNum]) db.ref('bank_accounts/' + myNum).set({ balance: 1000, history: [{ title: "Bonus startowy", amount: 1000, type: "in", time: "12:00" }] });
         } else {
             localStorage.removeItem('phone_my_number');
             renderNumberChoices();
@@ -528,27 +436,20 @@
     function renderNumberChoices() {
         document.getElementById('number-grid').innerHTML = AVAILABLE_NUMBERS.map(num => {
             const isTaken = !!claimedNumbersCache[num];
-            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">${num}<br><small style="font-size:10px; font-weight:normal;">${isTaken ? 'Zajęty (Zaloguj)' : 'Wolny'}</small></button>`;
+            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">${num}<br><small>${isTaken ? 'Zajęty' : 'Wolny'}</small></button>`;
         }).join('');
     }
 
     function selectNumber(num) {
         if (claimedNumbersCache[num]) {
-            const pin = prompt(`Numer ${num} jest zajęty. Podaj swój PIN:`);
-            if (pin === claimedNumbersCache[num].pin) {
-                localStorage.setItem('phone_my_number', num);
-                document.getElementById('setup-screen').classList.add('hidden');
-                updateMyNumberDisplay(num);
-            } else if (pin !== null) alert("Błędny PIN!");
+            const pin = prompt(`Numer ${num} zajęty. Podaj PIN:`);
+            if (pin === claimedNumbersCache[num].pin) { localStorage.setItem('phone_my_number', num); document.getElementById('setup-screen').classList.add('hidden'); updateMyNumberDisplay(num); }
+            else if (pin !== null) alert("Błędny PIN!");
         } else {
-            const newPin = prompt(`Wybrano numer ${num}. Ustaw swój PIN (min. 2 znaki):`);
-            if (newPin && newPin.trim().length >= 2) {
-                db.ref('claimed_numbers/' + num).set({ pin: newPin.trim() }).then(() => {
-                    localStorage.setItem('phone_my_number', num);
-                    document.getElementById('setup-screen').classList.add('hidden');
-                    updateMyNumberDisplay(num);
-                });
-            } else if (newPin !== null) alert("PIN musi mieć minimum 2 znaki!");
+            const newPin = prompt(`Wybierasz ${num}. Ustaw PIN (min. 2 znaki):`);
+            if (newPin && newPin.length >= 2) {
+                db.ref('claimed_numbers/' + num).set({ pin: newPin }).then(() => { localStorage.setItem('phone_my_number', num); document.getElementById('setup-screen').classList.add('hidden'); updateMyNumberDisplay(num); });
+            } else if (newPin !== null) alert("Za krótki PIN!");
         }
     }
 
@@ -557,24 +458,56 @@
         document.getElementById('settings-my-num').innerText = num;
     }
 
+    // POJAZDY (MAX 5)
+    function registerVehicle() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const brand = document.getElementById('v-brand').value.trim();
+        const plate = document.getElementById('v_plate').value.trim().toUpperCase();
+        if (!brand || !plate) return alert("Uzupełnij markę i tablicę!");
+
+        const userVehicles = allVehiclesCache[myNum] || {};
+        if (Object.keys(userVehicles).length >= 5) return alert("Masz już zarejestrowane maksymalnie 5 pojazdów!");
+
+        db.ref('vehicles/' + myNum + '/' + plate).set({ brand, plate, owner: myNum }).then(() => {
+            document.getElementById('v-brand').value = "";
+            document.getElementById('v_plate').value = "";
+            alert("Pojazd zarejestrowany!");
+        });
+    }
+
+    function deleteVehicle(plate) {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (confirm(`Usunąć pojazd o tablicy ${plate}?`)) db.ref('vehicles/' + myNum + '/' + plate).remove();
+    }
+
+    function renderVehicles() {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum) return;
+        const vehicles = allVehiclesCache[myNum] || {};
+        const list = document.getElementById('my-vehicles-list');
+        const keys = Object.keys(vehicles);
+
+        if (keys.length === 0) { list.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak zarejestrowanych pojazdów.</p>`; return; }
+        list.innerHTML = keys.map(plate => `
+            <div class="list-item">
+                <div><b>${vehicles[plate].brand}</b><br><small style="color:var(--subtext);">Tablica: ${plate}</small></div>
+                <button class="btn-danger" onclick="deleteVehicle('${plate}')">Usuń</button>
+            </div>
+        `).join('');
+    }
+
     // BANK
     function renderBank() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
         const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
         document.getElementById('bank-balance-display').innerText = acc.balance.toFixed(2) + " PLN";
-        document.getElementById('bank-phone-display').innerText = "Konto powiązane z tel: " + myNum;
+        document.getElementById('bank-phone-display').innerText = "Konto: " + myNum;
 
-        const histDiv = document.getElementById('bank-history-list');
-        const historyList = acc.history || [];
-        if (historyList.length === 0) { histDiv.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak operacji.</p>`; return; }
-
-        histDiv.innerHTML = historyList.slice().reverse().map(h => `
+        const hist = acc.history || [];
+        document.getElementById('bank-history-list').innerHTML = hist.length === 0 ? `<p style="font-size:12px; color:var(--subtext);">Brak operacji.</p>` : hist.slice().reverse().map(h => `
             <div class="history-card" style="border-left: 4px solid ${h.type === 'in' ? '#2ecc71' : '#e74c3c'};">
-                <div style="display:flex; justify-content:space-between;">
-                    <b>${h.title}</b>
-                    <span style="color: ${h.type === 'in' ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${h.type === 'in' ? '+' : '-'}${h.amount.toFixed(2)} PLN</span>
-                </div>
+                <div style="display:flex; justify-content:space-between;"><b>${h.title}</b><span style="color:${h.type === 'in' ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${h.type === 'in' ? '+' : '-'}${h.amount.toFixed(2)} PLN</span></div>
                 <div style="font-size:10px; color:var(--subtext); margin-top:2px;">${h.time}</div>
             </div>
         `).join('');
@@ -582,74 +515,38 @@
 
     function makeTransfer() {
         const myNum = localStorage.getItem('phone_my_number');
-        const targetNum = document.getElementById('transfer-target').value.trim();
-        const amount = parseFloat(document.getElementById('transfer-amount').value);
+        const target = document.getElementById('transfer-target').value.trim();
+        const amt = parseFloat(document.getElementById('transfer-amount').value);
+        if (!target || isNaN(amt) || amt <= 0) return alert("Podaj poprawny numer i kwotę!");
+        if (myNum === target) return alert("Nie możesz przelać do siebie!");
+        if (!allAccountsCache[target]) return alert("Konto nie istnieje!");
 
-        if (!targetNum || isNaN(amount) || amount <= 0) return alert("Podaj poprawny numer i kwotę!");
-        if (myNum === targetNum) return alert("Nie możesz wysłać przelewu do siebie!");
-        if (!allAccountsCache[targetNum]) return alert("Konto odbiorcy nie istnieje!");
+        const myAcc = allAccountsCache[myNum];
+        if (myAcc.balance < amt) return alert("Brak środków!");
+        const targetAcc = allAccountsCache[target];
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
 
-        const myAcc = allAccountsCache[myNum] || { balance: 0, history: [] };
-        if (myAcc.balance < amount) return alert("Brak środków na koncie!");
-
-        const targetAcc = allAccountsCache[targetNum];
-        const timeStr = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-        myAcc.balance -= amount;
-        myAcc.history = myAcc.history || [];
-        myAcc.history.push({ title: `Przelew do: ${targetNum}`, amount, type: 'out', time: timeStr });
-
-        targetAcc.balance += amount;
-        targetAcc.history = targetAcc.history || [];
-        targetAcc.history.push({ title: `Przelew od: ${myNum}`, amount, type: 'in', time: timeStr });
+        myAcc.balance -= amt; myAcc.history.push({ title: `Przelew do: ${target}`, amount: amt, type: 'out', time });
+        targetAcc.balance += amt; targetAcc.history.push({ title: `Przelew od: ${myNum}`, amount: amt, type: 'in', time });
 
         db.ref('bank_accounts/' + myNum).set(myAcc);
-        db.ref('bank_accounts/' + targetNum).set(targetAcc);
-
-        document.getElementById('transfer-target').value = "";
-        document.getElementById('transfer-amount').value = "";
-        alert("Przelew wysłany!");
+        db.ref('bank_accounts/' + target).set(targetAcc);
+        document.getElementById('transfer-target').value = ""; document.getElementById('transfer-amount').value = "";
+        alert("Przelew wykonany!");
     }
 
     // KASYNO
     function renderCasinoBalance() {
         const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum) return;
-        const acc = allAccountsCache[myNum] || { balance: 0 };
-        document.getElementById('casino-balance-display').innerText = acc.balance.toFixed(2) + " PLN";
+        if (myNum && allAccountsCache[myNum]) document.getElementById('casino-balance-display').innerText = allAccountsCache[myNum].balance.toFixed(2) + " PLN";
     }
-
-    function setBet(val) { document.getElementById('casino-bet').value = val; }
-
-    function processCasinoGame(bet, wonAmount, gameName) {
-        const myNum = localStorage.getItem('phone_my_number');
-        const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
-        const timeStr = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-        acc.history = acc.history || [];
-        if (wonAmount > 0) {
-            const netWin = wonAmount - bet;
-            acc.balance += netWin;
-            acc.history.push({ title: `Kasyno (${gameName}): Wygrana`, amount: netWin, type: 'in', time: timeStr });
-        } else {
-            acc.balance -= bet;
-            acc.history.push({ title: `Kasyno (${gameName}): Przegrana`, amount: bet, type: 'out', time: timeStr });
-        }
-        db.ref('bank_accounts/' + myNum).set(acc);
-    }
-
-    function validateBet() {
+    function setBet(v) { document.getElementById('casino-bet').value = v; }
+    function playSlots() {
         const myNum = localStorage.getItem('phone_my_number');
         const bet = parseFloat(document.getElementById('casino-bet').value);
         const acc = allAccountsCache[myNum] || { balance: 0 };
-        if (isNaN(bet) || bet <= 0) { alert("Podaj poprawną stawkę!"); return null; }
-        if (acc.balance < bet) { alert("Nie masz tyle pieniędzy na koncie!"); return null; }
-        return bet;
-    }
-
-    function playSlots() {
-        const bet = validateBet();
-        if (!bet) return;
+        if (isNaN(bet) || bet <= 0 || acc.balance < bet) return alert("Błędna stawka lub brak środków!");
+        
         const symbols = ["🍒", "🍋", "💎", "7️⃣"];
         const r1 = symbols[Math.floor(Math.random() * symbols.length)];
         const r2 = symbols[Math.floor(Math.random() * symbols.length)];
@@ -657,90 +554,49 @@
         document.getElementById('slot-reels').innerText = `${r1} ${r2} ${r3}`;
 
         const msg = document.getElementById('casino-result-msg');
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
         if (r1 === r2 && r2 === r3) {
-            const win = bet * 5;
-            processCasinoGame(bet, win, "Bandyta");
-            msg.style.color = "#2ecc71";
-            msg.innerText = `🎉 JACKPOT! Wygrałeś ${win.toFixed(2)} PLN!`;
-        } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-            const win = bet * 1.5;
-            processCasinoGame(bet, win, "Bandyta");
-            msg.style.color = "#2ecc71";
-            msg.innerText = `✨ Para! Wygrałeś ${win.toFixed(2)} PLN!`;
+            const win = bet * 5; acc.balance += (win - bet); acc.history.push({ title: "Kasyno (Wygrana)", amount: win - bet, type: 'in', time });
+            msg.style.color = "#2ecc71"; msg.innerText = `🎉 JACKPOT! Wygrana ${win.toFixed(2)} PLN!`;
         } else {
-            processCasinoGame(bet, 0, "Bandyta");
-            msg.style.color = "#e74c3c";
-            msg.innerText = `❌ Pudło! Przegrałeś ${bet.toFixed(2)} PLN.`;
+            acc.balance -= bet; acc.history.push({ title: "Kasyno (Przegrana)", amount: bet, type: 'out', time });
+            msg.style.color = "#e74c3c"; msg.innerText = `❌ Przegrana ${bet.toFixed(2)} PLN.`;
         }
-    }
-
-    function playCoin(choice) {
-        const bet = validateBet();
-        if (!bet) return;
-        const result = Math.random() < 0.5 ? "Orzeł" : "Reszka";
-        const msg = document.getElementById('casino-result-msg');
-        if (choice === result) {
-            const win = bet * 2;
-            processCasinoGame(bet, win, "Moneta");
-            msg.style.color = "#2ecc71";
-            msg.innerText = `🪙 Wypadł(a) ${result}! Wygrywasz ${win.toFixed(2)} PLN!`;
-        } else {
-            processCasinoGame(bet, 0, "Moneta");
-            msg.style.color = "#e74c3c";
-            msg.innerText = `🪙 Wypadł(a) ${result}. Przegrałeś ${bet.toFixed(2)} PLN.`;
-        }
-    }
-
-    function playDice(choice) {
-        const bet = validateBet();
-        if (!bet) return;
-        const roll = Math.floor(Math.random() * 6) + 1;
-        const isWin = (choice === 'low' && roll <= 3) || (choice === 'high' && roll >= 4);
-        const msg = document.getElementById('casino-result-msg');
-        if (isWin) {
-            const win = bet * 2;
-            processCasinoGame(bet, win, "Kostka");
-            msg.style.color = "#2ecc71";
-            msg.innerText = `🎲 Wyrzucono ${roll}! Wygrywasz ${win.toFixed(2)} PLN!`;
-        } else {
-            processCasinoGame(bet, 0, "Kostka");
-            msg.style.color = "#e74c3c";
-            msg.innerText = `🎲 Wyrzucono ${roll}. Przegrałeś ${bet.toFixed(2)} PLN.`;
-        }
+        db.ref('bank_accounts/' + myNum).set(acc);
     }
 
     // mObywatel
     function renderMobywatel() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
-        const container = document.getElementById('mobook-content');
         const citizen = allCitizensCache[myNum];
+        const container = document.getElementById('mobook-content');
 
         if (!citizen) {
             container.innerHTML = `
-                <div style="text-align:center; padding:5px 0;"><h3>Twój Dokument</h3><p style="font-size:12px; color:var(--subtext);">Wypełnij dane, aby wygenerować dowód.</p></div>
+                <div style="text-align:center;"><h3>Twój Dokument</h3></div>
                 <div class="id-form" style="display:flex; flex-direction:column; gap:8px;">
                     <input type="text" id="id-name" placeholder="Imię i Nazwisko">
                     <input type="text" id="id-pesel" placeholder="PESEL">
-                    <input type="text" id="id-dob" placeholder="Data urodzenia (np. 12.05.1998)">
-                    <input type="text" id="id-discord" placeholder="Nick na Discordzie">
+                    <input type="text" id="id-dob" placeholder="Data urodzenia">
+                    <input type="text" id="id-discord" placeholder="Nick Discord">
                     <input type="text" id="id-photo" placeholder="Link do zdjęcia (URL)">
-                    <button class="btn-primary" onclick="createCitizenId()">Stwórz dowód osobisty</button>
+                    <button class="btn-primary" onclick="createCitizenId()">Stwórz dowód</button>
                 </div>
             `;
         } else {
             const isSuspended = citizen.suspended;
+            const hasGunPermit = citizen.gunPermit === true;
             container.innerHTML = `
                 <div class="id-card ${isSuspended ? 'suspended' : ''}">
                     <div class="id-header"><span>RZECZPOSPOLITA POLSKA</span><span>${isSuspended ? '⚠️ ZASTRZEŻONY' : '✅ AKTUALNY'}</span></div>
                     <div class="id-body">
-                        <img src="${citizen.photo || 'https://via.placeholder.com/80'}" class="id-photo" alt="Zdjęcie">
+                        <img src="${citizen.photo || 'https://via.placeholder.com/80'}" class="id-photo" alt="Foto">
                         <div class="id-info">
                             <div><span>${citizen.name}</span></div>
                             <div>PESEL: <span>${citizen.pesel}</span></div>
                             <div>Urodzenie: <span>${citizen.dob}</span></div>
-                            <div>Discord: <span>${citizen.discord || 'Brak'}</span></div>
-                            <div>Tel: <span>${myNum}</span></div>
+                            <div>Pozwolenie na broń: <span style="color:${hasGunPermit ? '#2ecc71' : '#f1c40f'};">${hasGunPermit ? 'TAK (AKTYWNE)' : 'BRAK'}</span></div>
                         </div>
                     </div>
                 </div>
@@ -756,9 +612,8 @@
         const dob = document.getElementById('id-dob').value.trim();
         const discord = document.getElementById('id-discord').value.trim();
         const photo = document.getElementById('id-photo').value.trim();
-        if (!name || !pesel || !dob || !discord) return alert("Uzupełnij wszystkie pola!");
-
-        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false }).then(() => alert("Dowód utworzony!"));
+        if (!name || !pesel) return alert("Uzupełnij dane!");
+        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false, gunPermit: false }).then(() => alert("Dowód stworzony!"));
     }
 
     function toggleSuspendId() {
@@ -767,7 +622,7 @@
         if (citizen) db.ref('citizens/' + myNum + '/suspended').set(!citizen.suspended);
     }
 
-    // PANEL MODERATORA
+    // PANEL MODERATORA (Edycja dowodu, zmiana salda, usuwanie numeru w jednym miejscu)
     function renderModList() {
         const list = document.getElementById('mod-numbers-list');
         const keys = Object.keys(claimedNumbersCache);
@@ -778,11 +633,11 @@
             return `
                 <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
                     <div style="display:flex; justify-content:space-between; width:100%;">
-                        <div><b>Tel: ${num}</b><br><small style="color:var(--subtext);">PIN: ${claimedNumbersCache[num].pin}</small></div>
+                        <div><b>Tel: ${num}</b></div>
                         <button class="btn-danger" onclick="modDeleteNumber('${num}')">Zwolnij numer</button>
                     </div>
                     <div style="font-size:12px; color:var(--subtext); width:100%; border-top:1px solid var(--border-color); padding-top:6px;">
-                        Obywatel: <b>${cit ? cit.name : 'Brak dowodu'}</b> | Saldo: <b>${acc ? acc.balance.toFixed(2) : '0'} PLN</b>
+                        Obywatel: <b>${cit ? cit.name : 'Brak'}</b> | Saldo: <b>${acc ? acc.balance.toFixed(2) : '0'} PLN</b>
                     </div>
                     <div style="display:flex; gap:5px; width:100%;">
                         <button class="btn-primary" style="padding:4px; font-size:11px;" onclick="modEditCitizen('${num}')">Edytuj dowód</button>
@@ -794,122 +649,88 @@
     }
 
     function modDeleteNumber(num) {
-        if (!confirm(`Zwolnić numer ${num}?`)) return;
+        if (!confirm(`Usunąć numer ${num} i dane gracza?`)) return;
         db.ref('claimed_numbers/' + num).remove();
         db.ref('citizens/' + num).remove();
         db.ref('bank_accounts/' + num).remove();
+        db.ref('vehicles/' + num).remove();
     }
 
     function modEditCitizen(num) {
         const cit = allCitizensCache[num];
         if (!cit) return alert("Brak dowodu dla tego numeru!");
-        const newName = prompt("Edytuj imię i nazwisko:", cit.name);
-        const newPesel = prompt("Edytuj PESEL:", cit.pesel);
-        if (newName && newPesel) { db.ref('citizens/' + num).update({ name: newName, pesel: newPesel }); alert("Zaktualizowano!"); }
+        const newName = prompt("Imię i nazwisko:", cit.name);
+        const newPesel = prompt("PESEL:", cit.pesel);
+        if (newName && newPesel) db.ref('citizens/' + num).update({ name: newName, pesel: newPesel });
     }
 
     function modEditBalance(num) {
         const acc = allAccountsCache[num] || { balance: 0, history: [] };
-        const newBal = prompt(`Nowe saldo dla ${num} (obecne: ${acc.balance} PLN):`);
+        const newBal = prompt(`Nowe saldo dla ${num}:`, acc.balance);
         if (newBal !== null && !isNaN(parseFloat(newBal))) {
             acc.balance = parseFloat(newBal);
-            acc.history = acc.history || [];
-            acc.history.push({ title: "Korekta Moderatora", amount: acc.balance, type: "in", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
+            acc.history.push({ title: "Korekta Moderatora", amount: acc.balance, type: "in", time: "12:00" });
             db.ref('bank_accounts/' + num).set(acc);
-            alert("Saldo zmienione!");
         }
     }
 
-    // KONTAKTY, WIADOMOŚCI, KALKULATOR, USTAWIENIA
+    // KONTAKTY, SMS, KALKULATOR
     function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts') || '[]'); }
     function getContactName(num) { const f = getContacts().find(c => c.num === num); return f ? `${f.name} (${num})` : num; }
     function addContact() {
         const name = document.getElementById('contact-name').value.trim();
         const num = document.getElementById('contact-num').value.trim();
-        if (!name || !num) return alert("Wpisz imię i numer!");
-        const contacts = getContacts(); contacts.push({ name, num });
-        localStorage.setItem('phone_contacts', JSON.stringify(contacts));
-        document.getElementById('contact-name').value = ""; document.getElementById('contact-num').value = "";
-        renderContacts();
+        if (!name || !num) return;
+        const c = getContacts(); c.push({ name, num }); localStorage.setItem('phone_contacts', JSON.stringify(c));
+        document.getElementById('contact-name').value = ""; document.getElementById('contact-num').value = ""; renderContacts();
     }
     function deleteContact(idx) { const c = getContacts(); c.splice(idx, 1); localStorage.setItem('phone_contacts', JSON.stringify(c)); renderContacts(); }
     function messageContact(num) { openApp('sms'); document.getElementById('target-phone').value = num; }
     function renderContacts() {
-        let html = `<div class="list-item"><div><b>🚨 Policja</b><br><small style="color:var(--subtext);">997</small></div><button class="nav-btn" onclick="messageContact('997')">💬</button></div><div class="list-item"><div><b>🚒 Straż Pożarna</b><br><small style="color:var(--subtext);">998</small></div><button class="nav-btn" onclick="messageContact('998')">💬</button></div>`;
-        html += getContacts().map((c, idx) => `<div class="list-item"><div><b>${c.name}</b><br><small style="color:var(--subtext);">${c.num}</small></div><div style="display:flex; gap:5px;"><button class="nav-btn" style="padding:5px 10px;" onclick="messageContact('${c.num}')">💬</button><button class="btn-danger" onclick="deleteContact(${idx})">✕</button></div></div>`).join('');
+        let html = `<div class="list-item"><div><b>🚨 Policja</b></div><button class="nav-btn" onclick="messageContact('997')">💬</button></div>`;
+        html += getContacts().map((c, idx) => `<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div><button class="btn-danger" onclick="deleteContact(${idx})">✕</button></div>`).join('');
         document.getElementById('contacts-list').innerHTML = html;
     }
-
     function sendSms() {
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('target-phone').value.trim();
         const text = document.getElementById('sms-text').value.trim();
-        if (!target || !text) return alert('Wpisz numer i treść!');
+        if (!target || !text) return;
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        if (['997', '998', '999', '112'].includes(target)) {
-            db.ref('messages').push({ sender: myNum, receiver: `🚨 Zgłoszenie (${target})`, text, time, isEmergency: true });
-            document.getElementById('sms-text').value = "";
-            return alert('Zgłoszenie wysłane!');
-        }
-        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency: false });
+        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency: target === '997' });
         document.getElementById('sms-text').value = "";
     }
-
     function renderMessages(allMsgs) {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
-        const list = document.getElementById('sms-list');
-        list.innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum || m.isEmergency).map(m => {
-            if (m.isEmergency) return `<div class="msg-bubble service"><div style="font-size:11px; font-weight:bold; color:#f1c40f;">Od: ${m.sender} ➔ ${m.receiver}</div><div>${m.text}</div></div>`;
-            const isMine = m.sender === myNum;
-            return `<div class="msg-bubble ${isMine ? 'mine' : ''}"><div style="font-size:10px; font-weight:bold;">${isMine ? 'Ja ➔ ' + getContactName(m.receiver) : getContactName(m.sender)}</div><div>${m.text}</div></div>`;
-        }).join('');
-        list.scrollTop = list.scrollHeight;
+        document.getElementById('sms-list').innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum).map(m => `
+            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''}"><div>${m.text}</div></div>
+        `).join('');
     }
 
     function updateClock() {
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        const dateStr = now.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
-        document.getElementById('sb-time').innerText = timeStr;
-        document.getElementById('main-time').innerText = timeStr;
-        document.getElementById('lock-time').innerText = timeStr;
-        document.getElementById('main-date').innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-        document.getElementById('lock-date').innerText = dateStr;
+        document.getElementById('sb-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('main-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('lock-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClock, 1000); updateClock();
 
     function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
     function lockPhone() { if (localStorage.getItem('phone_lock_enabled') !== 'false') { goHome(); document.getElementById('lock-screen').classList.remove('hidden'); } }
     function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
     function openApp(name) {
-        goHome();
-        document.getElementById('app-' + name).classList.add('active');
-        if (name === 'contacts') renderContacts();
-        if (name === 'moboyatel') renderMobywatel();
-        if (name === 'bank') renderBank();
-        if (name === 'casino') renderCasinoBalance();
+        goHome(); document.getElementById('app-' + name).classList.add('active');
+        if (name === 'contacts') renderContacts(); if (name === 'moboyatel') renderMobywatel(); if (name === 'bank') renderBank(); if (name === 'casino') renderCasinoBalance(); if (name === 'vehicles') renderVehicles();
     }
     function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
-
-    const notesArea = document.getElementById('notes-area');
-    notesArea.value = localStorage.getItem('phone_notes') || "";
-    notesArea.addEventListener('input', () => localStorage.setItem('phone_notes', notesArea.value));
-
+    function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked ? 'light' : 'dark'); }
+    
     let calcExp = "";
-    function calcAdd(val) { calcExp += val; document.getElementById('calc-display').innerText = calcExp; }
+    function calcAdd(v) { calcExp += v; document.getElementById('calc-display').innerText = calcExp; }
     function calcClear() { calcExp = ""; document.getElementById('calc-display').innerText = "0"; }
     function calcBack() { calcExp = calcExp.slice(0, -1); document.getElementById('calc-display').innerText = calcExp || "0"; }
-    function calcEval() {
-        try { calcExp = String(eval(calcExp)); document.getElementById('calc-display').innerText = calcExp; }
-        catch { document.getElementById('calc-display').innerText = "Błąd"; calcExp = ""; }
-    }
-    function toggleTheme() {
-        const isLight = document.getElementById('theme-switch').checked;
-        document.body.classList.toggle('light-mode', isLight);
-        localStorage.setItem('phone_theme', isLight ? 'light' : 'dark');
-    }
+    function calcEval() { try { calcExp = String(eval(calcExp)); document.getElementById('calc-display').innerText = calcExp; } catch { calcExp = ""; } }
 </script>
 </body>
 </html>
