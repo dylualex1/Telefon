@@ -208,7 +208,7 @@
             <div class="lock-date" id="lock-date">Poniedziałek, 9 listopada</div>
         </div>
         <div class="fingerprint-container">
-            <div class="fingerprint-btn" onclick="unlockPhone()">👆</div>
+            <div class="fingerprint-btn" id="fingerprint-btn">👆</div>
             <div class="lock-hint">Dotknij, aby odblokować odciskiem</div>
         </div>
     </div>
@@ -374,6 +374,9 @@
 
     // START APLIKACJI
     window.addEventListener('DOMContentLoaded', () => {
+        // Podpięcie zdarzenia pod odcisku palca bezpośrednio w JS
+        document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
+
         const savedTheme = localStorage.getItem('phone_theme');
         if (savedTheme === 'light') {
             document.getElementById('theme-switch').checked = true;
