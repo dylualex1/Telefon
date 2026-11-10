@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + Bank + Kasyno + Tapety</title>
+    <title>Smartfon RP + Mapa + Twitter + Krypto + 112</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -111,6 +111,9 @@
         .bg-green { background: #27ae60; }
         .bg-gold { background: linear-gradient(135deg, #f39c12, #d35400); }
         .bg-teal { background: #16a085; }
+        .bg-twitter { background: #1da1f2; }
+        .bg-krypto { background: #f39c12; }
+        .bg-map { background: #27ae60; }
 
         .nav-bar {
             height: 48px; background: rgba(0,0,0,0.45); display: flex;
@@ -132,7 +135,6 @@
 
         .msg-bubble { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; margin-bottom: 10px; max-width: 85%; }
         .msg-bubble.mine { background: #2980b9; margin-left: auto; border-color: #3498db; color: #fff; }
-        .msg-bubble.service { background: #c0392b; border-color: #e74c3c; max-width: 100%; color: #fff; }
         
         .chat-input-box { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
         .chat-input-box input, .chat-input-box textarea, .contact-form input, .id-form input, .bank-input {
@@ -226,6 +228,10 @@
             <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
             <div class="app-icon" onclick="openApp('bank')"><div class="icon-box bg-green">💳</div><span>Bank</span></div>
             <div class="app-icon" onclick="openApp('casino')"><div class="icon-box bg-gold">🎰</div><span>Kasyno</span></div>
+            <div class="app-icon" onclick="openApp('map')"><div class="icon-box bg-map">🗺️</div><span>Mapa RP</span></div>
+            <div class="app-icon" onclick="openApp('twitter')"><div class="icon-box bg-twitter">🐦</div><span>Twitter</span></div>
+            <div class="app-icon" onclick="openApp('crypto')"><div class="icon-box bg-krypto">🪙</div><span>Krypto</span></div>
+            <div class="app-icon" onclick="openApp('emergency')"><div class="icon-box bg-red">🚨</div><span>Apka 112</span></div>
             <div class="app-icon" onclick="openApp('vehicles')"><div class="icon-box bg-teal">🚗</div><span>Pojazdy</span></div>
             <div class="app-icon" onclick="openApp('contacts')"><div class="icon-box bg-orange">👤</div><span>Kontakty</span></div>
             <div class="app-icon" onclick="openApp('calc')"><div class="icon-box bg-gray">🧮</div><span>Kalkulator</span></div>
@@ -256,6 +262,65 @@
                 </div>
                 <h3 style="font-size: 14px; margin-bottom: 8px;">Historia operacji</h3>
                 <div id="bank-history-list"></div>
+            </div>
+        </div>
+
+        <!-- MAPA RP (z załącznika) -->
+        <div id="app-map" class="app-window">
+            <div class="app-header"><span>Mapa Miasta ErLC</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" style="text-align:center; padding:5px;">
+                <p style="font-size:11px; color:var(--subtext); margin-bottom:8px;">Główne lokacje: Miasto, Lotnisko, Bank, Autostrady</p>
+                <div style="position:relative; width:100%; border-radius:10px; overflow:hidden; border:1px solid var(--border-color);">
+                    <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=600&q=80" alt="Mapa" style="width:100%; height:auto; display:block;">
+                </div>
+            </div>
+        </div>
+
+        <!-- TWITTER (OFLX) -->
+        <div id="app-twitter" class="app-window">
+            <div class="app-header"><span>Twitter (OFLX)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" style="display:flex; flex-direction:column; gap:10px;">
+                <div class="chat-input-box" style="border-radius:10px; margin-bottom:5px;">
+                    <input type="text" id="tw-author" placeholder="Twoja nazwa (np. Jan Kowalski)">
+                    <textarea id="tw-text" placeholder="Co się dzieje?" style="height:50px;"></textarea>
+                    <button class="btn-primary" onclick="postTweet()">🐦 Tweetnij</button>
+                </div>
+                <div id="twitter-feed"></div>
+            </div>
+        </div>
+
+        <!-- KRYPTOWALUTY -->
+        <div id="app-crypto" class="app-window">
+            <div class="app-header"><span>Giełda Krypto</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div class="bank-card" style="background:linear-gradient(135deg, #f39c12, #d35400);">
+                    <div style="font-size:12px;">Aktualny kurs RPCOIN</div>
+                    <div class="bank-balance" id="crypto-price">124.50 PLN</div>
+                    <div style="font-size:11px; margin-top:4px;" id="crypto-owned">Posiadasz: 0 RPC</div>
+                </div>
+                <div style="display:flex; gap:8px; margin-bottom:15px;">
+                    <input type="number" id="crypto-amount" class="bank-input" placeholder="Ilość RPC" value="1">
+                    <button class="btn-primary" onclick="buyCrypto()">Kup</button>
+                    <button class="btn-danger" onclick="sellCrypto()" style="flex:1; border-radius:8px; font-weight:bold;">Sprzedaj</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- APKA 112 -->
+        <div id="app-emergency" class="app-window">
+            <div class="app-header"><span>Centrala 112</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <p style="font-size:12px; color:var(--subtext);">Wybierz służbę i zgłoś zdarzenie bezpośrednio do Bluebird MDT.</p>
+                    <select id="em-service" class="bank-input">
+                        <option value="Policja (997)">🚨 Policja (997)</option>
+                        <option value="Pogotowie (999)">🚑 Pogotowie Ratunkowe (999)</option>
+                        <option value="Straż Pożarna (998)">🚒 Straż Pożarna (998)</option>
+                    </select>
+                    <input type="text" id="em-location" class="bank-input" placeholder="Lokalizacja (np. Bank Główny)">
+                    <textarea id="em-desc" class="bank-input" placeholder="Opis sytuacji..." style="height:70px;"></textarea>
+                    <button class="btn-primary" onclick="sendEmergency112()">🚨 WYŚLIJ WEZWANIE</button>
+                </div>
             </div>
         </div>
 
@@ -303,7 +368,7 @@
             <div class="app-header"><span>Wiadomości SMS</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="sms-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             <div class="chat-input-box">
-                <input type="text" id="target-phone" placeholder="Numer (lub 997 Policja)">
+                <input type="text" id="target-phone" placeholder="Numer">
                 <textarea id="sms-text" placeholder="Napisz wiadomość..."></textarea>
                 <button class="btn-primary" onclick="sendSms()">Wyślij</button>
             </div>
@@ -402,6 +467,7 @@
     let allAccountsCache = {};
     let allVehiclesCache = {};
     let secretClickCount = 0;
+    let currentCryptoPrice = 124.50;
 
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
@@ -415,10 +481,100 @@
 
         db.ref('claimed_numbers').on('value', snap => { claimedNumbersCache = snap.val() || {}; checkUserNumber(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
         db.ref('citizens').on('value', snap => { allCitizensCache = snap.val() || {}; renderMobywatel(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
-        db.ref('bank_accounts').on('value', snap => { allAccountsCache = snap.val() || {}; renderBank(); renderCasinoBalance(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('bank_accounts').on('value', snap => { allAccountsCache = snap.val() || {}; renderBank(); renderCasinoBalance(); updateCryptoDisplay(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
         db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
+        db.ref('tweets').limitToLast(30).on('value', snap => renderTweets(Object.values(snap.val() || {})));
+
+        // Losowa zmiana kursu krypto co 15 sekund
+        setInterval(() => {
+            let change = (Math.random() * 10 - 4.8);
+            currentCryptoPrice = Math.max(10, currentCryptoPrice + change);
+            updateCryptoDisplay();
+        }, 15000);
     });
+
+    // TWITTER
+    function postTweet() {
+        const author = document.getElementById('tw-author').value.trim();
+        const text = document.getElementById('tw-text').value.trim();
+        if (!author || !text) return alert("Podaj imię i treść tweeta!");
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        db.ref('tweets').push({ author, text, time });
+        document.getElementById('tw-text').value = "";
+    }
+    function renderTweets(tweets) {
+        const feed = document.getElementById('twitter-feed');
+        if (tweets.length === 0) { feed.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak tweetów.</p>`; return; }
+        feed.innerHTML = tweets.slice().reverse().map(t => `
+            <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:10px; border-radius:10px; margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px; color:#1da1f2;">${t.author}<span style="font-size:10px; color:var(--subtext);">${t.time}</span></div>
+                <div style="font-size:13px; margin-top:4px;">${t.text}</div>
+            </div>
+        `).join('');
+    }
+
+    // KRYPTOWALUTY
+    function updateCryptoDisplay() {
+        const myNum = localStorage.getItem('phone_my_number');
+        document.getElementById('crypto-price').innerText = currentCryptoPrice.toFixed(2) + " PLN";
+        if (myNum && allAccountsCache[myNum]) {
+            const owned = allAccountsCache[myNum].crypto || 0;
+            document.getElementById('crypto-owned').innerText = `Posiadasz: ${owned.toFixed(2)} RPC`;
+        }
+    }
+    function buyCrypto() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const qty = parseFloat(document.getElementById('crypto-amount').value);
+        if (isNaN(qty) || qty <= 0) return alert("Podaj ilość!");
+        const cost = qty * currentCryptoPrice;
+        let acc = allAccountsCache[myNum] || { balance: 0, crypto: 0, history: [] };
+        if (acc.balance < cost) return alert("Brak środków w banku!");
+        
+        acc.balance -= cost;
+        acc.crypto = (acc.crypto || 0) + qty;
+        acc.history = acc.history || [];
+        acc.history.push({ title: `Kupno ${qty} RPC`, amount: cost, type: 'out', time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
+        
+        db.ref('bank_accounts/' + myNum).set(acc).then(() => alert(`Zakupiono ${qty} RPC!`));
+    }
+    function sellCrypto() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const qty = parseFloat(document.getElementById('crypto-amount').value);
+        if (isNaN(qty) || qty <= 0) return alert("Podaj ilość!");
+        let acc = allAccountsCache[myNum] || { balance: 0, crypto: 0, history: [] };
+        if ((acc.crypto || 0) < qty) return alert("Nie masz tyle RPC!");
+        const income = qty * currentCryptoPrice;
+        
+        acc.crypto -= qty;
+        acc.balance += income;
+        acc.history = acc.history || [];
+        acc.history.push({ title: `Sprzedaż ${qty} RPC`, amount: income, type: 'in', time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
+
+        db.ref('bank_accounts/' + myNum).set(acc).then(() => alert(`Sprzedano ${qty} RPC za ${income.toFixed(2)} PLN!`));
+    }
+
+    // APKA 112
+    function sendEmergency112() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const service = document.getElementById('em-service').value;
+        const loc = document.getElementById('em-location').value.trim();
+        const desc = document.getElementById('em-desc').value.trim();
+        if (!loc || !desc) return alert("Uzupełnij lokalizację i opis!");
+
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        db.ref('active_dispatches').push({
+            telefon: myNum,
+            sluzba: service,
+            lokalizacja: `${loc} - ${desc}`,
+            czas: time,
+            status: 'Oczekujące'
+        });
+        alert("Zgłoszenie 112 zostało wysłane do dyspozytorni służb!");
+        document.getElementById('em-location').value = "";
+        document.getElementById('em-desc').value = "";
+        goHome();
+    }
 
     function setWallpaper(type) {
         let val = "";
@@ -465,6 +621,7 @@
                 if (!snapshot.exists()) {
                     db.ref('bank_accounts/' + myNum).set({
                         balance: 1000,
+                        crypto: 0,
                         history: [{ title: "Bonus startowy", amount: 1000, type: "in", time: "12:00" }]
                     });
                 }
@@ -736,22 +893,7 @@
         const text = document.getElementById('sms-text').value.trim();
         if (!target || !text) return;
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        
-        const isEmergency = ['997', '998', '999', '112'].includes(target);
-        
-        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency });
-
-        if (isEmergency) {
-            db.ref('active_dispatches').push({
-                telefon: myNum,
-                lokalizacja: text,
-                czas: time,
-                status: 'Oczekujące'
-            });
-            alert('Zgłoszenie alarmowe zostało wysłane do służb!');
-        } else {
-            alert('Wiadomość wysłana!');
-        }
+        db.ref('messages').push({ sender: myNum, receiver: target, text, time });
         document.getElementById('sms-text').value = "";
     }
 
@@ -759,7 +901,7 @@
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
         document.getElementById('sms-list').innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum).map(m => `
-            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''} ${m.isEmergency ? 'service' : ''}">
+            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''}">
                 <div style="font-size:10px; opacity:0.8;">${m.sender === myNum ? 'Ja ➔ ' + m.receiver : 'Od: ' + m.sender}</div>
                 <div>${m.text}</div>
             </div>
@@ -779,7 +921,7 @@
     function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
     function openApp(name) {
         goHome(); document.getElementById('app-' + name).classList.add('active');
-        if (name === 'contacts') renderContacts(); if (name === 'moboyatel') renderMobywatel(); if (name === 'bank') renderBank(); if (name === 'casino') renderCasinoBalance(); if (name === 'vehicles') renderVehicles();
+        if (name === 'contacts') renderContacts(); if (name === 'moboyatel') renderMobywatel(); if (name === 'bank') renderBank(); if (name === 'casino') renderCasinoBalance(); if (name === 'vehicles') renderVehicles(); if(name==='crypto') updateCryptoDisplay();
     }
     function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
     function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked ? 'light' : 'dark'); }
