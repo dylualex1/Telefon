@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + Bank + Kasyno + Pojazdy</title>
+    <title>Smartfon RP + Bank + Kasyno + Tapety</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -34,12 +34,11 @@
         body {
             margin: 0; padding: 0; background: var(--phone-bg); color: var(--text-color);
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
         }
 
         .phone {
             width: 100%; max-width: 400px; height: 100vh; max-height: 820px;
-            background: var(--bg-gradient);
+            background: var(--bg-gradient); background-size: cover; background-position: center;
             display: flex; flex-direction: column; position: relative; overflow: hidden;
             box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
@@ -161,7 +160,6 @@
         .calc-btn.op { background: #e67e22; color: #fff; border: none; }
         .calc-btn.eq { background: #2ecc71; color: #fff; border: none; }
 
-        /* DOWÓD OSOBISTY */
         .id-card {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 16px; padding: 20px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -174,7 +172,6 @@
         .id-info div { font-size: 13px; margin-bottom: 4px; }
         .id-info span { font-weight: bold; }
 
-        /* BANK */
         .bank-card {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             border-radius: 16px; padding: 20px; color: #fff; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -182,7 +179,6 @@
         .bank-balance { font-size: 32px; font-weight: bold; margin-top: 5px; }
         .history-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 12px; }
 
-        /* KASYNO */
         .casino-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: center; }
         .casino-reels { font-size: 36px; background: var(--phone-bg); padding: 12px; border-radius: 10px; border: 2px solid #f39c12; margin: 10px 0; letter-spacing: 8px; }
         .casino-btn-row { display: flex; gap: 8px; margin-top: 8px; }
@@ -268,8 +264,8 @@
             <div class="app-header"><span>Moje Pojazdy (Max 5)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="v-brand" class="bank-input" placeholder="Marka i model (np. Benefactor Schafter)">
-                    <input type="text" id="v_plate" class="bank-input" placeholder="Tablica rejestracyjna (np. W1 KOWAL)">
+                    <input type="text" id="v-brand" class="bank-input" placeholder="Marka i model">
+                    <input type="text" id="v_plate" class="bank-input" placeholder="Tablica (np. W1 KOWAL)">
                     <button class="btn-primary" onclick="registerVehicle()">➕ Zarejestruj pojazd</button>
                 </div>
                 <div id="my-vehicles-list"></div>
@@ -350,17 +346,27 @@
             </div>
         </div>
 
-        <!-- USTAWIENIA (5x klik w napis "Ustawienia" otwiera panel moderatora) -->
+        <!-- USTAWIENIA -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div class="list-item"><div><b>Blokada ekranu</b></div><label class="switch"><input type="checkbox" id="lock-switch" checked onchange="toggleLockFeature()"><span class="slider"></span></label></div>
                 <div class="list-item"><div><b>Motyw</b></div><label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label></div>
+                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                    <div><b>Tapeta telefonu</b></div>
+                    <div style="display:flex; gap:6px; width:100%;">
+                        <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="setWallpaper('dark')">Ciemna</button>
+                        <button class="btn-primary" style="padding:6px; font-size:11px; background:#2980b9;" onclick="setWallpaper('blue')">Niebieska</button>
+                        <button class="btn-primary" style="padding:6px; font-size:11px; background:#8e44ad;" onclick="setWallpaper('purple')">Fiolet</button>
+                    </div>
+                    <input type="text" id="wall-url" class="bank-input" placeholder="Wklej link URL do obrazka..." style="font-size:11px; margin-top:4px;">
+                    <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="setCustomWallpaper()">Ustaw własną tapetę</button>
+                </div>
                 <div class="list-item"><div><b>Mój numer</b><br><small id="settings-my-num">...</small></div><span style="color:#2ecc71; font-size:12px;">Aktywny</span></div>
             </div>
         </div>
 
-        <!-- PANEL MODERATORA (Zarządzanie numerami, edycja dowodów, zmiana salda) -->
+        <!-- PANEL MODERATORA -->
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
             <div class="app-content"><div id="mod-numbers-list"></div></div>
@@ -401,6 +407,9 @@
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
         if (localStorage.getItem('phone_theme') === 'light') { document.getElementById('theme-switch').checked = true; document.body.classList.add('light-mode'); }
         if (localStorage.getItem('phone_lock_enabled') === 'false') { document.getElementById('lock-switch').checked = false; document.getElementById('lock-screen').classList.add('hidden'); }
+        
+        const savedWall = localStorage.getItem('phone_wallpaper');
+        if (savedWall) applyWallpaperStyle(savedWall);
 
         renderContacts();
 
@@ -410,6 +419,32 @@
         db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
     });
+
+    function setWallpaper(type) {
+        let val = "";
+        if (type === 'dark') val = "linear-gradient(160deg, #1b2735 0%, #090a0f 100%)";
+        if (type === 'blue') val = "linear-gradient(160deg, #2980b9 0%, #2c3e50 100%)";
+        if (type === 'purple') val = "linear-gradient(160deg, #8e44ad 0%, #111 100%)";
+        localStorage.setItem('phone_wallpaper', val);
+        applyWallpaperStyle(val);
+    }
+    function setCustomWallpaper() {
+        const url = document.getElementById('wall-url').value.trim();
+        if(!url) return;
+        const val = `url('${url}')`;
+        localStorage.setItem('phone_wallpaper', val);
+        applyWallpaperStyle(val);
+    }
+    function applyWallpaperStyle(val) {
+        const phone = document.getElementById('phone-device');
+        if (val.startsWith('url')) {
+            phone.style.backgroundImage = val;
+            phone.style.backgroundSize = "cover";
+            phone.style.backgroundPosition = "center";
+        } else {
+            phone.style.backgroundImage = val;
+        }
+    }
 
     function secretModClick() {
         secretClickCount++;
@@ -425,7 +460,15 @@
         if (myNum && claimedNumbersCache[myNum]) {
             document.getElementById('setup-screen').classList.add('hidden');
             updateMyNumberDisplay(myNum);
-            if (!allAccountsCache[myNum]) db.ref('bank_accounts/' + myNum).set({ balance: 1000, history: [{ title: "Bonus startowy", amount: 1000, type: "in", time: "12:00" }] });
+            
+            db.ref('bank_accounts/' + myNum).once('value').then(snapshot => {
+                if (!snapshot.exists()) {
+                    db.ref('bank_accounts/' + myNum).set({
+                        balance: 1000,
+                        history: [{ title: "Bonus startowy", amount: 1000, type: "in", time: "12:00" }]
+                    });
+                }
+            });
         } else {
             localStorage.removeItem('phone_my_number');
             renderNumberChoices();
@@ -458,7 +501,6 @@
         document.getElementById('settings-my-num').innerText = num;
     }
 
-    // POJAZDY (MAX 5)
     function registerVehicle() {
         const myNum = localStorage.getItem('phone_my_number');
         const brand = document.getElementById('v-brand').value.trim();
@@ -466,7 +508,7 @@
         if (!brand || !plate) return alert("Uzupełnij markę i tablicę!");
 
         const userVehicles = allVehiclesCache[myNum] || {};
-        if (Object.keys(userVehicles).length >= 5) return alert("Masz już zarejestrowane maksymalnie 5 pojazdów!");
+        if (Object.keys(userVehicles).length >= 5) return alert("Masz już maksymalnie 5 pojazdów!");
 
         db.ref('vehicles/' + myNum + '/' + plate).set({ brand, plate, owner: myNum }).then(() => {
             document.getElementById('v-brand').value = "";
@@ -496,7 +538,6 @@
         `).join('');
     }
 
-    // BANK
     function renderBank() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
@@ -535,7 +576,6 @@
         alert("Przelew wykonany!");
     }
 
-    // KASYNO
     function renderCasinoBalance() {
         const myNum = localStorage.getItem('phone_my_number');
         if (myNum && allAccountsCache[myNum]) document.getElementById('casino-balance-display').innerText = allAccountsCache[myNum].balance.toFixed(2) + " PLN";
@@ -544,7 +584,7 @@
     function playSlots() {
         const myNum = localStorage.getItem('phone_my_number');
         const bet = parseFloat(document.getElementById('casino-bet').value);
-        const acc = allAccountsCache[myNum] || { balance: 0 };
+        const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
         if (isNaN(bet) || bet <= 0 || acc.balance < bet) return alert("Błędna stawka lub brak środków!");
         
         const symbols = ["🍒", "🍋", "💎", "7️⃣"];
@@ -555,6 +595,8 @@
 
         const msg = document.getElementById('casino-result-msg');
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        acc.history = acc.history || [];
+
         if (r1 === r2 && r2 === r3) {
             const win = bet * 5; acc.balance += (win - bet); acc.history.push({ title: "Kasyno (Wygrana)", amount: win - bet, type: 'in', time });
             msg.style.color = "#2ecc71"; msg.innerText = `🎉 JACKPOT! Wygrana ${win.toFixed(2)} PLN!`;
@@ -565,7 +607,6 @@
         db.ref('bank_accounts/' + myNum).set(acc);
     }
 
-    // mObywatel
     function renderMobywatel() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
@@ -622,7 +663,6 @@
         if (citizen) db.ref('citizens/' + myNum + '/suspended').set(!citizen.suspended);
     }
 
-    // PANEL MODERATORA (Edycja dowodu, zmiana salda, usuwanie numeru w jednym miejscu)
     function renderModList() {
         const list = document.getElementById('mod-numbers-list');
         const keys = Object.keys(claimedNumbersCache);
@@ -649,7 +689,7 @@
     }
 
     function modDeleteNumber(num) {
-        if (!confirm(`Usunąć numer ${num} i dane gracza?`)) return;
+        if (!confirm(`Usunąć numer ${num}?`)) return;
         db.ref('claimed_numbers/' + num).remove();
         db.ref('citizens/' + num).remove();
         db.ref('bank_accounts/' + num).remove();
@@ -658,7 +698,7 @@
 
     function modEditCitizen(num) {
         const cit = allCitizensCache[num];
-        if (!cit) return alert("Brak dowodu dla tego numeru!");
+        if (!cit) return alert("Brak dowodu!");
         const newName = prompt("Imię i nazwisko:", cit.name);
         const newPesel = prompt("PESEL:", cit.pesel);
         if (newName && newPesel) db.ref('citizens/' + num).update({ name: newName, pesel: newPesel });
@@ -674,9 +714,7 @@
         }
     }
 
-    // KONTAKTY, SMS, KALKULATOR
     function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts') || '[]'); }
-    function getContactName(num) { const f = getContacts().find(c => c.num === num); return f ? `${f.name} (${num})` : num; }
     function addContact() {
         const name = document.getElementById('contact-name').value.trim();
         const num = document.getElementById('contact-num').value.trim();
@@ -691,20 +729,40 @@
         html += getContacts().map((c, idx) => `<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div><button class="btn-danger" onclick="deleteContact(${idx})">✕</button></div>`).join('');
         document.getElementById('contacts-list').innerHTML = html;
     }
+
     function sendSms() {
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('target-phone').value.trim();
         const text = document.getElementById('sms-text').value.trim();
         if (!target || !text) return;
         const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency: target === '997' });
+        
+        const isEmergency = ['997', '998', '999', '112'].includes(target);
+        
+        db.ref('messages').push({ sender: myNum, receiver: target, text, time, isEmergency });
+
+        if (isEmergency) {
+            db.ref('active_dispatches').push({
+                telefon: myNum,
+                lokalizacja: text,
+                czas: time,
+                status: 'Oczekujące'
+            });
+            alert('Zgłoszenie alarmowe zostało wysłane do służb!');
+        } else {
+            alert('Wiadomość wysłana!');
+        }
         document.getElementById('sms-text').value = "";
     }
+
     function renderMessages(allMsgs) {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
         document.getElementById('sms-list').innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum).map(m => `
-            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''}"><div>${m.text}</div></div>
+            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''} ${m.isEmergency ? 'service' : ''}">
+                <div style="font-size:10px; opacity:0.8;">${m.sender === myNum ? 'Ja ➔ ' + m.receiver : 'Od: ' + m.sender}</div>
+                <div>${m.text}</div>
+            </div>
         `).join('');
     }
 
