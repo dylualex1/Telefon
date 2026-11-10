@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + Bank + Kasyno + Sklep Play z grami</title>
+    <title>Smartfon RP + Bank + Działające Gry + Praca 1h</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -186,7 +186,12 @@
         .quick-bet { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--header-bg); color: var(--text-color); cursor: pointer; font-weight: bold; font-size: 12px; }
         
         .job-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 10px; }
-        .game-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .game-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; }
+        
+        .sub-game-box { background: var(--header-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin-top: 8px; display: none; text-align: center; }
+        .sub-game-box.active { display: block; }
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px; margin: 10px auto; }
+        .ttt-cell { width: 45px; height: 45px; background: var(--phone-bg); border: 1px solid var(--border-color); font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; color: var(--text-color); }
     </style>
 </head>
 <body>
@@ -240,43 +245,82 @@
             <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
         </div>
 
-        <!-- SKLEP PLAY (GRI) -->
+        <!-- SKLEP PLAY (DZIAŁAJĄCE GRY) -->
         <div id="app-playstore" class="app-window">
             <div class="app-header"><span>Google Play (Gry)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Wybierz prostą grę na zabicie czasu podczas stania w korku RP!</p>
+                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Wybierz grę i graj bezpośrednio w telefonie!</p>
                 
                 <div class="game-card">
                     <div><b>❌ Kółko i Krzyżyk</b><br><small style="color:var(--subtext);">Klasyczna gra strategiczna</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Gra Kółko i Krzyżyk uruchomiona! (Wkrótce plansza)')">Graj</button>
+                    <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-ttt')">Graj</button>
+                    <div id="box-ttt" class="sub-game-box">
+                        <div id="ttt-status" style="font-size:12px; font-weight:bold; margin-bottom:5px;">Ruch gracza: X</div>
+                        <div class="ttt-grid" id="ttt-board">
+                            <div class="ttt-cell" onclick="cellClick(0)"></div><div class="ttt-cell" onclick="cellClick(1)"></div><div class="ttt-cell" onclick="cellClick(2)"></div>
+                            <div class="ttt-cell" onclick="cellClick(3)"></div><div class="ttt-cell" onclick="cellClick(4)"></div><div class="ttt-cell" onclick="cellClick(5)"></div>
+                            <div class="ttt-cell" onclick="cellClick(6)"></div><div class="ttt-cell" onclick="cellClick(7)"></div><div class="ttt-cell" onclick="cellClick(8)"></div>
+                        </div>
+                        <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="resetTTT()">Reset</button>
+                    </div>
                 </div>
+
                 <div class="game-card">
-                    <div><b>💣 Saper RP</b><br><small style="color:var(--subtext);">Uważaj na ładunki wybuchowe</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Saper zainicjowany. Szukaj min!')">Graj</button>
+                    <div><b>🔢 Zgadnij Liczbę (1-50)</b><br><small style="color:var(--subtext);">Wylosowano liczbę, odgadnij ją</small></div>
+                    <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-guess')">Graj</button>
+                    <div id="box-guess" class="sub-game-box">
+                        <input type="number" id="guess-input" class="bank-input" placeholder="Wpisz 1-50" style="margin-bottom:6px;">
+                        <button class="btn-primary" style="padding:6px; font-size:11px; margin-bottom:6px;" onclick="checkGuess()">Sprawdź</button>
+                        <div id="guess-msg" style="font-size:12px; font-weight:bold;"></div>
+                    </div>
                 </div>
+
                 <div class="game-card">
-                    <div><b>🖱️ Klikacz Monet</b><br><small style="color:var(--subtext);">Zbieraj walutę klikając w ekran</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Klikaj szybko po monety!')">Graj</button>
+                    <div><b>🖱️ Klikacz Monet</b><br><small style="color:var(--subtext);">Zbieraj punkty za klikanie</small></div>
+                    <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-clicker')">Graj</button>
+                    <div id="box-clicker" class="sub-game-box">
+                        <div style="font-size:16px; font-weight:bold; margin-bottom:8px;" id="clicker-score">Punkty: 0</div>
+                        <button class="btn-primary" style="background:#f39c12; padding:10px; font-size:14px;" onclick="addClickScore()">ZEBRAJ MONETĘ! 🪙</button>
+                    </div>
                 </div>
+
                 <div class="game-card">
-                    <div><b>🔢 Zgadnij Liczbę (1-100)</b><br><small style="color:var(--subtext);">Logiczna zagadka losowa</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="let n=Math.floor(Math.random()*100)+1; let g=prompt('Zgadnij liczbę 1-100:'); alert(g==n?'Brawo! Trafiłeś!':(g>n?'Za dużo!':'Za mało!'));">Graj</button>
+                    <div><b>✂️ Kamień, Papier, Nożyce</b><br><small style="color:var(--subtext);">Pojedynek z telefonem</small></div>
+                    <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-kpn')">Graj</button>
+                    <div id="box-kpn" class="sub-game-box">
+                        <div style="display:flex; gap:5px; justify-content:center; margin-bottom:6px;">
+                            <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="playKPN('Kamień')">Kamień</button>
+                            <button class="btn-primary" style="padding:6px; font-size:11px; background:#e67e22;" onclick="playKPN('Papier')">Papier</button>
+                            <button class="btn-primary" style="padding:6px; font-size:11px; background:#e74c3c;" onclick="playKPN('Nożyce')">Nożyce</button>
+                        </div>
+                        <div id="kpn-result" style="font-size:12px; font-weight:bold;">Wybierz swój znak!</div>
+                    </div>
                 </div>
-                <div class="game-card">
-                    <div><b>✂️ Kamień, Papier, Nożyce</b><br><small style="color:var(--subtext);">Pojedynek z botem</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="let w=['Kamień','Papier','Nożyce']; let b=w[Math.floor(Math.random()*3)]; let u=prompt('Wpisz: Kamień, Papier lub Nożyce'); alert('Bot wybrał: '+b);">Graj</button>
+            </div>
+        </div>
+
+        <!-- PRACA RP (Z LIMITEM 1H) -->
+        <div id="app-jobs" class="app-window">
+            <div class="app-header"><span>Urząd Pracy (Zlecenia)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Możesz pracować raz na godzinę. Wybierz zlecenie, odczekaj czas kursu, a wypłata trafi do banku.</p>
+                
+                <div class="job-card">
+                    <b>📦 Kurier Paczek</b>
+                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 200 PLN | Czas kursu: 10s</div>
+                    <button class="btn-primary" id="job-btn-1" onclick="rozpocznijPrace(1, 'Kurier Paczek', 200, 10)">Rozpocznij kurs</button>
                 </div>
-                <div class="game-card">
-                    <div><b>🐍 Retro Snake</b><br><small style="color:var(--subtext);">Kultowy wąż</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Snake uruchomiony w tle!')">Graj</button>
+
+                <div class="job-card">
+                    <b>🧹 Pracownik Oczyszczania</b>
+                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 350 PLN | Czas kursu: 15s</div>
+                    <button class="btn-primary" id="job-btn-2" onclick="rozpocznijPrace(2, 'Pracownik Oczyszczania', 350, 15)">Rozpocznij pracę</button>
                 </div>
-                <div class="game-card">
-                    <div><b>🎯 Strzelnica (Refleks)</b><br><small style="color:var(--subtext);">Sprawdź swój czas reakcji</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Czas reakcji: 0.24s - Świetny wynik!')">Graj</button>
-                </div>
-                <div class="game-card">
-                    <div><b>🎲 Kostka do gry (Rzut)</b><br><small style="color:var(--subtext);">Symulator rzutu kością D6</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px;" onclick="alert('Wyrzucono oczek: ' + (Math.floor(Math.random()*6)+1))">Graj</button>
+
+                <div class="job-card">
+                    <b>🚚 Kierowca Tir / Dostawca</b>
+                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 600 PLN | Czas kursu: 25s</div>
+                    <button class="btn-primary" id="job-btn-3" onclick="rozpocznijPrace(3, 'Dostawca Tir', 600, 25)">Wyjedź w trasę</button>
                 </div>
             </div>
         </div>
@@ -304,32 +348,6 @@
                 </div>
                 <h3 style="font-size: 14px; margin-bottom: 8px;">Historia operacji</h3>
                 <div id="bank-history-list"></div>
-            </div>
-        </div>
-
-        <!-- PRACA RP -->
-        <div id="app-jobs" class="app-window">
-            <div class="app-header"><span>Urząd Pracy / Zlecenia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content">
-                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Wybierz pracę i wykonaj zlecenie, aby zarobić pieniądze trafiające bezpośrednio na Twoje konto bankowe.</p>
-                
-                <div class="job-card">
-                    <b>📦 Kurier Paczek</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 150 - 250 PLN</div>
-                    <button class="btn-primary" onclick="wykonajPrace('Kurier Paczek', 150, 250)">Rozpocznij kurs</button>
-                </div>
-
-                <div class="job-card">
-                    <b>🧹 Pracownik Oczyszczania</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 200 - 350 PLN</div>
-                    <button class="btn-primary" onclick="wykonajPrace('Pracownik Oczyszczania', 200, 350)">Rozpocznij pracę</button>
-                </div>
-
-                <div class="job-card">
-                    <b>🚚 Kierowca Tir / Dostawca</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 400 - 600 PLN</div>
-                    <button class="btn-primary" onclick="wykonajPrace('Dostawca Tir', 400, 600)">Wyporadź w trasę</button>
-                </div>
             </div>
         </div>
 
@@ -523,19 +541,177 @@
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
     });
 
-    function wykonajPrace(nazwaPracy, minZarobek, maxZarobek) {
+    // --- LOGIKA SKLEPU PLAY (GRY) ---
+    function toggleGameBox(id) {
+        document.getElementById(id).classList.toggle('active');
+    }
+
+    let tttBoard = ["", "", "", "", "", "", "", "", ""];
+    let tttTurn = "X";
+    let tttActive = true;
+    function cellClick(idx) {
+        if (!tttActive || tttBoard[idx] !== "") return;
+        tttBoard[idx] = tttTurn;
+        renderTTT();
+        checkTTTWinner();
+        if (tttActive) {
+            tttTurn = tttTurn === "X" ? "O" : "X";
+            document.getElementById('ttt-status').innerText = `Ruch gracza: ${tttTurn}`;
+        }
+    }
+    function renderTTT() {
+        document.querySelectorAll('.ttt-cell').forEach((c, i) => c.innerText = tttBoard[i]);
+    }
+    function checkTTTWinner() {
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        for (let w of wins) {
+            const [a,b,c] = w;
+            if (tttBoard[a] && tttBoard[a] === tttBoard[b] && tttBoard[a] === tttBoard[c]) {
+                document.getElementById('ttt-status').innerText = `🎉 Wygrywa ${tttBoard[a]}!`;
+                tttActive = false;
+                return;
+            }
+        }
+        if (!tttBoard.includes("")) {
+            document.getElementById('ttt-status').innerText = `🤝 Remis!`;
+            tttActive = false;
+        }
+    }
+    function resetTTT() {
+        tttBoard = ["", "", "", "", "", "", "", "", ""];
+        tttTurn = "X";
+        tttActive = true;
+        document.getElementById('ttt-status').innerText = `Ruch gracza: X`;
+        renderTTT();
+    }
+
+    let targetNum = Math.floor(Math.random() * 50) + 1;
+    function checkGuess() {
+        const val = parseInt(document.getElementById('guess-input').value);
+        const msg = document.getElementById('guess-msg');
+        if (isNaN(val)) return;
+        if (val === targetNum) {
+            msg.style.color = "#2ecc71";
+            msg.innerText = `🎉 Brawo! Trafiłeś liczbę ${targetNum}!`;
+            targetNum = Math.floor(Math.random() * 50) + 1;
+        } else if (val > targetNum) {
+            msg.style.color = "#e74c3c";
+            msg.innerText = `📉 Za dużo! Szukaj mniejszej.`;
+        } else {
+            msg.style.color = "#e67e22";
+            msg.innerText = `📈 Za mało! Szukaj większej.`;
+        }
+    }
+
+    let clickScore = 0;
+    function addClickScore() {
+        clickScore++;
+        document.getElementById('clicker-score').innerText = `Punkty: ${clickScore}`;
+    }
+
+    function playKPN(userChoice) {
+        const choices = ["Kamień", "Papier", "Nożyce"];
+        const botChoice = choices[Math.floor(Math.random() * 3)];
+        const res = document.getElementById('kpn-result');
+        if (userChoice === botChoice) {
+            res.style.color = "#f1c40f";
+            res.innerText = `Remis! Bot wybrał ${botChoice}.`;
+        } else if (
+            (userChoice === "Kamień" && botChoice === "Nożyce") ||
+            (userChoice === "Papier" && botChoice === "Kamień") ||
+            (userChoice === "Nożyce" && botChoice === "Papier")
+        ) {
+            res.style.color = "#2ecc71";
+            res.innerText = `🎉 Wygrałeś! Bot wybrał ${botChoice}.`;
+        } else {
+            res.style.color = "#e74c3c";
+            res.innerText = `❌ Przegrałeś. Bot wybrał ${botChoice}.`;
+        }
+    }
+
+    // --- SYSTEM PRACY Z LICZNIKIEM I LIMITEM 1H ---
+    let isWorkingNow = false;
+
+    function getJobCooldownLeft(myNum) {
+        const cd = parseInt(localStorage.getItem('job_cooldown_' + myNum) || '0');
+        return Math.max(0, cd - Date.now());
+    }
+
+    function formatCooldown(ms) {
+        const totalSec = Math.ceil(ms / 1000);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        return `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+    }
+
+    function updateJobButtons() {
+        if (isWorkingNow) return;
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
-        const zarobek = Math.floor(Math.random() * (maxZarobek - minZarobek + 1)) + minZarobek;
-        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
-        acc.balance += zarobek;
-        acc.history = acc.history || [];
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        acc.history.push({ title: `Wypłata: ${nazwaPracy}`, amount: zarobek, type: 'in', time });
 
-        db.ref('bank_accounts/' + myNum).set(acc).then(() => {
-            alert(`✅ Ukończono zlecenie (${nazwaPracy})!\nZarobiono: +${zarobek} PLN trafia na konto bankowe.`);
+        const left = getJobCooldownLeft(myNum);
+        const btns = [
+            { id: 'job-btn-1', label: 'Rozpocznij kurs' },
+            { id: 'job-btn-2', label: 'Rozpocznij pracę' },
+            { id: 'job-btn-3', label: 'Wyjedź w trasę' }
+        ];
+
+        btns.forEach(b => {
+            const el = document.getElementById(b.id);
+            if (!el) return;
+            if (left > 0) {
+                el.disabled = true;
+                el.style.background = "#475569";
+                el.innerText = `⏳ Odczekaj: ${formatCooldown(left)}`;
+            } else {
+                el.disabled = false;
+                el.style.background = "#2ecc71";
+                el.innerText = b.label;
+            }
         });
+    }
+
+    function rozpocznijPrace(id, nazwaPracy, zarobek, sekundy) {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum || isWorkingNow) return;
+
+        const left = getJobCooldownLeft(myNum);
+        if (left > 0) {
+            return alert(`⏳ Możesz pracować raz na godzinę! Pozostało: ${formatCooldown(left)}`);
+        }
+
+        isWorkingNow = true;
+        const btn = document.getElementById(`job-btn-${id}`);
+        
+        document.getElementById('job-btn-1').disabled = true;
+        document.getElementById('job-btn-2').disabled = true;
+        document.getElementById('job-btn-3').disabled = true;
+
+        let pozostalo = sekundy;
+        btn.innerText = `Trwa praca (${pozostalo}s)...`;
+
+        const timer = setInterval(() => {
+            pozostalo--;
+            if (pozostalo > 0) {
+                btn.innerText = `Trwa praca (${pozostalo}s)...`;
+            } else {
+                clearInterval(timer);
+                isWorkingNow = false;
+
+                localStorage.setItem('job_cooldown_' + myNum, Date.now() + 3600000);
+
+                let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+                acc.balance += zarobek;
+                acc.history = acc.history || [];
+                const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+                acc.history.push({ title: `Wypłata: ${nazwaPracy}`, amount: zarobek, type: 'in', time });
+
+                db.ref('bank_accounts/' + myNum).set(acc).then(() => {
+                    updateJobButtons();
+                    alert(`✅ Ukończono zlecenie (${nazwaPracy})!\nZarobiono: +${zarobek} PLN.\nKolejna praca dostępna za godzinę.`);
+                });
+            }
+        }, 1000);
     }
 
     function sendEmergency112() {
@@ -895,6 +1071,9 @@
         document.getElementById('sb-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
         document.getElementById('main-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
         document.getElementById('lock-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        if (document.getElementById('app-jobs').classList.contains('active')) {
+            updateJobButtons();
+        }
     }
     setInterval(updateClock, 1000); updateClock();
 
@@ -903,7 +1082,12 @@
     function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
     function openApp(name) {
         goHome(); document.getElementById('app-' + name).classList.add('active');
-        if (name === 'contacts') renderContacts(); if (name === 'moboyatel') renderMobywatel(); if (name === 'bank') renderBank(); if (name === 'casino') renderCasinoBalance(); if (name === 'vehicles') renderVehicles();
+        if (name === 'contacts') renderContacts();
+        if (name === 'moboyatel') renderMobywatel();
+        if (name === 'bank') renderBank();
+        if (name === 'casino') renderCasinoBalance();
+        if (name === 'vehicles') renderVehicles();
+        if (name === 'jobs') updateJobButtons();
     }
     function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
     function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked ? 'light' : 'dark'); }
