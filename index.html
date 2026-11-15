@@ -192,6 +192,11 @@
         .sub-game-box.active { display: block; }
         .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px; margin: 10px auto; }
         .ttt-cell { width: 45px; height: 45px; background: var(--phone-bg); border: 1px solid var(--border-color); font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; color: var(--text-color); }
+        
+        /* Styl mapy zgłoszeń w telefonie */
+        .map-picker-container { position: relative; width: 100%; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); cursor: crosshair; margin-bottom: 10px; }
+        .map-picker-container img { width: 100%; height: auto; display: block; }
+        .map-pin { position: absolute; width: 16px; height: 16px; background: #e74c3c; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; display: none; box-shadow: 0 0 6px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
@@ -245,7 +250,7 @@
             <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
         </div>
 
-        <!-- SKLEP PLAY (DZIAŁAJĄCE GRY) -->
+        <!-- SKLEP PLAY (GRY) -->
         <div id="app-playstore" class="app-window">
             <div class="app-header"><span>Google Play (Gry)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -299,7 +304,7 @@
             </div>
         </div>
 
-        <!-- PRACA RP (Z LIMITEM 1H) -->
+        <!-- PRACA RP -->
         <div id="app-jobs" class="app-window">
             <div class="app-header"><span>Urząd Pracy (Zlecenia)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -351,7 +356,7 @@
             </div>
         </div>
 
-        <!-- MAPA RP (ZAKTUALIZOWANA) -->
+        <!-- MAPA RP -->
         <div id="app-map" class="app-window">
             <div class="app-header"><span>Mapa Miasta ErLC</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" style="text-align:center; padding:8px;">
@@ -362,19 +367,26 @@
             </div>
         </div>
 
-        <!-- APKA 112 -->
+        <!-- APKA 112 (Z MAPĄ I PINESKĄ) -->
         <div id="app-emergency" class="app-window">
             <div class="app-header"><span>Centrala 112</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div style="display:flex; flex-direction:column; gap:10px;">
-                    <p style="font-size:12px; color:var(--subtext);">Wybierz służbę i zgłoś zdarzenie bezpośrednio do Bluebird MDT.</p>
+                    <p style="font-size:12px; color:var(--subtext);">Wybierz służbę, opis i kliknij na mapę, aby zaznaczyć lokalizację wezwania.</p>
                     <select id="em-service" class="bank-input">
                         <option value="Policja (997)">🚨 Policja (997)</option>
                         <option value="Pogotowie (999)">🚑 Pogotowie Ratunkowe (999)</option>
                         <option value="Straż Pożarna (998)">🚒 Straż Pożarna (998)</option>
                     </select>
-                    <input type="text" id="em-location" class="bank-input" placeholder="Lokalizacja (np. Bank Główny)">
-                    <textarea id="em-desc" class="bank-input" placeholder="Opis sytuacji..." style="height:70px;"></textarea>
+                    <input type="text" id="em-location" class="bank-input" placeholder="Lokalizacja / Adres (np. Bank Główny)">
+                    <textarea id="em-desc" class="bank-input" placeholder="Opis sytuacji..." style="height:60px;"></textarea>
+                    
+                    <div style="font-size:12px; font-weight:bold;">Kliknij na mapę, aby postawić pineskę:</div>
+                    <div class="map-picker-container" id="map-picker-box" onclick="placePin(event)">
+                        <img src="mapa.jpg" alt="Mapa zgłoszenia">
+                        <div id="map-pin-marker" class="map-pin"></div>
+                    </div>
+
                     <button class="btn-primary" onclick="sendEmergency112()">🚨 WYŚLIJ WEZWANIE</button>
                 </div>
             </div>
@@ -524,6 +536,9 @@
     let allVehiclesCache = {};
     let secretClickCount = 0;
 
+    let selectedPinX = 50; // procentowo
+    let selectedPinY = 50;
+
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
         if (localStorage.getItem('phone_theme') === 'light') { document.getElementById('theme-switch').checked = true; document.body.classList.add('light-mode'); }
@@ -540,6 +555,22 @@
         db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
     });
+
+    // --- PINESKA NA MAPIE W ZGŁOSZENIACH ---
+    function placePin(event) {
+        const box = document.getElementById('map-picker-box');
+        const rect = box.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        selectedPinX = ((x / rect.width) * 100).toFixed(1);
+        selectedPinY = ((y / rect.height) * 100).toFixed(1);
+
+        const pin = document.getElementById('map-pin-marker');
+        pin.style.left = x + 'px';
+        pin.style.top = y + 'px';
+        pin.style.display = 'block';
+    }
 
     // --- LOGIKA SKLEPU PLAY (GRY) ---
     function toggleGameBox(id) {
@@ -727,7 +758,9 @@
             sluzba: service,
             lokalizacja: `${loc} - ${desc}`,
             czas: time,
-            status: 'Oczekujące'
+            status: 'Oczekujące',
+            pinX: selectedPinX,
+            pinY: selectedPinY
         });
         alert("Zgłoszenie 112 zostało wysłane do dyspozytorni służb!");
         document.getElementById('em-location').value = "";
@@ -969,7 +1002,7 @@
         const discord = document.getElementById('id-discord').value.trim();
         const photo = document.getElementById('id-photo').value.trim();
         if (!name || !pesel) return alert("Uzupełnij dane!");
-        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false, gunPermit: false }).then(() => alert("Dowód stworzony!"));
+        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false, gunPermit: false, gender: 'Mężczyzna', address: 'ul. Główna 1', parents: 'Jan Maria', ksis: 'Brak', tickets: 0, sis: 'Brak', noenet: 'Brak' }).then(() => alert("Dowód stworzony!"));
     }
 
     function toggleSuspendId() {
