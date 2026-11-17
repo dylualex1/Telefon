@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP + Bank + Gry + Mapa + Prawko + Otodom</title>
+    <title>Smartfon RP - Otodom & IP</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -140,7 +140,7 @@
         .chat-input-box { display: flex; flex-direction: column; gap: 8px; padding: 10px; background: var(--header-bg); border-top: 1px solid var(--border-color); }
         .chat-input-box input, .chat-input-box textarea, .contact-form input, .id-form input, .bank-input {
             width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
-            background: var(--phone-bg); color: var(--text-color); outline: none; font-size: 14px;
+            background: var(--phone-bg); color: var(--text-color); outline: none; font-size: 14px; margin-bottom: 8px;
         }
         .chat-input-box textarea { resize: none; height: 60px; }
         .btn-primary { background: #2ecc71; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
@@ -166,15 +166,8 @@
         .id-card {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 16px; padding: 20px; color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            position: relative; border: 1px solid rgba(255,255,255,0.2); margin-bottom: 15px;
+            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.2);
         }
-        .id-card.suspended { background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%); border-color: #f87171; }
-        .id-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; opacity: 0.8; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 12px; }
-        .id-body { display: flex; gap: 15px; align-items: center; }
-        .id-photo { width: 80px; height: 100px; background: #cbd5e1; border-radius: 8px; object-fit: cover; border: 2px solid #fff; }
-        .id-info div { font-size: 13px; margin-bottom: 4px; }
-        .id-info span { font-weight: bold; }
-
         .bank-card {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             border-radius: 16px; padding: 20px; color: #fff; margin-bottom: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -187,10 +180,7 @@
         .casino-btn-row { display: flex; gap: 8px; margin-top: 8px; }
         .quick-bet { flex: 1; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--header-bg); color: var(--text-color); cursor: pointer; font-weight: bold; font-size: 12px; }
         
-        .job-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 10px; }
-        .game-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; }
-        .house-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-        
+        .job-card, .game-card, .house-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 10px; }
         .sub-game-box { background: var(--header-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin-top: 8px; display: none; text-align: center; }
         .sub-game-box.active { display: block; }
         .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: 150px; margin: 10px auto; }
@@ -224,10 +214,7 @@
 
     <div class="status-bar">
         <span id="sb-time">12:00</span>
-        <div class="status-icons">
-            <span id="sb-wifi">📶 LTE</span>
-            <span id="sb-battery">🔋 94%</span>
-        </div>
+        <div class="status-icons"><span>📶 LTE</span><span>🔋 94%</span></div>
     </div>
 
     <div class="screen">
@@ -241,80 +228,51 @@
             <div class="app-icon" onclick="openApp('sms')"><div class="icon-box bg-blue">💬</div><span>Wiadomości</span></div>
             <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
             <div class="app-icon" onclick="openApp('bank')"><div class="icon-box bg-green">💳</div><span>Bank</span></div>
-            <div class="app-icon" onclick="openApp('school')"><div class="icon-box bg-school">🪪</div><span>Szkoła Jazdy</span></div>
-            <div class="app-icon" onclick="openApp('otodom')"><div class="icon-box bg-house">🏡</div><span>Otodom</span></div>
             <div class="app-icon" onclick="openApp('casino')"><div class="icon-box bg-gold">🎰</div><span>Kasyno</span></div>
             <div class="app-icon" onclick="openApp('playstore')"><div class="icon-box bg-play">🎮</div><span>Sklep Play</span></div>
             <div class="app-icon" onclick="openApp('jobs')"><div class="icon-box bg-work">💼</div><span>Praca RP</span></div>
+            <div class="app-icon" onclick="openApp('school')"><div class="icon-box bg-school">🚗</div><span>Szkoła Jazdy</span></div>
+            <div class="app-icon" onclick="openApp('otodom')"><div class="icon-box bg-house">🏡</div><span>Otodom</span></div>
             <div class="app-icon" onclick="openApp('map')"><div class="icon-box bg-green">🗺️</div><span>Mapa RP</span></div>
             <div class="app-icon" onclick="openApp('emergency')"><div class="icon-box bg-red">🚨</div><span>Apka 112</span></div>
-            <div class="app-icon" onclick="openApp('vehicles')"><div class="icon-box bg-teal">🚗</div><span>Pojazdy</span></div>
+            <div class="app-icon" onclick="openApp('vehicles')"><div class="icon-box bg-teal">🚙</div><span>Pojazdy</span></div>
             <div class="app-icon" onclick="openApp('contacts')"><div class="icon-box bg-orange">👤</div><span>Kontakty</span></div>
             <div class="app-icon" onclick="openApp('calc')"><div class="icon-box bg-gray">🧮</div><span>Kalkulator</span></div>
             <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
         </div>
 
-        <!-- SZKOŁA JAZDY -->
-        <div id="app-school" class="app-window">
-            <div class="app-header"><span>Ośrodek Szkolenia Kierowców</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content" id="school-content"></div>
-        </div>
-
-        <!-- OTODOM -->
-        <div id="app-otodom" class="app-window">
-            <div class="app-header"><span>Otodom Nieruchomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content" id="otodom-content"></div>
-        </div>
-
-        <!-- SKLEP PLAY (GRY) -->
+        <!-- SKLEP PLAY -->
         <div id="app-playstore" class="app-window">
             <div class="app-header"><span>Google Play (Gry)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Wybierz grę i graj bezpośrednio w telefonie!</p>
-                
                 <div class="game-card">
-                    <div><b>❌ Kółko i Krzyżyk</b><br><small style="color:var(--subtext);">Klasyczna gra strategiczna</small></div>
+                    <div><b>❌ Kółko i Krzyżyk</b></div>
                     <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-ttt')">Graj</button>
                     <div id="box-ttt" class="sub-game-box">
-                        <div id="ttt-status" style="font-size:12px; font-weight:bold; margin-bottom:5px;">Ruch gracza: X</div>
+                        <div id="ttt-status" style="font-size:12px; font-weight:bold; margin-bottom:5px;">Ruch: X</div>
                         <div class="ttt-grid" id="ttt-board">
                             <div class="ttt-cell" onclick="cellClick(0)"></div><div class="ttt-cell" onclick="cellClick(1)"></div><div class="ttt-cell" onclick="cellClick(2)"></div>
                             <div class="ttt-cell" onclick="cellClick(3)"></div><div class="ttt-cell" onclick="cellClick(4)"></div><div class="ttt-cell" onclick="cellClick(5)"></div>
                             <div class="ttt-cell" onclick="cellClick(6)"></div><div class="ttt-cell" onclick="cellClick(7)"></div><div class="ttt-cell" onclick="cellClick(8)"></div>
                         </div>
-                        <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="resetTTT()">Reset</button>
+                        <button class="btn-danger" onclick="resetTTT()">Reset</button>
                     </div>
                 </div>
-
                 <div class="game-card">
-                    <div><b>🔢 Zgadnij Liczbę (1-50)</b><br><small style="color:var(--subtext);">Wylosowano liczbę, odgadnij ją</small></div>
+                    <div><b>🔢 Zgadnij Liczbę (1-50)</b></div>
                     <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-guess')">Graj</button>
                     <div id="box-guess" class="sub-game-box">
-                        <input type="number" id="guess-input" class="bank-input" placeholder="Wpisz 1-50" style="margin-bottom:6px;">
-                        <button class="btn-primary" style="padding:6px; font-size:11px; margin-bottom:6px;" onclick="checkGuess()">Sprawdź</button>
+                        <input type="number" id="guess-input" class="bank-input" placeholder="Wpisz 1-50">
+                        <button class="btn-primary" style="padding:6px; margin-bottom:6px;" onclick="checkGuess()">Sprawdź</button>
                         <div id="guess-msg" style="font-size:12px; font-weight:bold;"></div>
                     </div>
                 </div>
-
                 <div class="game-card">
-                    <div><b>🖱️ Klikacz Monet</b><br><small style="color:var(--subtext);">Zbieraj punkty za klikanie</small></div>
+                    <div><b>🖱️ Klikacz Monet</b></div>
                     <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-clicker')">Graj</button>
                     <div id="box-clicker" class="sub-game-box">
                         <div style="font-size:16px; font-weight:bold; margin-bottom:8px;" id="clicker-score">Punkty: 0</div>
-                        <button class="btn-primary" style="background:#f39c12; padding:10px; font-size:14px;" onclick="addClickScore()">ZEBRAJ MONETĘ! 🪙</button>
-                    </div>
-                </div>
-
-                <div class="game-card">
-                    <div><b>✂️ Kamień, Papier, Nożyce</b><br><small style="color:var(--subtext);">Pojedynek z telefonem</small></div>
-                    <button class="btn-primary" style="width:auto; padding:6px 12px; margin-top:6px;" onclick="toggleGameBox('box-kpn')">Graj</button>
-                    <div id="box-kpn" class="sub-game-box">
-                        <div style="display:flex; gap:5px; justify-content:center; margin-bottom:6px;">
-                            <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="playKPN('Kamień')">Kamień</button>
-                            <button class="btn-primary" style="padding:6px; font-size:11px; background:#e67e22;" onclick="playKPN('Papier')">Papier</button>
-                            <button class="btn-primary" style="padding:6px; font-size:11px; background:#e74c3c;" onclick="playKPN('Nożyce')">Nożyce</button>
-                        </div>
-                        <div id="kpn-result" style="font-size:12px; font-weight:bold;">Wybierz swój znak!</div>
+                        <button class="btn-primary" style="background:#f39c12;" onclick="addClickScore()">ZEBRAJ MONETĘ! 🪙</button>
                     </div>
                 </div>
             </div>
@@ -322,27 +280,10 @@
 
         <!-- PRACA RP -->
         <div id="app-jobs" class="app-window">
-            <div class="app-header"><span>Urząd Pracy (Zlecenia)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-header"><span>Urząd Pracy</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <p style="font-size:12px; color:var(--subtext); margin-bottom:12px;">Możesz pracować raz na godzinę. Wybierz zlecenie, odczekaj czas kursu, a wypłata trafi do banku.</p>
-                
-                <div class="job-card">
-                    <b>📦 Kurier Paczek</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 200 PLN | Czas kursu: 10s</div>
-                    <button class="btn-primary" id="job-btn-1" onclick="rozpocznijPrace(1, 'Kurier Paczek', 200, 10)">Rozpocznij kurs</button>
-                </div>
-
-                <div class="job-card">
-                    <b>🧹 Pracownik Oczyszczania</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 350 PLN | Czas kursu: 15s</div>
-                    <button class="btn-primary" id="job-btn-2" onclick="rozpocznijPrace(2, 'Pracownik Oczyszczania', 350, 15)">Rozpocznij pracę</button>
-                </div>
-
-                <div class="job-card">
-                    <b>🚚 Kierowca Tir / Dostawca</b>
-                    <div style="font-size:12px; color:var(--subtext); margin:4px 0;">Zarobek: 600 PLN | Czas kursu: 25s</div>
-                    <button class="btn-primary" id="job-btn-3" onclick="rozpocznijPrace(3, 'Dostawca Tir', 600, 25)">Wyjedź w trasę</button>
-                </div>
+                <div class="job-card"><b>📦 Kurier Paczek</b><br><small style="color:var(--subtext);">Zarobek: 200 PLN | Czas: 10s</small><button class="btn-primary" id="job-btn-1" style="margin-top:6px;" onclick="rozpocznijPrace(1, 'Kurier Paczek', 200, 10)">Rozpocznij kurs</button></div>
+                <div class="job-card"><b>🧹 Oczyszczanie Miasta</b><br><small style="color:var(--subtext);">Zarobek: 350 PLN | Czas: 15s</small><button class="btn-primary" id="job-btn-2" style="margin-top:6px;" onclick="rozpocznijPrace(2, 'Oczyszczanie', 350, 15)">Rozpocznij pracę</button></div>
             </div>
         </div>
 
@@ -352,91 +293,53 @@
             <div class="app-content" id="mobook-content"></div>
         </div>
 
+        <!-- SZKOŁA JAZDY -->
+        <div id="app-school" class="app-window">
+            <div class="app-header"><span>Szkoła Jazdy OSK</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" style="text-align:center;">
+                <div class="house-card">
+                    <h3>Prawo Jazdy Kat. B</h3>
+                    <p style="font-size:12px; color:var(--subtext);">Zdobądź uprawnienia do prowadzenia pojazdów w mieście.</p>
+                    <p style="font-size:18px; font-weight:bold; color:#2ecc71;">Koszt: 10 000 PLN</p>
+                    <button class="btn-primary" onclick="buyDriversLicense()">Opłać kurs i zdaj egzamin</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTODOM (DOMY JEDNORODZINNE Z MAPY) -->
+        <div id="app-otodom" class="app-window">
+            <div class="app-header"><span>Otodom Nieruchomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" id="otodom-content"></div>
+        </div>
+
         <!-- BANK -->
         <div id="app-bank" class="app-window">
             <div class="app-header"><span>Bank RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
                 <div class="bank-card">
-                    <div style="font-size: 12px; opacity: 0.9;">Dostępne środki</div>
+                    <div style="font-size:12px; opacity:0.9;">Dostępne środki</div>
                     <div class="bank-balance" id="bank-balance-display">0.00 PLN</div>
-                    <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;" id="bank-phone-display">Konto powiązane z tel: ...</div>
                 </div>
-                <h3 style="font-size: 14px; margin-bottom: 8px;">Wyślij przelew</h3>
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="transfer-target" class="bank-input" placeholder="Numer odbiorcy (np. 555-011)">
-                    <input type="number" id="transfer-amount" class="bank-input" placeholder="Kwota (PLN)">
-                    <button class="btn-primary" onclick="makeTransfer()">Wyślij przelew</button>
-                </div>
-                <h3 style="font-size: 14px; margin-bottom: 8px;">Historia operacji</h3>
+                <h3 style="font-size:14px; margin-bottom:8px;">Wyślij przelew</h3>
+                <input type="text" id="transfer-target" class="bank-input" placeholder="Numer odbiorcy (np. 555-011)">
+                <input type="number" id="transfer-amount" class="bank-input" placeholder="Kwota (PLN)">
+                <button class="btn-primary" onclick="makeTransfer()" style="margin-bottom:15px;">Wyślij przelew</button>
+                <h3 style="font-size:14px; margin-bottom:8px;">Historia operacji</h3>
                 <div id="bank-history-list"></div>
-            </div>
-        </div>
-
-        <!-- MAPA RP -->
-        <div id="app-map" class="app-window">
-            <div class="app-header"><span>Mapa Miasta RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content" style="text-align:center; padding:8px;">
-                <p style="font-size:11px; color:var(--subtext); margin-bottom:8px;">Pełna mapa wysp/miasta</p>
-                <div style="position:relative; width:100%; border-radius:10px; overflow:hidden; border:1px solid var(--border-color); background:#1e293b;">
-                    <img src="mapa.jpg" alt="Mapa" style="width:100%; height:auto; display:block;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\'><rect width=\'100%\' height=\'100%\' fill=\'%231e293b\'/><text x=\'50%\' y=\'50%\' fill=\'%2394a3b8\' font-size=\'14\' text-anchor=\'middle\' dominant-baseline=\'middle\'>Brak pliku mapa.jpg w folderze</text></svg>'">
-                </div>
-            </div>
-        </div>
-
-        <!-- APKA 112 -->
-        <div id="app-emergency" class="app-window">
-            <div class="app-header"><span>Centrala 112</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content">
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <p style="font-size:12px; color:var(--subtext);">Wybierz służbę, opis i kliknij na mapę, aby zaznaczyć lokalizację wezwania.</p>
-                    <select id="em-service" class="bank-input">
-                        <option value="Policja (997)">🚨 Policja (997)</option>
-                        <option value="Pogotowie (999)">🚑 Pogotowie Ratunkowe (999)</option>
-                        <option value="Straż Pożarna (998)">🚒 Straż Pożarna (998)</option>
-                    </select>
-                    <input type="text" id="em-location" class="bank-input" placeholder="Lokalizacja / Adres (np. Bank Główny)">
-                    <textarea id="em-desc" class="bank-input" placeholder="Opis sytuacji..." style="height:60px;"></textarea>
-                    
-                    <div style="font-size:12px; font-weight:bold;">Kliknij na mapę, aby postawić pineskę:</div>
-                    <div class="map-picker-container" id="map-picker-box" onclick="placePin(event)">
-                        <img src="mapa.jpg" alt="Mapa zgłoszenia" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\'><rect width=\'100%\' height=\'100%\' fill=\'%231e293b\'/><text x=\'50%\' y=\'50%\' fill=\'%2394a3b8\' font-size=\'12\' text-anchor=\'middle\' dominant-baseline=\'middle\'>Kliknij tutaj (Brak pliku mapa.jpg)</text></svg>'">
-                        <div id="map-pin-marker" class="map-pin"></div>
-                    </div>
-
-                    <button class="btn-primary" onclick="sendEmergency112()">🚨 WYŚLIJ WEZWANIE</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- POJAZDY -->
-        <div id="app-vehicles" class="app-window">
-            <div class="app-header"><span>Moje Pojazdy (Max 5)</span><button class="nav-btn" onclick="goHome()">✕</button></div>
-            <div class="app-content">
-                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px;">
-                    <input type="text" id="v-brand" class="bank-input" placeholder="Marka i model">
-                    <input type="text" id="v_plate" class="bank-input" placeholder="Tablica (np. W1 KOWAL)">
-                    <button class="btn-primary" onclick="registerVehicle()">➕ Zarejestruj pojazd</button>
-                </div>
-                <div id="my-vehicles-list"></div>
             </div>
         </div>
 
         <!-- KASYNO -->
         <div id="app-casino" class="app-window">
-            <div class="app-header"><span>🎰 Kasyno Royal RP</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-header"><span>Kasyno Royal</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <div style="background:linear-gradient(135deg, #2c3e50, #000); padding:12px; border-radius:10px; text-align:center; margin-bottom:12px; border:1px solid #f39c12;">
-                    <div style="font-size:11px; color:#f39c12;">SALDO KONTRAKTOWE</div>
-                    <div style="font-size:22px; font-weight:bold; color:#fff;" id="casino-balance-display">0.00 PLN</div>
+                <div class="bank-card" style="text-align:center; padding:12px;">
+                    <div style="font-size:11px;">SALDO</div>
+                    <div style="font-size:24px; font-weight:bold;" id="casino-balance-display">0.00 PLN</div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <input type="number" id="casino-bet" class="bank-input" placeholder="Stawka (PLN)" value="100">
-                    <div class="casino-btn-row">
-                        <button class="quick-bet" onclick="setBet(50)">50</button>
-                        <button class="quick-bet" onclick="setBet(100)">100</button>
-                        <button class="quick-bet" onclick="setBet(500)">500</button>
-                        <button class="quick-bet" onclick="setBet(1000)">1000</button>
-                    </div>
+                <input type="number" id="casino-bet" class="bank-input" value="100" placeholder="Stawka">
+                <div class="casino-btn-row" style="margin-bottom:10px;">
+                    <button class="quick-bet" onclick="setBet(50)">50</button><button class="quick-bet" onclick="setBet(100)">100</button><button class="quick-bet" onclick="setBet(500)">500</button>
                 </div>
                 <div id="casino-result-msg" style="text-align:center; font-weight:bold; font-size:13px; min-height:20px; margin-bottom:10px;"></div>
                 <div class="casino-box">
@@ -447,7 +350,47 @@
             </div>
         </div>
 
-        <!-- WIADOMOŚCI -->
+        <!-- MAPA RP -->
+        <div id="app-map" class="app-window">
+            <div class="app-header"><span>Mapa Miasta</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" style="text-align:center; padding:8px;">
+                <div style="position:relative; width:100%; border-radius:10px; overflow:hidden; border:1px solid var(--border-color); background:#1e293b;">
+                    <img src="mapa.jpg" alt="Mapa" style="width:100%; height:auto; display:block;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\'><rect width=\'100%\' height=\'100%\' fill=\'%231e293b\'/><text x=\'50%\' y=\'50%\' fill=\'%2394a3b8\' font-size=\'14\' text-anchor=\'middle\' dominant-baseline=\'middle\'>Brak pliku mapa.jpg</text></svg>'">
+                </div>
+            </div>
+        </div>
+
+        <!-- APKA 112 -->
+        <div id="app-emergency" class="app-window">
+            <div class="app-header"><span>Centrala 112</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <select id="em-service" class="bank-input">
+                    <option value="Policja (997)">🚨 Policja (997)</option>
+                    <option value="Pogotowie (999)">🚑 Pogotowie (999)</option>
+                </select>
+                <input type="text" id="em-location" class="bank-input" placeholder="Lokalizacja / Adres">
+                <textarea id="em-desc" class="bank-input" placeholder="Opis sytuacji..." style="height:60px;"></textarea>
+                <div style="font-size:12px; font-weight:bold;">Kliknij na mapę, aby postawić pineskę:</div>
+                <div class="map-picker-container" id="map-picker-box" onclick="placePin(event)">
+                    <img src="mapa.jpg" alt="Mapa" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'200\'><rect width=\'100%\' height=\'100%\' fill=\'%231e293b\'/><text x=\'50%\' y=\'50%\' fill=\'%2394a3b8\' font-size=\'12\' text-anchor=\'middle\' dominant-baseline=\'middle\'>Kliknij tutaj</text></svg>'">
+                    <div id="map-pin-marker" class="map-pin"></div>
+                </div>
+                <button class="btn-primary" onclick="sendEmergency112()">🚨 WYŚLIJ WEZWANIE</button>
+            </div>
+        </div>
+
+        <!-- POJAZDY -->
+        <div id="app-vehicles" class="app-window">
+            <div class="app-header"><span>Moje Pojazdy</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content">
+                <input type="text" id="v-brand" class="bank-input" placeholder="Marka i model">
+                <input type="text" id="v_plate" class="bank-input" placeholder="Tablica (np. W1 KOWAL)">
+                <button class="btn-primary" onclick="registerVehicle()" style="margin-bottom:10px;">➕ Zarejestruj pojazd</button>
+                <div id="my-vehicles-list"></div>
+            </div>
+        </div>
+
+        <!-- WIADOMOŚCI SMS -->
         <div id="app-sms" class="app-window">
             <div class="app-header"><span>Wiadomości SMS</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="sms-list" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -462,11 +405,9 @@
         <div id="app-contacts" class="app-window">
             <div class="app-header"><span>Kontakty</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <div class="contact-form" style="display:flex; flex-direction:column; gap:8px; margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--border-color);">
-                    <input type="text" id="contact-name" placeholder="Imię / Ksywa">
-                    <input type="text" id="contact-num" placeholder="Numer telefonu">
-                    <button class="btn-primary" onclick="addContact()">➕ Zapisz kontakt</button>
-                </div>
+                <input type="text" id="contact-name" class="bank-input" placeholder="Imię / Ksywa">
+                <input type="text" id="contact-num" class="bank-input" placeholder="Numer telefonu">
+                <button class="btn-primary" onclick="addContact()" style="margin-bottom:15px;">➕ Zapisz kontakt</button>
                 <div id="contacts-list"></div>
             </div>
         </div>
@@ -477,10 +418,7 @@
             <div class="app-content">
                 <div class="calc-screen" id="calc-display">0</div>
                 <div class="calc-grid">
-                    <button class="calc-btn" onclick="calcClear()">C</button>
-                    <button class="calc-btn op" onclick="calcAdd('/')">÷</button>
-                    <button class="calc-btn op" onclick="calcAdd('*')">×</button>
-                    <button class="calc-btn op" onclick="calcBack()">⌫</button>
+                    <button class="calc-btn" onclick="calcClear()">C</button><button class="calc-btn op" onclick="calcAdd('/')">÷</button><button class="calc-btn op" onclick="calcAdd('*')">×</button><button class="calc-btn op" onclick="calcBack()">⌫</button>
                     <button class="calc-btn" onclick="calcAdd('7')">7</button><button class="calc-btn" onclick="calcAdd('8')">8</button><button class="calc-btn" onclick="calcAdd('9')">9</button><button class="calc-btn op" onclick="calcAdd('-')">-</button>
                     <button class="calc-btn" onclick="calcAdd('4')">4</button><button class="calc-btn" onclick="calcAdd('5')">5</button><button class="calc-btn" onclick="calcAdd('6')">6</button><button class="calc-btn op" onclick="calcAdd('+')">+</button>
                     <button class="calc-btn" onclick="calcAdd('1')">1</button><button class="calc-btn" onclick="calcAdd('2')">2</button><button class="calc-btn" onclick="calcAdd('3')">3</button><button class="calc-btn eq" onclick="calcEval()">=</button>
@@ -489,31 +427,22 @@
             </div>
         </div>
 
-        <!-- USTAWIENIA -->
+        <!-- USTAWIENIA (Z ADRESEM IP POWIĄZANYM Z NUMEREM) -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
-                <div class="list-item"><div><b>Blokada ekranu</b></div><label class="switch"><input type="checkbox" id="lock-switch" checked onchange="toggleLockFeature()"><span class="slider"></span></label></div>
-                <div class="list-item"><div><b>Motyw</b></div><label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label></div>
-                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
-                    <div><b>Tapeta telefonu</b></div>
-                    <div style="display:flex; gap:6px; width:100%;">
-                        <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="setWallpaper('dark')">Ciemna</button>
-                        <button class="btn-primary" style="padding:6px; font-size:11px; background:#2980b9;" onclick="setWallpaper('blue')">Niebieska</button>
-                        <button class="btn-primary" style="padding:6px; font-size:11px; background:#8e44ad;" onclick="setWallpaper('purple')">Fiolet</button>
-                    </div>
-                    <input type="text" id="wall-url" class="bank-input" placeholder="Wklej link URL do obrazka..." style="font-size:11px; margin-top:4px;">
-                    <button class="btn-primary" style="padding:6px; font-size:11px;" onclick="setCustomWallpaper()">Ustaw własną tapetę</button>
-                </div>
+                <div class="list-item"><div><b>Motyw jasny/ciemny</b></div><label class="switch"><input type="checkbox" id="theme-switch" onchange="toggleTheme()"><span class="slider"></span></label></div>
                 <div class="list-item"><div><b>Mój numer</b><br><small id="settings-my-num">...</small></div><span style="color:#2ecc71; font-size:12px;">Aktywny</span></div>
+                <div class="list-item"><div><b>Adres IP urządzenia</b><br><small id="settings-my-ip" style="color:#3498db;">192.168.1.X</small></div><span style="color:#f1c40f; font-size:12px;">Sieć RP</span></div>
             </div>
         </div>
 
-        <!-- PANEL MODERATORA -->
+        <!-- PANEL MODERATORA (PIN: 997997) -->
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
             <div class="app-content"><div id="mod-numbers-list"></div></div>
         </div>
+
     </div>
 
     <div class="nav-bar">
@@ -536,13 +465,7 @@
     };
 
     const MOD_PIN = "997997";
-    const AVAILABLE_NUMBERS = ["555-010", "555-011", "555-012", "555-013", "555-014", "555-015", "555-016", "555-017", "555-018", "555-019"];
-
-    const AVAILABLE_HOUSES = {
-        "house_1": { name: "Dom na przedmieściach", price: 50000, address: "ul. Leśna 4" },
-        "house_2": { name: "Apartament w centrum", price: 150000, address: "ul. Marszałkowska 12" },
-        "house_3": { name: "Willa z basenem", price: 400000, address: "ul. Słoneczna 8" }
-    };
+    const AVAILABLE_NUMBERS = ["555-010", "555-011", "555-012", "555-013", "555-014", "555-015"];
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -552,442 +475,246 @@
     let allVehiclesCache = {};
     let secretClickCount = 0;
 
-    let selectedPinX = 50;
-    let selectedPinY = 50;
+    // Lista domów jednorodzinnych z Twojej mapy (sektory / numery)
+    let availableHouses = {
+        "dom_202": { name: "Dom jednorodzinny nr 202", price: 45000, address: "Sektor 202 (Droga Fairfax)" },
+        "dom_216": { name: "Dom jednorodzinny nr 216", price: 48000, address: "Sektor 216" },
+        "dom_219": { name: "Dom jednorodzinny nr 219", price: 47000, address: "Sektor 219" },
+        "dom_309": { name: "Dom jednorodzinny nr 309", price: 52000, address: "Sektor 309" },
+        "dom_401": { name: "Dom jednorodzinny nr 401", price: 46000, address: "Sektor 401" },
+        "dom_404": { name: "Dom jednorodzinny nr 404", price: 55000, address: "Sektor 404" },
+        "dom_405": { name: "Dom jednorodzinny nr 405", price: 49000, address: "Sektor 405 (Droga Fairfax)" },
+        "dom_407": { name: "Dom jednorodzinny nr 407", price: 53000, address: "Sektor 407 (Droga Medyczna)" },
+        "dom_408": { name: "Dom jednorodzinny nr 408", price: 50000, address: "Sektor 408 (Droga Dolinna)" },
+        "dom_409": { name: "Dom jednorodzinny nr 409", price: 54000, address: "Sektor 409" },
+        "dom_410": { name: "Dom jednorodzinny nr 410", price: 56000, address: "Sektor 410" },
+        "dom_411": { name: "Dom jednorodzinny nr 411", price: 51000, address: "Sektor 411" },
+        "dom_412": { name: "Dom jednorodzinny nr 412", price: 49000, address: "Sektor 412" },
+        "dom_502": { name: "Dom jednorodzinny nr 502", price: 60000, address: "Sektor 502" },
+        "dom_503": { name: "Dom jednorodzinny nr 503", price: 58000, address: "Sektor 503" },
+        "dom_504": { name: "Dom jednorodzinny nr 504", price: 62000, address: "Sektor 504" },
+        "dom_505": { name: "Dom jednorodzinny nr 505", price: 57000, address: "Sektor 505" },
+        "dom_600": { name: "Dom jednorodzinny nr 600", price: 65000, address: "Sektor 600" },
+        "dom_601": { name: "Dom jednorodzinny nr 601", price: 70000, address: "Sektor 601 (Aleja Kolonialna)" },
+        "dom_602": { name: "Dom jednorodzinny nr 602", price: 68000, address: "Sektor 602" },
+        "dom_603": { name: "Dom jednorodzinny nr 603", price: 66000, address: "Sektor 603" },
+        "dom_700": { name: "Dom jednorodzinny nr 700", price: 75000, address: "Sektor 700" },
+        "dom_701": { name: "Dom jednorodzinny nr 701", price: 72000, address: "Sektor 701" },
+        "dom_702": { name: "Dom jednorodzinny nr 702", price: 74000, address: "Sektor 702" },
+        "dom_703": { name: "Dom jednorodzinny nr 703", price: 69000, address: "Sektor 703 (Ulica Nadwodna)" },
+        "dom_704": { name: "Dom jednorodzinny nr 704", price: 78000, address: "Sektor 704 (Plac Akademicki)" },
+        "dom_705": { name: "Dom jednorodzinny nr 705", price: 80000, address: "Sektor 705 (Dziedziniec Franklina)" },
+        "dom_706": { name: "Dom jednorodzinny nr 706", price: 82000, address: "Sektor 706" },
+        "dom_707": { name: "Dom jednorodzinny nr 707", price: 71000, address: "Sektor 707" },
+        "dom_708": { name: "Dom jednorodzinny nr 708", price: 73000, address: "Sektor 708" },
+        "dom_709": { name: "Dom jednorodzinny nr 709", price: 85000, address: "Sektor 709 (Rondo Sosnowe)" },
+        "dom_710": { name: "Dom jednorodzinny nr 710", price: 76000, address: "Sektor 710" },
+        "dom_711": { name: "Dom jednorodzinny nr 711", price: 77000, address: "Sektor 711" },
+        "dom_801": { name: "Dom jednorodzinny nr 801", price: 60000, address: "Sektor 801" },
+        "dom_802": { name: "Dom jednorodzinny nr 802", price: 62000, address: "Sektor 802" },
+        "dom_803": { name: "Dom jednorodzinny nr 803", price: 59000, address: "Sektor 803" },
+        "dom_804": { name: "Dom jednorodzinny nr 804", price: 64000, address: "Sektor 804 (Autostrada 55)" },
+        "dom_805": { name: "Dom jednorodzinny nr 805", price: 61000, address: "Sektor 805" },
+        "dom_810": { name: "Dom jednorodzinny nr 810", price: 67000, address: "Sektor 810" },
+        "dom_900": { name: "Dom jednorodzinny nr 900", price: 90000, address: "Sektor 900" },
+        "dom_901": { name: "Dom jednorodzinny nr 901", price: 92000, address: "Sektor 901" },
+        "dom_903": { name: "Dom jednorodzinny nr 903", price: 84000, address: "Sektor 903 (Droga Wiosennego Potoku)" },
+        "dom_909": { name: "Dom jednorodzinny nr 909", price: 88000, address: "Sektor 909" }
+    };
+
+    let selectedPinX = 50, selectedPinY = 50;
 
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fingerprint-btn').addEventListener('click', unlockPhone);
         if (localStorage.getItem('phone_theme') === 'light') { document.getElementById('theme-switch').checked = true; document.body.classList.add('light-mode'); }
-        if (localStorage.getItem('phone_lock_enabled') === 'false') { document.getElementById('lock-switch').checked = false; document.getElementById('lock-screen').classList.add('hidden'); }
         
-        const savedWall = localStorage.getItem('phone_wallpaper');
-        if (savedWall) applyWallpaperStyle(savedWall);
-
-        renderContacts();
-
-        db.ref('claimed_numbers').on('value', snap => { claimedNumbersCache = snap.val() || {}; checkUserNumber(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
-        db.ref('citizens').on('value', snap => { allCitizensCache = snap.val() || {}; renderMobywatel(); renderSchool(); renderOtodom(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
-        db.ref('bank_accounts').on('value', snap => { allAccountsCache = snap.val() || {}; renderBank(); renderCasinoBalance(); if (document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('claimed_numbers').on('value', snap => { claimedNumbersCache = snap.val() || {}; checkUserNumber(); if(document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('citizens').on('value', snap => { allCitizensCache = snap.val() || {}; renderMobywatel(); if(document.getElementById('app-mod').classList.contains('active')) renderModList(); });
+        db.ref('bank_accounts').on('value', snap => { allAccountsCache = snap.val() || {}; renderBank(); renderCasinoBalance(); if(document.getElementById('app-mod').classList.contains('active')) renderModList(); });
         db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
+        renderContacts();
     });
 
-    // SZKOŁA JAZDY (PRAWO JAZDY KAT. B)
-    function renderSchool() {
-        const myNum = localStorage.getItem('phone_my_number');
-        const content = document.getElementById('school-content');
-        if (!myNum || !content) return;
-        const cit = allCitizensCache[myNum];
-        if (!cit) {
-            content.innerHTML = `<div class="house-card"><p style="font-size:13px;">Najpierw wyrob swój dowód w aplikacji <b>mObywatel</b>.</p></div>`;
-            return;
+    // Generowanie IP na podstawie numeru telefonu
+    function getIpForNumber(num) {
+        if (!num) return "192.168.1.100";
+        let hash = 0;
+        for (let i = 0; i < num.length; i++) {
+            hash = (hash << 5) - hash + num.charCodeAt(i);
+            hash |= 0;
         }
-        const hasLic = cit.driversLicense === true;
-        content.innerHTML = `
-            <div class="house-card" style="text-align:center;">
-                <h3>🪪 Prawo Jazdy Kat. B</h3>
-                <p style="font-size:12px; color:var(--subtext);">Uprawnienia do prowadzenia pojazdów osobowych. Synchronizuje się z mObywatelem i Bluebirdem.</p>
-                <div style="font-size:14px; margin:10px 0;">Status: <b style="color:${hasLic ? '#2ecc71' : '#e74c3c'};">${hasLic ? 'ZDANE (KAT. B)' : 'BRAK UPRAWNIEŃ'}</b></div>
-                ${hasLic
-                    ? `<button class="btn-primary" style="background:#475569;" disabled>✅ Posiadasz prawo jazdy Kat. B</button>`
-                    : `<button class="btn-primary" onclick="buyDriversLicense()">Opłać egzamin — 10 000 PLN</button>`
-                }
-            </div>
-        `;
-    }
-
-    function buyDriversLicense() {
-        const myNum = localStorage.getItem('phone_my_number');
-        const cost = 10000;
-        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
-        if (acc.balance < cost) return alert("Brak środków! Prawo jazdy Kat. B kosztuje 10 000 PLN.");
-
-        let cit = allCitizensCache[myNum];
-        if (!cit) return alert("Najpierw stwórz dowód w mObywatelu!");
-        if (cit.driversLicense) return alert("Masz już prawo jazdy Kat. B!");
-
-        acc.balance -= cost;
-        acc.history = acc.history || [];
-        acc.history.push({ title: "Egzamin prawo jazdy Kat. B", amount: cost, type: "out", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
-
-        db.ref('bank_accounts/' + myNum).set(acc);
-        db.ref('citizens/' + myNum + '/driversLicense').set(true);
-        alert("🎉 Zdano egzamin! Prawo jazdy Kat. B dodano do mObywatela i zsynchronizowano z Bluebirdem.");
-    }
-
-    // OTODOM (KUPNO DOMÓW)
-    function renderOtodom() {
-        const myNum = localStorage.getItem('phone_my_number');
-        const content = document.getElementById('otodom-content');
-        if (!myNum || !content) return;
-        const cit = allCitizensCache[myNum];
-        if (!cit) {
-            content.innerHTML = `<div class="house-card"><p style="font-size:13px;">Najpierw wyrob swój dowód w aplikacji <b>mObywatel</b>.</p></div>`;
-            return;
-        }
-
-        let html = '';
-        if (cit.ownedHouse) {
-            html += `<div class="house-card" style="border-color:#2ecc71;"><b>🏡 Twoja nieruchomość:</b><br>${cit.ownedHouse.name}<br><small style="color:var(--subtext);">${cit.ownedHouse.address}</small></div><hr style="border:0; border-top:1px solid var(--border-color); margin:10px 0;">`;
-        }
-        html += `<h4 style="margin:0 0 8px 0;">Dostępne oferty:</h4>`;
-        for (let id in AVAILABLE_HOUSES) {
-            const h = AVAILABLE_HOUSES[id];
-            const isOwned = cit.ownedHouse && cit.ownedHouse.name === h.name;
-            html += `
-                <div class="house-card">
-                    <b>${h.name}</b><br>
-                    <small style="color:var(--subtext);">${h.address}</small><br>
-                    <div style="font-size:15px; font-weight:bold; color:#2ecc71; margin:6px 0;">${h.price.toLocaleString('pl-PL')} PLN</div>
-                    ${isOwned
-                        ? `<button class="btn-primary" style="background:#475569;" disabled>✅ Twoja nieruchomość</button>`
-                        : `<button class="btn-primary" onclick="buyHouse('${id}')">Kup nieruchomość</button>`
-                    }
-                </div>
-            `;
-        }
-        content.innerHTML = html;
-    }
-
-    function buyHouse(houseId) {
-        const myNum = localStorage.getItem('phone_my_number');
-        const house = AVAILABLE_HOUSES[houseId];
-        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
-        if (acc.balance < house.price) return alert("Brak środków na zakup tej nieruchomości!");
-
-        acc.balance -= house.price;
-        acc.history = acc.history || [];
-        acc.history.push({ title: `Zakup: ${house.name}`, amount: house.price, type: "out", time: new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }) });
-
-        db.ref('bank_accounts/' + myNum).set(acc);
-        db.ref('citizens/' + myNum + '/ownedHouse').set(house);
-        alert(`🏡 Zakupiłeś nieruchomość: ${house.name}! Dane trafiły do mObywatela i Bluebirda.`);
+        let octet = Math.abs(hash) % 200 + 10;
+        return `192.168.1.${octet}`;
     }
 
     function placePin(event) {
         const box = document.getElementById('map-picker-box');
         const rect = box.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        
-        selectedPinX = ((x / rect.width) * 100).toFixed(1);
-        selectedPinY = ((y / rect.height) * 100).toFixed(1);
-
+        selectedPinX = (((event.clientX - rect.left) / rect.width) * 100).toFixed(1);
+        selectedPinY = (((event.clientY - rect.top) / rect.height) * 100).toFixed(1);
         const pin = document.getElementById('map-pin-marker');
-        pin.style.left = x + 'px';
-        pin.style.top = y + 'px';
+        pin.style.left = (event.clientX - rect.left) + 'px';
+        pin.style.top = (event.clientY - rect.top) + 'px';
         pin.style.display = 'block';
-    }
-
-    function toggleGameBox(id) {
-        document.getElementById(id).classList.toggle('active');
-    }
-
-    let tttBoard = ["", "", "", "", "", "", "", "", ""];
-    let tttTurn = "X";
-    let tttActive = true;
-    function cellClick(idx) {
-        if (!tttActive || tttBoard[idx] !== "") return;
-        tttBoard[idx] = tttTurn;
-        renderTTT();
-        checkTTTWinner();
-        if (tttActive) {
-            tttTurn = tttTurn === "X" ? "O" : "X";
-            document.getElementById('ttt-status').innerText = `Ruch gracza: ${tttTurn}`;
-        }
-    }
-    function renderTTT() {
-        document.querySelectorAll('.ttt-cell').forEach((c, i) => c.innerText = tttBoard[i]);
-    }
-    function checkTTTWinner() {
-        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        for (let w of wins) {
-            const [a,b,c] = w;
-            if (tttBoard[a] && tttBoard[a] === tttBoard[b] && tttBoard[a] === tttBoard[c]) {
-                document.getElementById('ttt-status').innerText = `🎉 Wygrywa ${tttBoard[a]}!`;
-                tttActive = false;
-                return;
-            }
-        }
-        if (!tttBoard.includes("")) {
-            document.getElementById('ttt-status').innerText = `🤝 Remis!`;
-            tttActive = false;
-        }
-    }
-    function resetTTT() {
-        tttBoard = ["", "", "", "", "", "", "", "", ""];
-        tttTurn = "X";
-        tttActive = true;
-        document.getElementById('ttt-status').innerText = `Ruch gracza: X`;
-        renderTTT();
-    }
-
-    let targetNum = Math.floor(Math.random() * 50) + 1;
-    function checkGuess() {
-        const val = parseInt(document.getElementById('guess-input').value);
-        const msg = document.getElementById('guess-msg');
-        if (isNaN(val)) return;
-        if (val === targetNum) {
-            msg.style.color = "#2ecc71";
-            msg.innerText = `🎉 Brawo! Trafiłeś liczbę ${targetNum}!`;
-            targetNum = Math.floor(Math.random() * 50) + 1;
-        } else if (val > targetNum) {
-            msg.style.color = "#e74c3c";
-            msg.innerText = `📉 Za dużo! Szukaj mniejszej.`;
-        } else {
-            msg.style.color = "#e67e22";
-            msg.innerText = `📈 Za mało! Szukaj większej.`;
-        }
-    }
-
-    let clickScore = 0;
-    function addClickScore() {
-        clickScore++;
-        document.getElementById('clicker-score').innerText = `Punkty: ${clickScore}`;
-    }
-
-    function playKPN(userChoice) {
-        const choices = ["Kamień", "Papier", "Nożyce"];
-        const botChoice = choices[Math.floor(Math.random() * 3)];
-        const res = document.getElementById('kpn-result');
-        if (userChoice === botChoice) {
-            res.style.color = "#f1c40f";
-            res.innerText = `Remis! Bot wybrał ${botChoice}.`;
-        } else if (
-            (userChoice === "Kamień" && botChoice === "Nożyce") ||
-            (userChoice === "Papier" && botChoice === "Kamień") ||
-            (userChoice === "Nożyce" && botChoice === "Papier")
-        ) {
-            res.style.color = "#2ecc71";
-            res.innerText = `🎉 Wygrałeś! Bot wybrał ${botChoice}.`;
-        } else {
-            res.style.color = "#e74c3c";
-            res.innerText = `❌ Przegrałeś. Bot wybrał ${botChoice}.`;
-        }
-    }
-
-    let isWorkingNow = false;
-    function getJobCooldownLeft(myNum) {
-        const cd = parseInt(localStorage.getItem('job_cooldown_' + myNum) || '0');
-        return Math.max(0, cd - Date.now());
-    }
-
-    function formatCooldown(ms) {
-        const totalSec = Math.ceil(ms / 1000);
-        const mins = Math.floor(totalSec / 60);
-        const secs = totalSec % 60;
-        return `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
-    }
-
-    function updateJobButtons() {
-        if (isWorkingNow) return;
-        const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum) return;
-
-        const left = getJobCooldownLeft(myNum);
-        const btns = [
-            { id: 'job-btn-1', label: 'Rozpocznij kurs' },
-            { id: 'job-btn-2', label: 'Rozpocznij pracę' },
-            { id: 'job-btn-3', label: 'Wyjedź w trasę' }
-        ];
-
-        btns.forEach(b => {
-            const el = document.getElementById(b.id);
-            if (!el) return;
-            if (left > 0) {
-                el.disabled = true;
-                el.style.background = "#475569";
-                el.innerText = `⏳ Odczekaj: ${formatCooldown(left)}`;
-            } else {
-                el.disabled = false;
-                el.style.background = "#2ecc71";
-                el.innerText = b.label;
-            }
-        });
-    }
-
-    function rozpocznijPrace(id, nazwaPracy, zarobek, sekundy) {
-        const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum || isWorkingNow) return;
-
-        const left = getJobCooldownLeft(myNum);
-        if (left > 0) {
-            return alert(`⏳ Możesz pracować raz na godzinę! Pozostało: ${formatCooldown(left)}`);
-        }
-
-        isWorkingNow = true;
-        const btn = document.getElementById(`job-btn-${id}`);
-        
-        document.getElementById('job-btn-1').disabled = true;
-        document.getElementById('job-btn-2').disabled = true;
-        document.getElementById('job-btn-3').disabled = true;
-
-        let pozostalo = sekundy;
-        btn.innerText = `Trwa praca (${pozostalo}s)...`;
-
-        const timer = setInterval(() => {
-            pozostalo--;
-            if (pozostalo > 0) {
-                btn.innerText = `Trwa praca (${pozostalo}s)...`;
-            } else {
-                clearInterval(timer);
-                isWorkingNow = false;
-
-                localStorage.setItem('job_cooldown_' + myNum, Date.now() + 3600000);
-
-                let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
-                acc.balance += zarobek;
-                acc.history = acc.history || [];
-                const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-                acc.history.push({ title: `Wypłata: ${nazwaPracy}`, amount: zarobek, type: 'in', time });
-
-                db.ref('bank_accounts/' + myNum).set(acc).then(() => {
-                    updateJobButtons();
-                    alert(`✅ Ukończono zlecenie (${nazwaPracy})!\nZarobiono: +${zarobek} PLN.\nKolejna praca dostępna za godzinę.`);
-                });
-            }
-        }, 1000);
-    }
-
-    function sendEmergency112() {
-        const myNum = localStorage.getItem('phone_my_number');
-        const service = document.getElementById('em-service').value;
-        const loc = document.getElementById('em-location').value.trim();
-        const desc = document.getElementById('em-desc').value.trim();
-        if (!loc || !desc) return alert("Uzupełnij lokalizację i opis!");
-
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        db.ref('active_dispatches').push({
-            telefon: myNum,
-            sluzba: service,
-            lokalizacja: `${loc} - ${desc}`,
-            czas: time,
-            status: 'Oczekujące',
-            pinX: selectedPinX,
-            pinY: selectedPinY
-        });
-        alert("Zgłoszenie 112 zostało wysłane do dyspozytorni służb!");
-        document.getElementById('em-location').value = "";
-        document.getElementById('em-desc').value = "";
-        goHome();
-    }
-
-    function setWallpaper(type) {
-        let val = "";
-        if (type === 'dark') val = "linear-gradient(160deg, #1b2735 0%, #090a0f 100%)";
-        if (type === 'blue') val = "linear-gradient(160deg, #2980b9 0%, #2c3e50 100%)";
-        if (type === 'purple') val = "linear-gradient(160deg, #8e44ad 0%, #111 100%)";
-        localStorage.setItem('phone_wallpaper', val);
-        applyWallpaperStyle(val);
-    }
-    function setCustomWallpaper() {
-        const url = document.getElementById('wall-url').value.trim();
-        if(!url) return;
-        const val = `url('${url}')`;
-        localStorage.setItem('phone_wallpaper', val);
-        applyWallpaperStyle(val);
-    }
-    function applyWallpaperStyle(val) {
-        const phone = document.getElementById('phone-device');
-        if (val.startsWith('url')) {
-            phone.style.backgroundImage = val;
-            phone.style.backgroundSize = "cover";
-            phone.style.backgroundPosition = "center";
-        } else {
-            phone.style.backgroundImage = val;
-        }
-    }
-
-    function secretModClick() {
-        secretClickCount++;
-        if (secretClickCount >= 5) {
-            secretClickCount = 0;
-            const pin = prompt("🛡️ Podaj PIN Moderatora:");
-            if (pin === MOD_PIN) { renderModList(); openApp('mod'); } else if (pin !== null) alert("Błędny PIN!");
-        }
     }
 
     function checkUserNumber() {
         const myNum = localStorage.getItem('phone_my_number');
         if (myNum && claimedNumbersCache[myNum]) {
             document.getElementById('setup-screen').classList.add('hidden');
-            updateMyNumberDisplay(myNum);
-            
-            db.ref('bank_accounts/' + myNum).once('value').then(snapshot => {
-                if (!snapshot.exists()) {
-                    db.ref('bank_accounts/' + myNum).set({
-                        balance: 15000,
-                        history: [{ title: "Bonus startowy", amount: 15000, type: "in", time: "12:00" }]
-                    });
+            document.getElementById('display-my-num').innerText = "Mój numer: " + myNum;
+            document.getElementById('settings-my-num').innerText = myNum;
+            document.getElementById('settings-my-ip').innerText = getIpForNumber(myNum);
+            db.ref('bank_accounts/' + myNum).once('value', snap => {
+                if (!snap.exists()) {
+                    db.ref('bank_accounts/' + myNum).set({ balance: 50000, history: [{ title: "Start", amount: 50000, type: "in", time: "12:00" }] });
                 }
             });
         } else {
             localStorage.removeItem('phone_my_number');
-            renderNumberChoices();
+            document.getElementById('number-grid').innerHTML = AVAILABLE_NUMBERS.map(num => {
+                const taken = claimedNumbersCache[num];
+                return `<button class="num-choice ${taken?'taken':''}" onclick="selectNumber('${num}')">${num}<br><small>${taken?'Zajęty':'Wolny'}</small></button>`;
+            }).join('');
             document.getElementById('setup-screen').classList.remove('hidden');
         }
-    }
-
-    function renderNumberChoices() {
-        document.getElementById('number-grid').innerHTML = AVAILABLE_NUMBERS.map(num => {
-            const isTaken = !!claimedNumbersCache[num];
-            return `<button class="num-choice ${isTaken ? 'taken' : ''}" onclick="selectNumber('${num}')">${num}<br><small>${isTaken ? 'Zajęty' : 'Wolny'}</small></button>`;
-        }).join('');
     }
 
     function selectNumber(num) {
         if (claimedNumbersCache[num]) {
             const pin = prompt(`Numer ${num} zajęty. Podaj PIN:`);
-            if (pin === claimedNumbersCache[num].pin) { localStorage.setItem('phone_my_number', num); document.getElementById('setup-screen').classList.add('hidden'); updateMyNumberDisplay(num); }
+            if (pin === claimedNumbersCache[num].pin) { localStorage.setItem('phone_my_number', num); checkUserNumber(); }
             else if (pin !== null) alert("Błędny PIN!");
         } else {
-            const newPin = prompt(`Wybierasz ${num}. Ustaw PIN (min. 2 znaki):`);
-            if (newPin && newPin.length >= 2) {
-                db.ref('claimed_numbers/' + num).set({ pin: newPin }).then(() => { localStorage.setItem('phone_my_number', num); document.getElementById('setup-screen').classList.add('hidden'); updateMyNumberDisplay(num); });
-            } else if (newPin !== null) alert("Za krótki PIN!");
+            const pin = prompt(`Wybierasz ${num}. Ustaw PIN (min. 2 znaki):`);
+            if (pin && pin.length >= 2) {
+                db.ref('claimed_numbers/' + num).set({ pin }).then(() => { localStorage.setItem('phone_my_number', num); checkUserNumber(); });
+            } else if (pin !== null) alert("Za krótki PIN!");
         }
     }
 
-    function updateMyNumberDisplay(num) {
-        document.getElementById('display-my-num').innerText = "Mój numer: " + num;
-        document.getElementById('settings-my-num').innerText = num;
-    }
-
-    function registerVehicle() {
+    function buyDriversLicense() {
         const myNum = localStorage.getItem('phone_my_number');
-        const brand = document.getElementById('v-brand').value.trim();
-        const plate = document.getElementById('v_plate').value.trim().toUpperCase();
-        if (!brand || !plate) return alert("Uzupełnij markę i tablicę!");
+        const cost = 10000;
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (acc.balance < cost) return alert("Brak środków! Prawo jazdy kosztuje 10 000 PLN.");
+        let cit = allCitizensCache[myNum];
+        if (!cit) return alert("Najpierw stwórz swój dowód w mObywatelu!");
+        if (cit.driversLicense) return alert("Masz już prawo jazdy kat. B!");
 
-        const userVehicles = allVehiclesCache[myNum] || {};
-        if (Object.keys(userVehicles).length >= 5) return alert("Masz już maksymalnie 5 pojazdów!");
+        acc.balance -= cost;
+        acc.history.push({ title: "Prawo jazdy Kat. B", amount: cost, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
 
-        db.ref('vehicles/' + myNum + '/' + plate).set({ brand, plate, owner: myNum }).then(() => {
-            document.getElementById('v-brand').value = "";
-            document.getElementById('v_plate').value = "";
-            alert("Pojazd zarejestrowany!");
-        });
+        db.ref('bank_accounts/' + myNum).set(acc);
+        db.ref('citizens/' + myNum + '/driversLicense').set(true);
+        alert("🎉 Gratulacje! Zdobyłeś prawo jazdy kat. B.");
+        renderMobywatel();
     }
 
-    function deleteVehicle(plate) {
+    // Zakup domu w Otodom
+    function buyHouse(houseId) {
         const myNum = localStorage.getItem('phone_my_number');
-        if (confirm(`Usunąć pojazd o tablicy ${plate}?`)) db.ref('vehicles/' + myNum + '/' + plate).remove();
+        const house = availableHouses[houseId];
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (acc.balance < house.price) return alert("Brak środków na tę nieruchomość!");
+
+        acc.balance -= house.price;
+        acc.history.push({ title: `Zakup domu: ${house.name}`, amount: house.price, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+
+        db.ref('bank_accounts/' + myNum).set(acc);
+        db.ref('citizens/' + myNum + '/ownedHouse').set(house);
+        alert(`🏡 Zakupiłeś nieruchomość: ${house.name}`);
+        renderOtodom();
     }
 
-    function renderVehicles() {
+    // Usuwanie / Sprzedaż domu
+    function removeHouse() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const cit = allCitizensCache[myNum];
+        if (!cit || !cit.ownedHouse) return;
+
+        if (confirm("Czy na pewno chcesz sprzedać / usunąć swoją nieruchomość?")) {
+            db.ref('citizens/' + myNum + '/ownedHouse').remove().then(() => {
+                alert("Nieruchomość została usunięta z Twojego konta.");
+                renderOtodom();
+            });
+        }
+    }
+
+    function renderOtodom() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const cit = allCitizensCache[myNum] || {};
+        let html = '';
+        if (cit.ownedHouse) {
+            html += `
+                <div class="house-card" style="border-color:#2ecc71;">
+                    <b>Twój Dom:</b><br>${cit.ownedHouse.name}<br><small>${cit.ownedHouse.address}</small>
+                    <button class="btn-danger" style="margin-top:8px;" onclick="removeHouse()">🗑️ Usuń / Sprzedaj dom</button>
+                </div>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin:10px 0;">
+            `;
+        }
+        html += `<h4 style="margin:0 0 8px 0;">Dostępne domy jednorodzinne:</h4>`;
+        for (let id in availableHouses) {
+            const h = availableHouses[id];
+            html += `
+                <div class="house-card">
+                    <b>${h.name}</b><br><small style="color:var(--subtext);">${h.address}</small>
+                    <div style="font-size:15px; font-weight:bold; color:#2ecc71; margin:6px 0;">${h.price.toLocaleString()} PLN</div>
+                    <button class="btn-primary" onclick="buyHouse('${id}')">Kup dom</button>
+                </div>
+            `;
+        }
+        document.getElementById('otodom-content').innerHTML = html;
+    }
+
+    function renderMobywatel() {
         const myNum = localStorage.getItem('phone_my_number');
         if (!myNum) return;
-        const vehicles = allVehiclesCache[myNum] || {};
-        const list = document.getElementById('my-vehicles-list');
-        const keys = Object.keys(vehicles);
+        const cit = allCitizensCache[myNum];
+        const container = document.getElementById('mobook-content');
 
-        if (keys.length === 0) { list.innerHTML = `<p style="font-size:12px; color:var(--subtext);">Brak zarejestrowanych pojazdów.</p>`; return; }
-        list.innerHTML = keys.map(plate => `
-            <div class="list-item">
-                <div><b>${vehicles[plate].brand}</b><br><small style="color:var(--subtext);">Tablica: ${plate}</small></div>
-                <button class="btn-danger" onclick="deleteVehicle('${plate}')">Usuń</button>
-            </div>
-        `).join('');
+        if (!cit) {
+            container.innerHTML = `
+                <div style="text-align:center;"><h3>Twój Dokument</h3></div>
+                <div class="id-form">
+                    <input type="text" id="id-name" class="bank-input" placeholder="Imię i Nazwisko">
+                    <input type="text" id="id-pesel" class="bank-input" placeholder="PESEL">
+                    <input type="text" id="id-photo" class="bank-input" placeholder="Link do zdjęcia (URL)">
+                    <button class="btn-primary" onclick="createCitizenId()">Stwórz dowód</button>
+                </div>
+            `;
+        } else {
+            const hasLic = cit.driversLicense === true;
+            const points = cit.penaltyPoints || 0;
+            const house = cit.ownedHouse ? cit.ownedHouse.name + ` (${cit.ownedHouse.address})` : "Brak";
+            container.innerHTML = `
+                <div class="id-card">
+                    <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">RZECZPOSPOLITA POLSKA</div>
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <img src="${cit.photo || 'https://via.placeholder.com/80'}" style="width:70px; height:90px; border-radius:6px; object-fit:cover;">
+                        <div>
+                            <div style="font-size:15px; font-weight:bold;">${cit.name}</div>
+                            <div style="font-size:12px;">PESEL: ${cit.pesel}</div>
+                            <div style="font-size:12px; margin-top:4px;">Prawko Kat. B: <b style="color:${hasLic?'#2ecc71':'#e74c3c'};">${hasLic?'POSIADA':'BRAK'}</b></div>
+                            <div style="font-size:12px;">Punkty karne: <b style="color:${points>0?'#e74c3c':'#2ecc71'};">${points} pkt</b></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="house-card"><b>Nieruchomość:</b> ${house}</div>
+            `;
+        }
+        renderOtodom();
+    }
+
+    function createCitizenId() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const name = document.getElementById('id-name').value.trim();
+        const pesel = document.getElementById('id-pesel').value.trim();
+        const photo = document.getElementById('id-photo').value.trim();
+        if (!name || !pesel) return alert("Uzupełnij dane!");
+        db.ref('citizens/' + myNum).set({ name, pesel, photo, suspended: false, driversLicense: false, penaltyPoints: 0 }).then(() => alert("Dowód stworzony!"));
     }
 
     function renderBank() {
@@ -995,13 +722,9 @@
         if (!myNum) return;
         const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
         document.getElementById('bank-balance-display').innerText = acc.balance.toFixed(2) + " PLN";
-        document.getElementById('bank-phone-display').innerText = "Konto: " + myNum;
-
-        const hist = acc.history || [];
-        document.getElementById('bank-history-list').innerHTML = hist.length === 0 ? `<p style="font-size:12px; color:var(--subtext);">Brak operacji.</p>` : hist.slice().reverse().map(h => `
+        document.getElementById('bank-history-list').innerHTML = (acc.history || []).slice().reverse().map(h => `
             <div class="history-card" style="border-left: 4px solid ${h.type === 'in' ? '#2ecc71' : '#e74c3c'};">
-                <div style="display:flex; justify-content:space-between;"><b>${h.title}</b><span style="color:${h.type === 'in' ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${h.type === 'in' ? '+' : '-'}${h.amount.toFixed(2)} PLN</span></div>
-                <div style="font-size:10px; color:var(--subtext); margin-top:2px;">${h.time}</div>
+                <div><b>${h.title}</b>: ${h.type === 'in' ? '+' : '-'}${h.amount.toFixed(2)} PLN</div>
             </div>
         `).join('');
     }
@@ -1010,22 +733,20 @@
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('transfer-target').value.trim();
         const amt = parseFloat(document.getElementById('transfer-amount').value);
-        if (!target || isNaN(amt) || amt <= 0) return alert("Podaj poprawny numer i kwotę!");
+        if (!target || isNaN(amt) || amt <= 0) return alert("Błędny odbiorca lub kwota!");
         if (myNum === target) return alert("Nie możesz przelać do siebie!");
-        if (!allAccountsCache[target]) return alert("Konto nie istnieje!");
-
-        const myAcc = allAccountsCache[myNum];
+        if (!allAccountsCache[target]) return alert("Odbiorca nie istnieje w banku!");
+        let myAcc = allAccountsCache[myNum];
         if (myAcc.balance < amt) return alert("Brak środków!");
-        const targetAcc = allAccountsCache[target];
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        let tAcc = allAccountsCache[target];
+        let time = new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
 
         myAcc.balance -= amt; myAcc.history.push({ title: `Przelew do: ${target}`, amount: amt, type: 'out', time });
-        targetAcc.balance += amt; targetAcc.history.push({ title: `Przelew od: ${myNum}`, amount: amt, type: 'in', time });
+        tAcc.balance += amt; tAcc.history.push({ title: `Przelew od: ${myNum}`, amount: amt, type: 'in', time });
 
         db.ref('bank_accounts/' + myNum).set(myAcc);
-        db.ref('bank_accounts/' + target).set(targetAcc);
-        document.getElementById('transfer-target').value = ""; document.getElementById('transfer-amount').value = "";
-        alert("Przelew wykonany!");
+        db.ref('bank_accounts/' + target).set(tAcc);
+        alert("Przelew udany!");
     }
 
     function renderCasinoBalance() {
@@ -1036,212 +757,169 @@
     function playSlots() {
         const myNum = localStorage.getItem('phone_my_number');
         const bet = parseFloat(document.getElementById('casino-bet').value);
-        const acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
         if (isNaN(bet) || bet <= 0 || acc.balance < bet) return alert("Błędna stawka lub brak środków!");
-        
         const symbols = ["🍒", "🍋", "💎", "7️⃣"];
-        const r1 = symbols[Math.floor(Math.random() * symbols.length)];
-        const r2 = symbols[Math.floor(Math.random() * symbols.length)];
-        const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+        const r1 = symbols[Math.floor(Math.random()*symbols.length)], r2 = symbols[Math.floor(Math.random()*symbols.length)], r3 = symbols[Math.floor(Math.random()*symbols.length)];
         document.getElementById('slot-reels').innerText = `${r1} ${r2} ${r3}`;
-
-        const msg = document.getElementById('casino-result-msg');
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        acc.history = acc.history || [];
-
+        let time = new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
+        let msg = document.getElementById('casino-result-msg');
         if (r1 === r2 && r2 === r3) {
-            const win = bet * 5; acc.balance += (win - bet); acc.history.push({ title: "Kasyno (Wygrana)", amount: win - bet, type: 'in', time });
-            msg.style.color = "#2ecc71"; msg.innerText = `🎉 JACKPOT! Wygrana ${win.toFixed(2)} PLN!`;
+            let win = bet * 5; acc.balance += (win - bet); acc.history.push({ title: "Kasyno (Wygrana)", amount: win - bet, type: 'in', time });
+            msg.style.color = "#2ecc71"; msg.innerText = `🎉 JACKPOT! +${win.toFixed(2)} PLN`;
         } else {
             acc.balance -= bet; acc.history.push({ title: "Kasyno (Przegrana)", amount: bet, type: 'out', time });
-            msg.style.color = "#e74c3c"; msg.innerText = `❌ Przegrana ${bet.toFixed(2)} PLN.`;
+            msg.style.color = "#e74c3c"; msg.innerText = `❌ Przegrana -${bet.toFixed(2)} PLN`;
         }
         db.ref('bank_accounts/' + myNum).set(acc);
     }
 
-    function renderMobywatel() {
-        const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum) return;
-        const citizen = allCitizensCache[myNum];
-        const container = document.getElementById('mobook-content');
+    let isWorkingNow = false;
+    function rozpocznijPrace(id, nazwa, zarobek, sekundy) {
+        if (isWorkingNow) return;
+        isWorkingNow = true;
+        let btn = document.getElementById(`job-btn-${id}`);
+        let pozostalo = sekundy;
+        let timer = setInterval(() => {
+            pozostalo--;
+            if(pozostalo > 0) btn.innerText = `Trwa praca (${pozostalo}s)...`;
+            else {
+                clearInterval(timer);
+                isWorkingNow = false;
+                btn.innerText = `Rozpocznij pracę`;
+                const myNum = localStorage.getItem('phone_my_number');
+                let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+                acc.balance += zarobek;
+                acc.history.push({ title: `Wypłata: ${nazwa}`, amount: zarobek, type: 'in', time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+                db.ref('bank_accounts/' + myNum).set(acc);
+                alert(`✅ Zarobiono +${zarobek} PLN!`);
+            }
+        }, 1000);
+    }
 
-        if (!citizen) {
-            container.innerHTML = `
-                <div style="text-align:center;"><h3>Twój Dokument</h3></div>
-                <div class="id-form" style="display:flex; flex-direction:column; gap:8px;">
-                    <input type="text" id="id-name" placeholder="Imię i Nazwisko">
-                    <input type="text" id="id-pesel" placeholder="PESEL">
-                    <input type="text" id="id-dob" placeholder="Data urodzenia">
-                    <input type="text" id="id-discord" placeholder="Nick Discord">
-                    <input type="text" id="id-photo" placeholder="Link do zdjęcia (URL)">
-                    <button class="btn-primary" onclick="createCitizenId()">Stwórz dowód</button>
-                </div>
-            `;
-        } else {
-            const isSuspended = citizen.suspended;
-            const hasGunPermit = citizen.gunPermit === true;
-            const hasLic = citizen.driversLicense === true;
-            const points = citizen.penaltyPoints || 0;
-            const house = citizen.ownedHouse ? `${citizen.ownedHouse.name} (${citizen.ownedHouse.address})` : "Brak nieruchomości";
-            container.innerHTML = `
-                <div class="id-card ${isSuspended ? 'suspended' : ''}">
-                    <div class="id-header"><span>RZECZPOSPOLITA POLSKA</span><span>${isSuspended ? '⚠️ ZASTRZEŻONY' : '✅ AKTUALNY'}</span></div>
-                    <div class="id-body">
-                        <img src="${citizen.photo || 'https://via.placeholder.com/80'}" class="id-photo" alt="Foto">
-                        <div class="id-info">
-                            <div><span>${citizen.name}</span></div>
-                            <div>PESEL: <span>${citizen.pesel}</span></div>
-                            <div>Urodzenie: <span>${citizen.dob || '-'}</span></div>
-                            <div>Prawo jazdy: <span style="color:${hasLic ? '#2ecc71' : '#f1c40f'};">${hasLic ? 'KAT. B' : 'BRAK'}</span></div>
-                            <div>Punkty karne: <span style="color:${points > 0 ? '#ff7675' : '#2ecc71'};">${points} pkt</span></div>
-                            <div>Pozwolenie na broń: <span style="color:${hasGunPermit ? '#2ecc71' : '#f1c40f'};">${hasGunPermit ? 'TAK (AKTYWNE)' : 'BRAK'}</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="house-card"><b>🏡 Nieruchomość (Otodom):</b><br><span style="font-size:13px;">${house}</span></div>
-                <button class="${isSuspended ? 'btn-primary' : 'btn-danger'}" onclick="toggleSuspendId()">${isSuspended ? '🔓 Cofnij zastrzeżenie' : '🛑 Zastrzeż dokument'}</button>
-            `;
+    let tttBoard = ["","","","","","","","",""], tttTurn = "X", tttActive = true;
+    function cellClick(i) {
+        if (!tttActive || tttBoard[i] !== "") return;
+        tttBoard[i] = tttTurn;
+        document.querySelectorAll('.ttt-cell')[i].innerText = tttTurn;
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        for(let w of wins) {
+            if(tttBoard[w[0]] && tttBoard[w[0]]===tttBoard[w[1]] && tttBoard[w[0]]===tttBoard[w[2]]) {
+                document.getElementById('ttt-status').innerText = `🎉 Wygrał ${tttBoard[w[0]]}!`; tttActive=false; return;
+            }
         }
+        if(!tttBoard.includes("")) { document.getElementById('ttt-status').innerText = `Remis!`; tttActive=false; return; }
+        tttTurn = tttTurn === "X" ? "O" : "X";
+        document.getElementById('ttt-status').innerText = `Ruch: ${tttTurn}`;
+    }
+    function resetTTT() { tttBoard = ["","","","","","","","",""]; tttTurn = "X"; tttActive = true; document.getElementById('ttt-status').innerText="Ruch: X"; document.querySelectorAll('.ttt-cell').forEach(c=>c.innerText=""); }
+
+    let targetNum = Math.floor(Math.random()*50)+1;
+    function checkGuess() {
+        let val = parseInt(document.getElementById('guess-input').value);
+        let msg = document.getElementById('guess-msg');
+        if(val === targetNum) { msg.style.color="#2ecc71"; msg.innerText="🎉 Trafione!"; targetNum=Math.floor(Math.random()*50)+1; }
+        else if(val > targetNum) { msg.style.color="#e74c3c"; msg.innerText="📉 Za dużo!"; }
+        else { msg.style.color="#e67e22"; msg.innerText="📈 Za mało!"; }
     }
 
-    function createCitizenId() {
+    let clickScore = 0;
+    function addClickScore() { clickScore++; document.getElementById('clicker-score').innerText = `Punkty: ${clickScore}`; }
+
+    function registerVehicle() {
         const myNum = localStorage.getItem('phone_my_number');
-        const name = document.getElementById('id-name').value.trim();
-        const pesel = document.getElementById('id-pesel').value.trim();
-        const dob = document.getElementById('id-dob').value.trim();
-        const discord = document.getElementById('id-discord').value.trim();
-        const photo = document.getElementById('id-photo').value.trim();
-        if (!name || !pesel) return alert("Uzupełnij dane!");
-        db.ref('citizens/' + myNum).set({ name, pesel, dob, discord, photo, suspended: false, gunPermit: false, driversLicense: false, penaltyPoints: 0, gender: 'Mężczyzna', address: 'ul. Główna 1', parents: 'Jan Maria', ksis: 'Brak', tickets: 0, sis: 'Brak', noenet: 'Brak' }).then(() => alert("Dowód stworzony!"));
+        const brand = document.getElementById('v-brand').value.trim();
+        const plate = document.getElementById('v_plate').value.trim().toUpperCase();
+        if(!brand || !plate) return alert("Uzupełnij dane!");
+        db.ref('vehicles/' + myNum + '/' + plate).set({ brand, plate, owner: myNum }).then(()=>alert("Zarejestrowano!"));
     }
-
-    function toggleSuspendId() {
+    function renderVehicles() {
         const myNum = localStorage.getItem('phone_my_number');
-        const citizen = allCitizensCache[myNum];
-        if (citizen) db.ref('citizens/' + myNum + '/suspended').set(!citizen.suspended);
+        if(!myNum) return;
+        const v = allVehiclesCache[myNum] || {};
+        document.getElementById('my-vehicles-list').innerHTML = Object.keys(v).map(p=>`<div class="list-item"><b>${v[p].brand}</b> (${p})</div>`).join('');
     }
 
-    function renderModList() {
-        const list = document.getElementById('mod-numbers-list');
-        const keys = Object.keys(claimedNumbersCache);
-        if (keys.length === 0) { list.innerHTML = `<p style="color:var(--subtext); text-align:center;">Brak zajętych numerów.</p>`; return; }
-        list.innerHTML = keys.map(num => {
-            const cit = allCitizensCache[num];
-            const acc = allAccountsCache[num];
-            return `
-                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <div><b>Tel: ${num}</b></div>
-                        <button class="btn-danger" onclick="modDeleteNumber('${num}')">Zwolnij numer</button>
-                    </div>
-                    <div style="font-size:12px; color:var(--subtext); width:100%; border-top:1px solid var(--border-color); padding-top:6px;">
-                        Obywatel: <b>${cit ? cit.name : 'Brak'}</b> | Saldo: <b>${acc ? acc.balance.toFixed(2) : '0'} PLN</b>
-                    </div>
-                    <div style="display:flex; gap:5px; width:100%;">
-                        <button class="btn-primary" style="padding:4px; font-size:11px;" onclick="modEditCitizen('${num}')">Edytuj dowód</button>
-                        <button class="btn-primary" style="padding:4px; font-size:11px; background:#e67e22;" onclick="modEditBalance('${num}')">Zmień saldo</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function modDeleteNumber(num) {
-        if (!confirm(`Usunąć numer ${num}?`)) return;
-        db.ref('claimed_numbers/' + num).remove();
-        db.ref('citizens/' + num).remove();
-        db.ref('bank_accounts/' + num).remove();
-        db.ref('vehicles/' + num).remove();
-    }
-
-    function modEditCitizen(num) {
-        const cit = allCitizensCache[num];
-        if (!cit) return alert("Brak dowodu!");
-        const newName = prompt("Imię i nazwisko:", cit.name);
-        const newPesel = prompt("PESEL:", cit.pesel);
-        if (newName && newPesel) db.ref('citizens/' + num).update({ name: newName, pesel: newPesel });
-    }
-
-    function modEditBalance(num) {
-        const acc = allAccountsCache[num] || { balance: 0, history: [] };
-        const newBal = prompt(`Nowe saldo dla ${num}:`, acc.balance);
-        if (newBal !== null && !isNaN(parseFloat(newBal))) {
-            acc.balance = parseFloat(newBal);
-            acc.history.push({ title: "Korekta Moderatora", amount: acc.balance, type: "in", time: "12:00" });
-            db.ref('bank_accounts/' + num).set(acc);
-        }
-    }
-
-    function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts') || '[]'); }
+    function getContacts() { return JSON.parse(localStorage.getItem('phone_contacts')||'[]'); }
     function addContact() {
-        const name = document.getElementById('contact-name').value.trim();
-        const num = document.getElementById('contact-num').value.trim();
-        if (!name || !num) return;
-        const c = getContacts(); c.push({ name, num }); localStorage.setItem('phone_contacts', JSON.stringify(c));
-        document.getElementById('contact-name').value = ""; document.getElementById('contact-num').value = ""; renderContacts();
+        let name = document.getElementById('contact-name').value.trim(), num = document.getElementById('contact-num').value.trim();
+        if(!name||!num) return;
+        let c = getContacts(); c.push({name, num}); localStorage.setItem('phone_contacts', JSON.stringify(c));
+        document.getElementById('contact-name').value=""; document.getElementById('contact-num').value=""; renderContacts();
     }
-    function deleteContact(idx) { const c = getContacts(); c.splice(idx, 1); localStorage.setItem('phone_contacts', JSON.stringify(c)); renderContacts(); }
-    function messageContact(num) { openApp('sms'); document.getElementById('target-phone').value = num; }
     function renderContacts() {
-        let html = `<div class="list-item"><div><b>🚨 Policja</b></div><button class="nav-btn" onclick="messageContact('997')">💬</button></div>`;
-        html += getContacts().map((c, idx) => `<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div><button class="btn-danger" onclick="deleteContact(${idx})">✕</button></div>`).join('');
-        document.getElementById('contacts-list').innerHTML = html;
+        document.getElementById('contacts-list').innerHTML = `<div class="list-item"><div><b>🚨 Policja</b></div></div>` + getContacts().map(c=>`<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div></div>`).join('');
     }
 
     function sendSms() {
         const myNum = localStorage.getItem('phone_my_number');
         const target = document.getElementById('target-phone').value.trim();
         const text = document.getElementById('sms-text').value.trim();
-        if (!target || !text) return;
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        db.ref('messages').push({ sender: myNum, receiver: target, text, time });
-        document.getElementById('sms-text').value = "";
+        if(!target||!text) return;
+        db.ref('messages').push({ sender: myNum, receiver: target, text, time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+        document.getElementById('sms-text').value="";
     }
-
-    function renderMessages(allMsgs) {
+    function renderMessages(msgs) {
         const myNum = localStorage.getItem('phone_my_number');
-        if (!myNum) return;
-        document.getElementById('sms-list').innerHTML = allMsgs.filter(m => m.sender === myNum || m.receiver === myNum).map(m => `
-            <div class="msg-bubble ${m.sender === myNum ? 'mine' : ''}">
-                <div style="font-size:10px; opacity:0.8;">${m.sender === myNum ? 'Ja ➔ ' + m.receiver : 'Od: ' + m.sender}</div>
-                <div>${m.text}</div>
+        if(!myNum) return;
+        document.getElementById('sms-list').innerHTML = msgs.filter(m=>m.sender===myNum||m.receiver===myNum).map(m=>`
+            <div class="msg-bubble ${m.sender===myNum?'mine':''}">
+                <div style="font-size:10px; opacity:0.8;">${m.sender===myNum?'Ja':m.sender}</div><div>${m.text}</div>
             </div>
         `).join('');
     }
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('sb-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('main-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('lock-time').innerText = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        if (document.getElementById('app-jobs').classList.contains('active')) {
-            updateJobButtons();
+    function sendEmergency112() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const service = document.getElementById('em-service').value;
+        const loc = document.getElementById('em-location').value.trim();
+        const desc = document.getElementById('em-desc').value.trim();
+        if(!loc||!desc) return alert("Uzupełnij opis!");
+        db.ref('active_dispatches').push({
+            telefon: myNum, sluzba: service, lokalizacja: `${loc} - ${desc}`,
+            czas: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}),
+            status: 'Oczekujące', pinX: selectedPinX, pinY: selectedPinY
+        });
+        alert("Wysłano zgłoszenie 112!");
+        goHome();
+    }
+
+    function secretModClick() {
+        secretClickCount++;
+        if(secretClickCount >= 5) {
+            secretClickCount = 0;
+            let pin = prompt("PIN Moderatora:");
+            if(pin === MOD_PIN) { renderModList(); openApp('mod'); }
         }
     }
-    setInterval(updateClock, 1000); updateClock();
-
-    function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
-    function lockPhone() { if (localStorage.getItem('phone_lock_enabled') !== 'false') { goHome(); document.getElementById('lock-screen').classList.remove('hidden'); } }
-    function toggleLockFeature() { localStorage.setItem('phone_lock_enabled', document.getElementById('lock-switch').checked); }
-    function openApp(name) {
-        goHome(); document.getElementById('app-' + name).classList.add('active');
-        if (name === 'contacts') renderContacts();
-        if (name === 'moboyatel') renderMobywatel();
-        if (name === 'school') renderSchool();
-        if (name === 'otodom') renderOtodom();
-        if (name === 'bank') renderBank();
-        if (name === 'casino') renderCasinoBalance();
-        if (name === 'vehicles') renderVehicles();
-        if (name === 'jobs') updateJobButtons();
+    function renderModList() {
+        document.getElementById('mod-numbers-list').innerHTML = Object.keys(claimedNumbersCache).map(num=>`
+            <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                <div><b>Tel: ${num} | IP: ${getIpForNumber(num)}</b></div>
+                <button class="btn-danger" style="margin-top:6px;" onclick="db.ref('claimed_numbers/${num}').remove(); db.ref('citizens/${num}').remove();">Usuń dane numeru</button>
+            </div>
+        `).join('');
     }
-    function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
-    function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked ? 'light' : 'dark'); }
-    
+
     let calcExp = "";
     function calcAdd(v) { calcExp += v; document.getElementById('calc-display').innerText = calcExp; }
-    function calcClear() { calcExp = ""; document.getElementById('calc-display').innerText = "0"; }
-    function calcBack() { calcExp = calcExp.slice(0, -1); document.getElementById('calc-display').innerText = calcExp || "0"; }
-    function calcEval() { try { calcExp = String(eval(calcExp)); document.getElementById('calc-display').innerText = calcExp; } catch { calcExp = ""; } }
+    function calcClear() { calcExp=""; document.getElementById('calc-display').innerText="0"; }
+    function calcBack() { calcExp=calcExp.slice(0,-1); document.getElementById('calc-display').innerText=calcExp||"0"; }
+    function calcEval() { try { calcExp=String(eval(calcExp)); document.getElementById('calc-display').innerText=calcExp; } catch{calcExp="";} }
+
+    function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
+    function lockPhone() { document.getElementById('lock-screen').classList.remove('hidden'); }
+    function openApp(name) { goHome(); document.getElementById('app-'+name).classList.add('active'); if(name==='otodom') renderOtodom(); if(name==='contacts') renderContacts(); }
+    function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
+    function toggleGameBox(id) { document.getElementById(id).classList.toggle('active'); }
+    function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked?'light':'dark'); }
+    
+    setInterval(() => {
+        const t = new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('sb-time').innerText = t;
+        document.getElementById('main-time').innerText = t;
+        document.getElementById('lock-time').innerText = t;
+    }, 1000);
 </script>
 </body>
 </html>
