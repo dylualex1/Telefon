@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP - Kompletny System</title>
+    <title>Smartfon RP - Pełny System z Edycją Salda</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -225,7 +225,7 @@
             <div class="my-number-badge" id="display-my-num">Mój numer: ...</div>
         </div>
 
-        <!-- IKONY APLIKACJI (W TYM DARKWEB) -->
+        <!-- IKONY APLIKACJI -->
         <div class="app-grid">
             <div class="app-icon" onclick="openApp('sms')"><div class="icon-box bg-blue">💬</div><span>Wiadomości</span></div>
             <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
@@ -315,7 +315,7 @@
             </div>
         </div>
 
-        <!-- OTODOM (DOMY I MAGAZYNY) -->
+        <!-- OTODOM -->
         <div id="app-otodom" class="app-window">
             <div class="app-header"><span>Otodom Nieruchomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="otodom-content"></div>
@@ -446,7 +446,7 @@
             </div>
         </div>
 
-        <!-- PANEL MODERATORA (PIN: 997997) -->
+        <!-- PANEL MODERATORA (PIN: 997997) Z OPCJĄ ZMIANY SALDA -->
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
             <div class="app-content"><div id="mod-numbers-list"></div></div>
@@ -484,7 +484,6 @@
     let allVehiclesCache = {};
     let secretClickCount = 0;
 
-    // Domy jednorodzinne z mapy
     let availableHouses = {
         "dom_202": { name: "Dom jednorodzinny nr 202", price: 45000, address: "Sektor 202 (Droga Fairfax)" },
         "dom_216": { name: "Dom jednorodzinny nr 216", price: 48000, address: "Sektor 216" },
@@ -599,7 +598,6 @@
         }
     }
 
-    // DARKMARKET & DARKWEB LOGIC
     function buyDarkwebAccess() {
         const myNum = localStorage.getItem('phone_my_number');
         const cost = 10000;
@@ -624,8 +622,6 @@
         acc.history.push({ title: `Zakup (DarkMarket): ${itemName}`, amount: price, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
 
         db.ref('bank_accounts/' + myNum).set(acc);
-        
-        // Dodaj do ekwipunku / inwentarza gracza w bazie
         db.ref('citizens/' + myNum + '/inventory/' + itemName).once('value', snap => {
             let currentQty = snap.val() || 0;
             db.ref('citizens/' + myNum + '/inventory/' + itemName).set(currentQty + 1);
@@ -697,7 +693,6 @@
         renderMobywatel();
     }
 
-    // Zakup domu w Otodom
     function buyHouse(houseId) {
         const myNum = localStorage.getItem('phone_my_number');
         const house = availableHouses[houseId];
@@ -713,7 +708,6 @@
         renderOtodom();
     }
 
-    // Dokupienie magazynu do domu
     function buyWarehouse() {
         const myNum = localStorage.getItem('phone_my_number');
         const whCost = 35000;
@@ -729,7 +723,6 @@
         renderOtodom();
     }
 
-    // Usuwanie / Sprzedaż domu
     function removeHouse() {
         const myNum = localStorage.getItem('phone_my_number');
         const cit = allCitizensCache[myNum];
@@ -964,7 +957,6 @@
         if(!target||!text) return;
         db.ref('messages').push({ sender: myNum, receiver: target, text, time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
         
-        // Inteligentna odpowiedź od dostawcy z DarkMarket (np. 555-999)
         if (target === "555-999" || target === "555-888") {
             setTimeout(() => {
                 let replyText = "Interesujące. Jeśli masz odpowiednie fundusze w banku i magazyn w domu, sprawdź ofertę w naszej aplikacji DarkMarket.";
@@ -1014,13 +1006,32 @@
             if(pin === MOD_PIN) { renderModList(); openApp('mod'); }
         }
     }
+
+    // Funkcja administratora do zmiany salda konta z panelu moderatora
+    function adminSetBalance(num) {
+        let acc = allAccountsCache[num] || { balance: 0, history: [] };
+        let newBal = prompt(`Podaj nową kwotę salda dla numeru ${num} (Aktualnie: ${acc.balance} PLN):`, acc.balance);
+        if (newBal !== null && !isNaN(parseFloat(newBal))) {
+            acc.balance = parseFloat(newBal);
+            acc.history.push({ title: "Korekta Administratora", amount: acc.balance, type: 'in', time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+            db.ref('bank_accounts/' + num).set(acc).then(() => alert("Saldo zostało zaktualizowane!"));
+        }
+    }
+
     function renderModList() {
-        document.getElementById('mod-numbers-list').innerHTML = Object.keys(claimedNumbersCache).map(num=>`
-            <div class="list-item" style="flex-direction:column; align-items:flex-start;">
-                <div><b>Tel: ${num} | IP: ${getIpForNumber(num)}</b></div>
-                <button class="btn-danger" style="margin-top:6px;" onclick="db.ref('claimed_numbers/${num}').remove(); db.ref('citizens/${num}').remove();">Usuń dane numeru</button>
-            </div>
-        `).join('');
+        document.getElementById('mod-numbers-list').innerHTML = Object.keys(claimedNumbersCache).map(num => {
+            const acc = allAccountsCache[num] || { balance: 0 };
+            return `
+                <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                    <div><b>Tel: ${num} | IP: ${getIpForNumber(num)}</b></div>
+                    <div style="font-size:12px; color:#2ecc71; margin:4px 0;">Saldo bankowe: ${acc.balance.toFixed(2)} PLN</div>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                        <button class="btn-primary" style="padding:6px 10px; font-size:11px;" onclick="adminSetBalance('${num}')">💳 Zmień Saldo</button>
+                        <button class="btn-danger" style="padding:6px 10px; font-size:11px;" onclick="db.ref('claimed_numbers/${num}').remove(); db.ref('citizens/${num}').remove(); db.ref('bank_accounts/${num}').remove();">🗑️ Usuń konto</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     let calcExp = "";
