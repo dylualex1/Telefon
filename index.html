@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP - Otodom & IP</title>
+    <title>Smartfon RP - Kompletny System</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -115,6 +115,7 @@
         .bg-play { background: #00875a; }
         .bg-house { background: #e84393; }
         .bg-school { background: #00cec9; }
+        .bg-dark { background: #111118; border: 1px solid #e74c3c; }
 
         .nav-bar {
             height: 48px; background: rgba(0,0,0,0.45); display: flex;
@@ -224,11 +225,13 @@
             <div class="my-number-badge" id="display-my-num">Mój numer: ...</div>
         </div>
 
+        <!-- IKONY APLIKACJI (W TYM DARKWEB) -->
         <div class="app-grid">
             <div class="app-icon" onclick="openApp('sms')"><div class="icon-box bg-blue">💬</div><span>Wiadomości</span></div>
             <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
             <div class="app-icon" onclick="openApp('bank')"><div class="icon-box bg-green">💳</div><span>Bank</span></div>
             <div class="app-icon" onclick="openApp('casino')"><div class="icon-box bg-gold">🎰</div><span>Kasyno</span></div>
+            <div class="app-icon" onclick="openApp('darkweb')"><div class="icon-box bg-dark">🧅</div><span>DarkMarket</span></div>
             <div class="app-icon" onclick="openApp('playstore')"><div class="icon-box bg-play">🎮</div><span>Sklep Play</span></div>
             <div class="app-icon" onclick="openApp('jobs')"><div class="icon-box bg-work">💼</div><span>Praca RP</span></div>
             <div class="app-icon" onclick="openApp('school')"><div class="icon-box bg-school">🚗</div><span>Szkoła Jazdy</span></div>
@@ -239,6 +242,12 @@
             <div class="app-icon" onclick="openApp('contacts')"><div class="icon-box bg-orange">👤</div><span>Kontakty</span></div>
             <div class="app-icon" onclick="openApp('calc')"><div class="icon-box bg-gray">🧮</div><span>Kalkulator</span></div>
             <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
+        </div>
+
+        <!-- DARKWEB / DARKMARKET -->
+        <div id="app-darkweb" class="app-window">
+            <div class="app-header"><span style="color:#e74c3c;">🧅 DarkMarket</span><button class="nav-btn" onclick="goHome()">✕</button></div>
+            <div class="app-content" id="darkweb-content"></div>
         </div>
 
         <!-- SKLEP PLAY -->
@@ -306,7 +315,7 @@
             </div>
         </div>
 
-        <!-- OTODOM (DOMY JEDNORODZINNE Z MAPY) -->
+        <!-- OTODOM (DOMY I MAGAZYNY) -->
         <div id="app-otodom" class="app-window">
             <div class="app-header"><span>Otodom Nieruchomości</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="otodom-content"></div>
@@ -427,7 +436,7 @@
             </div>
         </div>
 
-        <!-- USTAWIENIA (Z ADRESEM IP POWIĄZANYM Z NUMEREM) -->
+        <!-- USTAWIENIA -->
         <div id="app-settings" class="app-window">
             <div class="app-header"><span id="settings-title" style="cursor:pointer;" onclick="secretModClick()">Ustawienia</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content">
@@ -475,7 +484,7 @@
     let allVehiclesCache = {};
     let secretClickCount = 0;
 
-    // Lista domów jednorodzinnych z Twojej mapy (sektory / numery)
+    // Domy jednorodzinne z mapy
     let availableHouses = {
         "dom_202": { name: "Dom jednorodzinny nr 202", price: 45000, address: "Sektor 202 (Droga Fairfax)" },
         "dom_216": { name: "Dom jednorodzinny nr 216", price: 48000, address: "Sektor 216" },
@@ -534,18 +543,14 @@
         db.ref('vehicles').on('value', snap => { allVehiclesCache = snap.val() || {}; renderVehicles(); });
         db.ref('messages').limitToLast(50).on('value', snap => renderMessages(Object.values(snap.val() || {})));
         renderContacts();
+        renderDarkMarket();
     });
 
-    // Generowanie IP na podstawie numeru telefonu
     function getIpForNumber(num) {
         if (!num) return "192.168.1.100";
         let hash = 0;
-        for (let i = 0; i < num.length; i++) {
-            hash = (hash << 5) - hash + num.charCodeAt(i);
-            hash |= 0;
-        }
-        let octet = Math.abs(hash) % 200 + 10;
-        return `192.168.1.${octet}`;
+        for (let i = 0; i < num.length; i++) { hash = (hash << 5) - hash + num.charCodeAt(i); hash |= 0; }
+        return `192.168.1.${Math.abs(hash) % 200 + 10}`;
     }
 
     function placePin(event) {
@@ -594,6 +599,86 @@
         }
     }
 
+    // DARKMARKET & DARKWEB LOGIC
+    function buyDarkwebAccess() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const cost = 10000;
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (acc.balance < cost) return alert("Brak środków! Dostęp do DarkMarket kosztuje 10 000 PLN.");
+        
+        acc.balance -= cost;
+        acc.history.push({ title: "Subskrypcja DarkMarket", amount: cost, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+        
+        db.ref('bank_accounts/' + myNum).set(acc);
+        db.ref('citizens/' + myNum + '/darkwebAccess').set(true);
+        alert("🧅 Uzyskano dostęp do DarkMarket!");
+        renderDarkMarket();
+    }
+
+    function buyDarkItem(itemName, price) {
+        const myNum = localStorage.getItem('phone_my_number');
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (acc.balance < price) return alert("Brak środków na koncie!");
+
+        acc.balance -= price;
+        acc.history.push({ title: `Zakup (DarkMarket): ${itemName}`, amount: price, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+
+        db.ref('bank_accounts/' + myNum).set(acc);
+        
+        // Dodaj do ekwipunku / inwentarza gracza w bazie
+        db.ref('citizens/' + myNum + '/inventory/' + itemName).once('value', snap => {
+            let currentQty = snap.val() || 0;
+            db.ref('citizens/' + myNum + '/inventory/' + itemName).set(currentQty + 1);
+        });
+
+        alert(`✅ Zakupiono: ${itemName}!`);
+    }
+
+    function renderDarkMarket() {
+        const myNum = localStorage.getItem('phone_my_number');
+        if (!myNum) return;
+        db.ref('citizens/' + myNum).once('value', snap => {
+            const cit = snap.val() || {};
+            const container = document.getElementById('darkweb-content');
+
+            if (!cit.darkwebAccess) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px 10px;">
+                        <h3 style="color:#e74c3c;">Brak dostępu</h3>
+                        <p style="font-size:13px; color:var(--subtext);">Zabezpieczona sieć onion wymaga opłaty za szyfrowany klucz dostępu.</p>
+                        <p style="font-size:18px; font-weight:bold; color:#2ecc71;">Koszt: 10 000 PLN</p>
+                        <button class="btn-primary" style="background:#e74c3c;" onclick="buyDarkwebAccess()">Kup dostęp do DarkMarket</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <h4 style="color:#e74c3c; margin-top:0;">Sprzedawcy i Kontakty:</h4>
+                    <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                        <div><b>Dostawca Sprzętu (Szafirek)</b><br><small style="color:#3498db;">Tel: 555-999</small></div>
+                        <p style="font-size:12px; color:var(--subtext); margin:5px 0;">Specjalista od profesjonalnych zestawów nawadniających, filtrów i nasion.</p>
+                        <button class="btn-primary" style="padding:4px 8px; font-size:11px; width:auto;" onclick="openSmsWith('555-999')">Napisz SMS</button>
+                    </div>
+                    <div class="list-item" style="flex-direction:column; align-items:flex-start;">
+                        <div><b>Chemik (Laborant)</b><br><small style="color:#3498db;">Tel: 555-888</small></div>
+                        <p style="font-size:12px; color:var(--subtext); margin:5px 0;">Dostawca chemii technicznej i akcesoriów laboratoryjnych do suszenia.</p>
+                        <button class="btn-primary" style="padding:4px 8px; font-size:11px; width:auto;" onclick="openSmsWith('555-888')">Napisz SMS</button>
+                    </div>
+
+                    <h4 style="color:#e74c3c; margin:15px 0 8px 0;">Katalog Rynku:</h4>
+                    <div class="house-card"><b>🌱 Nasiona Ziół / Roślin</b><br><small>Do uprawy w magazynie</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">1,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Nasiona Ziół', 1500)">Kup</button></div>
+                    <div class="house-card"><b>💡 Lampa UV / LED (Growbox)</b><br><small>Doświetlanie uprawy</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">4,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Lampa UV', 4000)">Kup</button></div>
+                    <div class="house-card"><b>💨 Filtr Węglowy</b><br><small>Neutralizacja zapachów</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">2,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Filtr Węglowy', 2500)">Kup</button></div>
+                    <div class="house-card"><b>🌡️ Profesjonalna Suszarka</b><br><small>Do suszenia plonów</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">6,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Suszarka Rolnicza', 6000)">Kup</button></div>
+                `;
+            }
+        });
+    }
+
+    function openSmsWith(num) {
+        openApp('sms');
+        document.getElementById('target-phone').value = num;
+    }
+
     function buyDriversLicense() {
         const myNum = localStorage.getItem('phone_my_number');
         const cost = 10000;
@@ -623,8 +708,24 @@
         acc.history.push({ title: `Zakup domu: ${house.name}`, amount: house.price, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
 
         db.ref('bank_accounts/' + myNum).set(acc);
-        db.ref('citizens/' + myNum + '/ownedHouse').set(house);
+        db.ref('citizens/' + myNum + '/ownedHouse').set({ ...house, warehouse: false });
         alert(`🏡 Zakupiłeś nieruchomość: ${house.name}`);
+        renderOtodom();
+    }
+
+    // Dokupienie magazynu do domu
+    function buyWarehouse() {
+        const myNum = localStorage.getItem('phone_my_number');
+        const whCost = 35000;
+        let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+        if (acc.balance < whCost) return alert("Brak środków! Magazyn kosztuje 35 000 PLN.");
+
+        acc.balance -= whCost;
+        acc.history.push({ title: "Zakup magazynu produkcyjnego", amount: whCost, type: "out", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+
+        db.ref('bank_accounts/' + myNum).set(acc);
+        db.ref('citizens/' + myNum + '/ownedHouse/warehouse').set(true);
+        alert("🏭 Magazyn gospodarczy został dobudowany i aktywowany!");
         renderOtodom();
     }
 
@@ -634,7 +735,7 @@
         const cit = allCitizensCache[myNum];
         if (!cit || !cit.ownedHouse) return;
 
-        if (confirm("Czy na pewno chcesz sprzedać / usunąć swoją nieruchomość?")) {
+        if (confirm("Czy na pewno chcesz sprzedać / usunąć swoją nieruchomość wraz z magazynem?")) {
             db.ref('citizens/' + myNum + '/ownedHouse').remove().then(() => {
                 alert("Nieruchomość została usunięta z Twojego konta.");
                 renderOtodom();
@@ -647,10 +748,15 @@
         const cit = allCitizensCache[myNum] || {};
         let html = '';
         if (cit.ownedHouse) {
+            const hasWh = cit.ownedHouse.warehouse;
             html += `
                 <div class="house-card" style="border-color:#2ecc71;">
-                    <b>Twój Dom:</b><br>${cit.ownedHouse.name}<br><small>${cit.ownedHouse.address}</small>
-                    <button class="btn-danger" style="margin-top:8px;" onclick="removeHouse()">🗑️ Usuń / Sprzedaj dom</button>
+                    <b>Twój Dom:</b><br>${cit.ownedHouse.name}<br><small>${cit.ownedHouse.address}</small><br>
+                    Magazyn produkcyjny: <b style="color:${hasWh?'#2ecc71':'#e74c3c'}">${hasWh?'AKTYWNY 🏭':'BRAK'}</b>
+                    <div style="margin-top:8px; display:flex; gap:6px;">
+                        ${!hasWh ? `<button class="btn-primary" style="background:#f39c12; flex:1;" onclick="buyWarehouse()">Dokup Magazyn (35k)</button>` : ''}
+                        <button class="btn-danger" style="flex:1;" onclick="removeHouse()">🗑️ Sprzedaj dom</button>
+                    </div>
                 </div>
                 <hr style="border:0; border-top:1px solid var(--border-color); margin:10px 0;">
             `;
@@ -688,7 +794,7 @@
         } else {
             const hasLic = cit.driversLicense === true;
             const points = cit.penaltyPoints || 0;
-            const house = cit.ownedHouse ? cit.ownedHouse.name + ` (${cit.ownedHouse.address})` : "Brak";
+            const house = cit.ownedHouse ? cit.ownedHouse.name + (cit.ownedHouse.warehouse ? " [+ Magazyn]" : "") : "Brak";
             container.innerHTML = `
                 <div class="id-card">
                     <div style="font-size:12px; opacity:0.8; margin-bottom:8px;">RZECZPOSPOLITA POLSKA</div>
@@ -848,7 +954,7 @@
         document.getElementById('contact-name').value=""; document.getElementById('contact-num').value=""; renderContacts();
     }
     function renderContacts() {
-        document.getElementById('contacts-list').innerHTML = `<div class="list-item"><div><b>🚨 Policja</b></div></div>` + getContacts().map(c=>`<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div></div>`).join('');
+        document.getElementById('contacts-list').innerHTML = `<div class="list-item"><div><b>🚨 Policja</b></div></div><div class="list-item"><div><b>Szafirek (DarkMarket)</b><br><small>555-999</small></div></div>` + getContacts().map(c=>`<div class="list-item"><div><b>${c.name}</b><br><small>${c.num}</small></div></div>`).join('');
     }
 
     function sendSms() {
@@ -857,8 +963,24 @@
         const text = document.getElementById('sms-text').value.trim();
         if(!target||!text) return;
         db.ref('messages').push({ sender: myNum, receiver: target, text, time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+        
+        // Inteligentna odpowiedź od dostawcy z DarkMarket (np. 555-999)
+        if (target === "555-999" || target === "555-888") {
+            setTimeout(() => {
+                let replyText = "Interesujące. Jeśli masz odpowiednie fundusze w banku i magazyn w domu, sprawdź ofertę w naszej aplikacji DarkMarket.";
+                let lower = text.toLowerCase();
+                if (lower.includes("cena") || lower.includes("targ") || lower.includes("zniżka")) {
+                    replyText = "Ceny są sztywne, ale za stałą współpracę przy przetwórstwie mogę dać rabat przy większych zamówieniach.";
+                } else if (lower.includes("suszarka") || lower.includes("lampa") || lower.includes("do czego")) {
+                    replyText = "Lampy i filtry montuje się w magazynie domowym, żeby przetwarzać zebrany surowiec w czysty susz.";
+                }
+                db.ref('messages').push({ sender: target, receiver: myNum, text: replyText, time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+            }, 1000);
+        }
+
         document.getElementById('sms-text').value="";
     }
+
     function renderMessages(msgs) {
         const myNum = localStorage.getItem('phone_my_number');
         if(!myNum) return;
@@ -909,7 +1031,7 @@
 
     function unlockPhone() { document.getElementById('lock-screen').classList.add('hidden'); }
     function lockPhone() { document.getElementById('lock-screen').classList.remove('hidden'); }
-    function openApp(name) { goHome(); document.getElementById('app-'+name).classList.add('active'); if(name==='otodom') renderOtodom(); if(name==='contacts') renderContacts(); }
+    function openApp(name) { goHome(); document.getElementById('app-'+name).classList.add('active'); if(name==='otodom') renderOtodom(); if(name==='contacts') renderContacts(); if(name==='darkweb') renderDarkMarket(); }
     function goHome() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
     function toggleGameBox(id) { document.getElementById(id).classList.toggle('active'); }
     function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('theme-switch').checked); localStorage.setItem('phone_theme', document.getElementById('theme-switch').checked?'light':'dark'); }
