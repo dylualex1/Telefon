@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smartfon RP - Pełny System z Edycją Salda</title>
+    <title>Smartfon RP - Pełny System Produkcji</title>
     
     <!-- BIBLIOTEKI FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -225,7 +225,6 @@
             <div class="my-number-badge" id="display-my-num">Mój numer: ...</div>
         </div>
 
-        <!-- IKONY APLIKACJI -->
         <div class="app-grid">
             <div class="app-icon" onclick="openApp('sms')"><div class="icon-box bg-blue">💬</div><span>Wiadomości</span></div>
             <div class="app-icon" onclick="openApp('moboyatel')"><div class="icon-box bg-red">🆔</div><span>mObywatel</span></div>
@@ -244,7 +243,7 @@
             <div class="app-icon" onclick="openApp('settings')"><div class="icon-box bg-purple">⚙️</div><span>Ustawienia</span></div>
         </div>
 
-        <!-- DARKWEB / DARKMARKET -->
+        <!-- DARKMARKET & PRODUKCJA -->
         <div id="app-darkweb" class="app-window">
             <div class="app-header"><span style="color:#e74c3c;">🧅 DarkMarket</span><button class="nav-btn" onclick="goHome()">✕</button></div>
             <div class="app-content" id="darkweb-content"></div>
@@ -446,7 +445,7 @@
             </div>
         </div>
 
-        <!-- PANEL MODERATORA (PIN: 997997) Z OPCJĄ ZMIANY SALDA -->
+        <!-- PANEL MODERATORA (PIN: 997997) -->
         <div id="app-mod" class="app-window">
             <div class="app-header"><span>🛡️ Tryb Moderatora</span><button class="nav-btn" onclick="openApp('settings')">✕</button></div>
             <div class="app-content"><div id="mod-numbers-list"></div></div>
@@ -625,9 +624,58 @@
         db.ref('citizens/' + myNum + '/inventory/' + itemName).once('value', snap => {
             let currentQty = snap.val() || 0;
             db.ref('citizens/' + myNum + '/inventory/' + itemName).set(currentQty + 1);
+            renderDarkMarket();
         });
 
         alert(`✅ Zakupiono: ${itemName}!`);
+    }
+
+    // System wytwarzania suszu w magazynie
+    function startProcessing() {
+        const myNum = localStorage.getItem('phone_my_number');
+        db.ref('citizens/' + myNum).once('value', snap => {
+            const cit = snap.val() || {};
+            if (!cit.ownedHouse || !cit.ownedHouse.warehouse) {
+                return alert("❌ Nie posiadasz dokupionego magazynu w swoim domu!");
+            }
+            const inv = cit.inventory || {};
+            if ((inv['Nasiona Ziół'] || 0) < 1 || (inv['Lampa UV'] || 0) < 1 || (inv['Filtr Węglowy'] || 0) < 1 || (inv['Suszarka Rolnicza'] || 0) < 1) {
+                return alert("❌ Brak wymaganych komponentów w ekwipunku! Potrzebujesz: Nasiona, Lampę UV, Filtr Węglowy i Suszarkę.");
+            }
+
+            // Zużyj po 1 sztuce każdego itemu i dodaj 1 partię gotowego suszu
+            inv['Nasiona Ziół'] -= 1;
+            inv['Przetworzony Susz'] = (inv['Przetworzony Susz'] || 0) + 1;
+
+            db.ref('citizens/' + myNum + '/inventory').set(inv).then(() => {
+                alert("🌿 Proces przetwórstwa i suszenia zakończony pomyślnie! Otrzymano partię Przetworzonego Suszu.");
+                renderDarkMarket();
+            });
+        });
+    }
+
+    // Sprzedaż wyprodukowanego suszu
+    function sellProcessedGoods() {
+        const myNum = localStorage.getItem('phone_my_number');
+        db.ref('citizens/' + myNum).once('value', snap => {
+            const cit = snap.val() || {};
+            const inv = cit.inventory || {};
+            const qty = inv['Przetworzony Susz'] || 0;
+            if (qty <= 0) return alert("❌ Nie masz żadnego przetworzonego suszu na sprzedaż!");
+
+            const payout = qty * 12000; // 12 tys PLN za sztukę
+            inv['Przetworzony Susz'] = 0; // wyzeruj zapasy
+
+            let acc = allAccountsCache[myNum] || { balance: 0, history: [] };
+            acc.balance += payout;
+            acc.history.push({ title: "Sprzedaż partii suszu (DarkMarket)", amount: payout, type: "in", time: new Date().toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'}) });
+
+            db.ref('bank_accounts/' + myNum).set(acc);
+            db.ref('citizens/' + myNum + '/inventory').set(inv).then(() => {
+                alert(`💰 Sprzedano ${qty} szt. suszu za kwotę +${payout.toLocaleString()} PLN!`);
+                renderDarkMarket();
+            });
+        });
     }
 
     function renderDarkMarket() {
@@ -636,6 +684,7 @@
         db.ref('citizens/' + myNum).once('value', snap => {
             const cit = snap.val() || {};
             const container = document.getElementById('darkweb-content');
+            const inv = cit.inventory || {};
 
             if (!cit.darkwebAccess) {
                 container.innerHTML = `
@@ -648,23 +697,31 @@
                 `;
             } else {
                 container.innerHTML = `
-                    <h4 style="color:#e74c3c; margin-top:0;">Sprzedawcy i Kontakty:</h4>
-                    <div class="list-item" style="flex-direction:column; align-items:flex-start;">
-                        <div><b>Dostawca Sprzętu (Szafirek)</b><br><small style="color:#3498db;">Tel: 555-999</small></div>
-                        <p style="font-size:12px; color:var(--subtext); margin:5px 0;">Specjalista od profesjonalnych zestawów nawadniających, filtrów i nasion.</p>
-                        <button class="btn-primary" style="padding:4px 8px; font-size:11px; width:auto;" onclick="openSmsWith('555-999')">Napisz SMS</button>
+                    <h4 style="color:#e74c3c; margin-top:0;">Twój Ekwipunek:</h4>
+                    <div class="house-card" style="background:var(--header-bg); font-size:12px;">
+                        🌱 Nasiona: <b>${inv['Nasiona Ziół'] || 0}</b> | 
+                        💡 Lampy UV: <b>${inv['Lampa UV'] || 0}</b><br>
+                        💨 Filtry: <b>${inv['Filtr Węglowy'] || 0}</b> | 
+                        🌡️ Suszarki: <b>${inv['Suszarka Rolnicza'] || 0}</b><br>
+                        📦 Gotowy Susz: <b style="color:#2ecc71;">${inv['Przetworzony Susz'] || 0} szt.</b>
                     </div>
+
+                    <div style="display:flex; gap:6px; margin-bottom:12px;">
+                        <button class="btn-primary" style="flex:1; background:#27ae60;" onclick="startProcessing()">⚙️ Wytwórz Susz</button>
+                        <button class="btn-primary" style="flex:1; background:#f39c12;" onclick="sellProcessedGoods()">💵 Sprzedaj Susz</button>
+                    </div>
+
+                    <h4 style="color:#e74c3c; margin-top:10px;">Kontakty (SMS):</h4>
                     <div class="list-item" style="flex-direction:column; align-items:flex-start;">
-                        <div><b>Chemik (Laborant)</b><br><small style="color:#3498db;">Tel: 555-888</small></div>
-                        <p style="font-size:12px; color:var(--subtext); margin:5px 0;">Dostawca chemii technicznej i akcesoriów laboratoryjnych do suszenia.</p>
-                        <button class="btn-primary" style="padding:4px 8px; font-size:11px; width:auto;" onclick="openSmsWith('555-888')">Napisz SMS</button>
+                        <div><b>Dostawca (Szafirek)</b><br><small style="color:#3498db;">Tel: 555-999</small></div>
+                        <button class="btn-primary" style="padding:4px 8px; font-size:11px; margin-top:6px; width:auto;" onclick="openSmsWith('555-999')">Napisz SMS</button>
                     </div>
 
                     <h4 style="color:#e74c3c; margin:15px 0 8px 0;">Katalog Rynku:</h4>
-                    <div class="house-card"><b>🌱 Nasiona Ziół / Roślin</b><br><small>Do uprawy w magazynie</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">1,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Nasiona Ziół', 1500)">Kup</button></div>
-                    <div class="house-card"><b>💡 Lampa UV / LED (Growbox)</b><br><small>Doświetlanie uprawy</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">4,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Lampa UV', 4000)">Kup</button></div>
-                    <div class="house-card"><b>💨 Filtr Węglowy</b><br><small>Neutralizacja zapachów</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">2,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Filtr Węglowy', 2500)">Kup</button></div>
-                    <div class="house-card"><b>🌡️ Profesjonalna Suszarka</b><br><small>Do suszenia plonów</small><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">6,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Suszarka Rolnicza', 6000)">Kup</button></div>
+                    <div class="house-card"><b>🌱 Nasiona Ziół</b><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">1,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Nasiona Ziół', 1500)">Kup</button></div>
+                    <div class="house-card"><b>💡 Lampa UV / LED</b><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">4,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Lampa UV', 4000)">Kup</button></div>
+                    <div class="house-card"><b>💨 Filtr Węglowy</b><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">2,500 PLN</div><button class="btn-primary" onclick="buyDarkItem('Filtr Węglowy', 2500)">Kup</button></div>
+                    <div class="house-card"><b>🌡️ Suszarka Rolnicza</b><div style="color:#2ecc71; font-weight:bold; margin:4px 0;">6,000 PLN</div><button class="btn-primary" onclick="buyDarkItem('Suszarka Rolnicza', 6000)">Kup</button></div>
                 `;
             }
         });
@@ -721,6 +778,7 @@
         db.ref('citizens/' + myNum + '/ownedHouse/warehouse').set(true);
         alert("🏭 Magazyn gospodarczy został dobudowany i aktywowany!");
         renderOtodom();
+        renderDarkMarket();
     }
 
     function removeHouse() {
@@ -732,6 +790,7 @@
             db.ref('citizens/' + myNum + '/ownedHouse').remove().then(() => {
                 alert("Nieruchomość została usunięta z Twojego konta.");
                 renderOtodom();
+                renderDarkMarket();
             });
         }
     }
@@ -1007,7 +1066,6 @@
         }
     }
 
-    // Funkcja administratora do zmiany salda konta z panelu moderatora
     function adminSetBalance(num) {
         let acc = allAccountsCache[num] || { balance: 0, history: [] };
         let newBal = prompt(`Podaj nową kwotę salda dla numeru ${num} (Aktualnie: ${acc.balance} PLN):`, acc.balance);
